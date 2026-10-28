@@ -5,6 +5,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 // Recibe la ruta (por ejemplo "/api/ingredientes/menu") y las mismas opciones que fetch (method, body, headers).
 // Si algo sale mal, lanza un Error con un mensaje pensado para mostrarle al usuario.
 export const pedirApi = async (ruta, opciones = {}) => {
+        // Sin la dirección de la API, el pedido saldría a cualquier lado: mejor avisar con un mensaje claro.
+    if(!API_URL) {
+        throw new Error("Falta configurar la dirección de la API (VITE_API_URL en el archivo .env).");
+    }
+    
     let respuesta;
 
     try {
