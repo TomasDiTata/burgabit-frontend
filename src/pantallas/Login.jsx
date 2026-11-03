@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { pedirApi } from "../api.js";
+import { FORMATO_EMAIL } from "../validaciones.js";
 
-// El mismo formato de email que exige el backend (modelo Usuario, campo email).
-const FORMATO_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
 // Revisa los datos antes de enviarlos. Devuelve un objeto con un mensaje por cada campo con problemas:
 // si está todo bien, el objeto queda vacío.
@@ -23,7 +23,7 @@ const validar = (email, password) => {
 };
 
 // Pantalla de inicio de sesión. Cuando el backend acepta los datos, le pasa el token a App.
-function Login({ alIniciarSesion }) {
+function Login({ alIniciarSesion, alIrAlRegistro }) {
     // Un estado por campo: lo que el usuario va escribiendo.
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -97,6 +97,12 @@ function Login({ alIniciarSesion }) {
 
             {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
             {mensaje && <p className="error">{mensaje}</p>}
+
+            
+            <p>
+                ¿No tenés cuenta? <button className="enlace" onClick={alIrAlRegistro}>Registrate</button>
+            </p>
+            
         </main>
     );
 }
