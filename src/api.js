@@ -1,5 +1,6 @@
 // Dirección de la API. Vite la toma del archivo .env (variable VITE_API_URL).
 const API_URL = import.meta.env.VITE_API_URL;
+import { leerToken } from "./sesion.js";
 
 // Hace una petición a la API y devuelve los datos de la respuesta, ya convertidos de JSON.
 // Recibe la ruta (por ejemplo "/api/ingredientes/menu") y las mismas opciones que fetch (method, body, headers).
@@ -10,6 +11,10 @@ export const pedirApi = async (ruta, opciones = {}) => {
         throw new Error("Falta configurar la dirección de la API (VITE_API_URL en el archivo .env).");
     }
     
+    // Con una sesión iniciada, cada petición lleva el token como lo espera el backend: "Bearer <token>".
+    const token = leerToken();
+    const autorizacion = token ? { Authorization: `Bearer ${token}` } : {};
+
     let respuesta;
 
     try {
@@ -17,6 +22,7 @@ export const pedirApi = async (ruta, opciones = {}) => {
             ...opciones,
             headers: {
                 "Content-Type": "application/json",
+                ...autorizacion,
                 ...opciones.headers
             }
         });

@@ -1,39 +1,28 @@
 import { useState } from "react";
-import { pedirApi } from "./api.js";
+import { guardarToken, borrarToken, leerSesion } from "./sesion.js";
+import Login from "./pantallas/Login.jsx";
+import Inicio from "./pantallas/Inicio.jsx";
 
-// Pantalla de prueba: confirma que el frontend llega a la API. Se reemplaza en el próximo paso.
+// Decide qué pantalla mostrar: sin sesión, el login; con sesión, la pantalla de inicio.
 function App() {
-    // Estado de la petición: si está cargando y qué mensaje mostrar.
-    const [cargando, setCargando] = useState(false);
-    const [mensaje, setMensaje] = useState("");
+    // Al abrir la app se lee la sesión guardada: si el token sigue vigente, no hace falta volver a ingresar.
+    const [sesion, setSesion] = useState(leerSesion());
 
-    const probarConexion = async () => {
-        setCargando(true);
-        setMensaje("");
-
-        try {
-            // Pide el menú sin token: si la conexión funciona, el backend responde 401 "Token inexistente.".
-            await pedirApi("/api/ingredientes/menu");
-            setMensaje("El servidor respondió con datos.");
-        } catch (error) {
-            setMensaje(error.message);
-        } finally {
-            // Salga bien o mal, se deja de mostrar "Cargando...".
-            setCargando(false);
-        }
+    const iniciarSesion = (token) => {
+        guardarToken(token);
+        setSesion(leerSesion());
     };
 
-    return (
-        <main>
-            <h1>BurgaBit</h1>
-            <button onClick={probarConexion} disabled={cargando}>
-                Probar conexión con la API
-            </button>
+    const cerrarSesion = () => {
+        borrarToken();
+        setSesion(null);
+    };
 
-            {cargando && <p>Cargando... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
-            {mensaje && <p>{mensaje}</p>}
-        </main>
-    );
+    if(!sesion) {
+        return <Login alIniciarSesion={iniciarSesion} />;
+    }
+
+    return <Inicio sesion={sesion} alCerrarSesion={cerrarSesion} />;
 }
 
 export default App;
