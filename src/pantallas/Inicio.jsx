@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { pedirApi } from "../api.js";
+import Encabezado from "../componentes/Encabezado.jsx";
 
 // Cómo se muestra cada rol en pantalla.
 const NOMBRE_ROL = {
@@ -31,10 +32,7 @@ function Inicio({ sesion, alCerrarSesion }) {
 
     return (
         <main>
-            <header className="encabezado">
-                <strong>BurgaBit · {NOMBRE_ROL[sesion.rol]}</strong>
-                <button onClick={alCerrarSesion}>Cerrar sesión</button>
-            </header>
+                        <Encabezado seccion={NOMBRE_ROL[sesion.rol]} alCerrarSesion={alCerrarSesion} />
 
             <h1>¡Hola!</h1>
             <p>Tu sección: <strong>{NOMBRE_ROL[sesion.rol]}</strong>.</p>
