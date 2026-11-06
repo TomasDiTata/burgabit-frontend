@@ -43,7 +43,8 @@ label {
 }
 
 /* Letra de 16px (1rem): con menos, el iPhone hace zoom al tocar el campo. */
-input {
+input,
+select {
     font-size: 1rem;
     padding: 10px;
     border: 1px solid #c9c2b8;
@@ -76,4 +77,50 @@ input {
     font: inherit;
     color: #9a3412;
     text-decoration: underline;
+}
+
+
+/* Mensajes de que algo salió bien: en verde. */
+.exito {
+    color: #1e6b34;
+    margin: 0;
+}
+
+/* Pestañas del panel: la elegida se ve marcada. */
+.pestanas {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.pestanas .activa {
+    background-color: #9a3412;
+    border-color: #9a3412;
+    color: #fffaf3;
+}
+
+/* Si la tabla no entra en el celular, se desplaza ella sola y no toda la página. */
+.tabla {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #e6dccf;
+}
+
+/* En pantallas angostas (celulares), las tablas usan letra y márgenes más chicos para entrar a lo ancho. */
+@media (max-width: 480px) {
+    th,
+    td {
+        padding: 6px 4px;
+        font-size: 0.875rem;
+    }
 }
