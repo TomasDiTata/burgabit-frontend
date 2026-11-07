@@ -2,9 +2,9 @@ import { useState } from "react";
 import { guardarToken, borrarToken, leerSesion } from "./sesion.js";
 import Login from "./pantallas/Login.jsx";
 import Registro from "./pantallas/Registro.jsx";
-import Inicio from "./pantallas/Inicio.jsx";
 import PanelAdmin from "./pantallas/PanelAdmin.jsx";
 import PantallaCliente from "./pantallas/PantallaCliente.jsx";
+import PantallaCocina from "./pantallas/PantallaCocina.jsx";
 
 // Decide qué pantalla mostrar: sin sesión, el login o el registro; con sesión, la de cada rol.
 function App() {
@@ -32,7 +32,7 @@ function App() {
         return <Login alIniciarSesion={iniciarSesion} alIrAlRegistro={() => setVerRegistro(true)} />;
     }
 
-        // Cada rol ve su pantalla. Por ahora la cocina sigue en el inicio provisorio.
+    // Cada rol ve su pantalla.
     if(sesion.rol === "administrador") {
         return <PanelAdmin alCerrarSesion={cerrarSesion} />;
     }
@@ -41,6 +41,8 @@ function App() {
         return <PantallaCliente alCerrarSesion={cerrarSesion} />;
     }
 
-    return <Inicio sesion={sesion} alCerrarSesion={cerrarSesion} />;
+    // El rol que queda es el de cocinero.
+    return <PantallaCocina alCerrarSesion={cerrarSesion} />;
 }
+
 export default App;

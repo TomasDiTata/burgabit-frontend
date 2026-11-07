@@ -224,3 +224,18 @@ td {
     background-color: #fecaca;
     color: #7f1d1d;
 }
+
+
+/* Botones de cada pedido en la cocina: uno al lado del otro, y abajo si no entran. */
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* El botón de la acción principal, resaltado con el color de la marca. */
+.principal {
+    background-color: #9a3412;
+    border-color: #9a3412;
+    color: #fffaf3;
+}
