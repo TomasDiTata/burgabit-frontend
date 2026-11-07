@@ -155,13 +155,7 @@ td {
     padding: 0;
 }
 
-/* "Anterior" a la izquierda y "Siguiente" a la derecha. */
-.navegacion {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 16px 0 8px;
-}
+
 
 /* Recuadros: lo que se va armando y cada pedido. */
 .resumen,
@@ -238,4 +232,20 @@ td {
     background-color: #9a3412;
     border-color: #9a3412;
     color: #fffaf3;
+}
+
+
+/* El resumen del armador queda siempre a mano: pegado abajo de la pantalla mientras se eligen los ingredientes. */
+.resumen {
+    position: sticky;
+    bottom: 0;
+}
+
+.resumen p {
+    margin: 4px 0;
+}
+
+/* El nombre de cada categoría empieza con mayúscula, aunque en la base esté en minúsculas. */
+.titulo-categoria::first-letter {
+    text-transform: uppercase;
 }
