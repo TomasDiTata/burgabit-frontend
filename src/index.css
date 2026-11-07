@@ -124,3 +124,103 @@ td {
         font-size: 0.875rem;
     }
 }
+
+
+/* Armador: cada ingrediente en una fila, con el nombre a la izquierda y el contador a la derecha. */
+.opciones {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.opcion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #e6dccf;
+}
+
+/* Los botones - y + del contador: cuadrados y con lugar para el dedo en el celular. */
+.contador {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.contador button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+}
+
+/* "Anterior" a la izquierda y "Siguiente" a la derecha. */
+.navegacion {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 16px 0 8px;
+}
+
+/* Recuadros: lo que se va armando y cada pedido. */
+.resumen,
+.tarjeta {
+    border: 1px solid #e6dccf;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 16px 0;
+    background-color: #ffffff;
+}
+
+/* El pedido en curso, separado del armador. */
+.pedido-actual {
+    border-top: 2px solid #9a3412;
+    margin-top: 24px;
+}
+
+.total {
+    font-weight: 700;
+}
+
+/* Un título con un botón al costado, como "Mis pedidos" y "Actualizar". */
+.titulo-con-boton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+/* El estado de un pedido: una etiqueta con un color por estado. */
+.estado {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.pendiente {
+    background-color: #fde68a;
+    color: #713f12;
+}
+
+.preparacion {
+    background-color: #bfdbfe;
+    color: #1e3a8a;
+}
+
+.lista {
+    background-color: #bbf7d0;
+    color: #14532d;
+}
+
+.entregada {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.cancelado {
+    background-color: #fecaca;
+    color: #7f1d1d;
+}

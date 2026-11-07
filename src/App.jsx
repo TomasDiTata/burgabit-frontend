@@ -4,6 +4,7 @@ import Login from "./pantallas/Login.jsx";
 import Registro from "./pantallas/Registro.jsx";
 import Inicio from "./pantallas/Inicio.jsx";
 import PanelAdmin from "./pantallas/PanelAdmin.jsx";
+import PantallaCliente from "./pantallas/PantallaCliente.jsx";
 
 // Decide qué pantalla mostrar: sin sesión, el login o el registro; con sesión, la de cada rol.
 function App() {
@@ -31,12 +32,15 @@ function App() {
         return <Login alIniciarSesion={iniciarSesion} alIrAlRegistro={() => setVerRegistro(true)} />;
     }
 
-    // Por ahora solo el administrador tiene su pantalla: los demás roles siguen en el inicio provisorio.
+        // Cada rol ve su pantalla. Por ahora la cocina sigue en el inicio provisorio.
     if(sesion.rol === "administrador") {
         return <PanelAdmin alCerrarSesion={cerrarSesion} />;
     }
 
+    if(sesion.rol === "cliente") {
+        return <PantallaCliente alCerrarSesion={cerrarSesion} />;
+    }
+
     return <Inicio sesion={sesion} alCerrarSesion={cerrarSesion} />;
 }
-
 export default App;
