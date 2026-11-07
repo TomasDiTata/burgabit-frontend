@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
-import { esEnteroDesde, TIENE_LETRAS } from "../../validaciones.js";
+import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
 
 // Revisa un ingrediente antes de enviarlo, con las reglas del modelo Ingrediente del backend.
@@ -11,8 +11,8 @@ const validar = ({ nombre, categoria, precio, cantidad }, otros) => {
 
     if(nombre.trim() === "") {
         errores.nombre = "Ingresá el nombre.";
-    } else if(!TIENE_LETRAS.test(nombre)) {
-        errores.nombre = "El nombre tiene que tener letras.";
+    } else if(!SOLO_LETRAS.test(nombre)) {
+        errores.nombre = "El nombre solo puede tener letras y espacios.";
     } else if(otros.some((ingrediente) => ingrediente.nombre === nombre.trim().toLowerCase())) {
         errores.nombre = "Ya existe un ingrediente con ese nombre.";
     }

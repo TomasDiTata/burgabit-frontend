@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
-import { esEnteroDesde, TIENE_LETRAS } from "../../validaciones.js";
+import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
 
 // El paso que sigue al último: es el que se propone para una categoría nueva, y el más alto que se puede usar.
 const pasoSiguiente = (categorias) => categorias.reduce((mayor, categoria) => Math.max(mayor, categoria.paso), 0) + 1;
@@ -13,8 +13,8 @@ const validar = ({ nombre, paso, minimo, maximo }, otras) => {
 
     if(nombre.trim() === "") {
         errores.nombre = "Ingresá el nombre.";
-    } else if(!TIENE_LETRAS.test(nombre)) {
-        errores.nombre = "El nombre tiene que tener letras.";
+    } else if(!SOLO_LETRAS.test(nombre)) {
+        errores.nombre = "El nombre solo puede tener letras y espacios.";
     } else if(otras.some((categoria) => categoria.nombre === nombre.trim().toLowerCase())) {
         errores.nombre = "Ya existe una categoría con ese nombre.";
     }
