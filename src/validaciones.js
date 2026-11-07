@@ -13,3 +13,7 @@ export const esEnteroDesde = (texto, minimo) => {
     const numero = Number(texto);
     return texto !== "" && Number.isInteger(numero) && numero >= minimo;
 };
+
+
+// Unidades máximas de un mismo ingrediente por producto (las controla el backend al crear el pedido).
+export const MAXIMO_POR_INGREDIENTE = 3;
