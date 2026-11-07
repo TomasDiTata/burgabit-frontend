@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
-import { esEnteroDesde } from "../../validaciones.js";
+import { esEnteroDesde, TIENE_LETRAS } from "../../validaciones.js";
 
-// Revisa una categoría nueva antes de enviarla, con las reglas del modelo Categoria del backend.
-// También mira las categorías que ya existen, para no repetir el nombre ni el paso.
-const validar = ({ nombre, paso, minimo, maximo }, categorias) => {
+// El paso que sigue al último: es el que se propone para una categoría nueva, y el más alto que se puede usar.
+const pasoSiguiente = (categorias) => categorias.reduce((mayor, categoria) => Math.max(mayor, categoria.paso), 0) + 1;
+
+// Revisa una categoría antes de enviarla, con las reglas del modelo Categoria del backend.
+// "otras" son las demás categorías: para no repetir el nombre ni el paso, y para que el paso no salte de más.
+const validar = ({ nombre, paso, minimo, maximo }, otras) => {
     const errores = {};
+    const siguiente = pasoSiguiente(otras);
 
     if(nombre.trim() === "") {
         errores.nombre = "Ingresá el nombre.";
-    } else if(categorias.some((categoria) => categoria.nombre === nombre.trim().toLowerCase())) {
+    } else if(!TIENE_LETRAS.test(nombre)) {
+        errores.nombre = "El nombre tiene que tener letras.";
+    } else if(otras.some((categoria) => categoria.nombre === nombre.trim().toLowerCase())) {
         errores.nombre = "Ya existe una categoría con ese nombre.";
     }
 
     if(!esEnteroDesde(paso, 1)) {
         errores.paso = "El paso tiene que ser un número entero desde 1.";
-    } else if(categorias.some((categoria) => categoria.paso === Number(paso))) {
+    } else if(Number(paso) > siguiente) {
+        errores.paso = `El paso puede ser hasta ${siguiente}, el que sigue al último.`;
+    } else if(otras.some((categoria) => categoria.paso === Number(paso))) {
         errores.paso = `Ya hay una categoría en el paso ${paso}.`;
     }
 
@@ -32,7 +40,7 @@ const validar = ({ nombre, paso, minimo, maximo }, categorias) => {
     return errores;
 };
 
-// Sección de categorías del panel: la lista (ordenada por paso) y el formulario para crear una nueva.
+// Sección de categorías del panel: la lista (ordenada por paso) y el formulario para crear una nueva o editar una.
 function Categorias() {
     // La lista que manda el backend y cómo va su carga.
     const [categorias, setCategorias] = useState([]);
@@ -43,6 +51,8 @@ function Categorias() {
     const [paso, setPaso] = useState("");
     const [minimo, setMinimo] = useState("");
     const [maximo, setMaximo] = useState("");
+    // El id de la categoría que se está editando, o "" si el formulario es para crear una nueva.
+    const [editando, setEditando] = useState("");
     // Estado del formulario.
     const [errores, setErrores] = useState({});
     const [enviando, setEnviando] = useState(false);
@@ -54,11 +64,11 @@ function Categorias() {
         setErrorAlCargar("");
 
         try {
-                        const lista = await pedirApi("/api/categorias");
+            const lista = await pedirApi("/api/categorias");
             setCategorias(lista);
             // Se propone el paso que sigue al último: así no hace falta escribirlo,
             // y si se quiere la categoría en otro lugar del armador, se cambia.
-            setPaso(String(lista.reduce((mayor, categoria) => Math.max(mayor, categoria.paso), 0) + 1));
+            setPaso(String(pasoSiguiente(lista)));
         } catch (error) {
             setErrorAlCargar(error.message);
         } finally {
@@ -71,10 +81,34 @@ function Categorias() {
         cargarCategorias();
     }, []);
 
-    const crear = async (evento) => {
+    // Llena el formulario con los datos de una categoría, para cambiarlos.
+    const empezarEdicion = (categoria) => {
+        setEditando(categoria._id);
+        setNombre(categoria.nombre);
+        setPaso(String(categoria.paso));
+        setMinimo(String(categoria.minimo));
+        setMaximo(String(categoria.maximo));
+        setErrores({});
+        setExito("");
+        setMensaje("");
+    };
+
+    // Deja el formulario vacío, listo para crear una categoría nueva.
+    const limpiarFormulario = () => {
+        setEditando("");
+        setNombre("");
+        setPaso(String(pasoSiguiente(categorias)));
+        setMinimo("");
+        setMaximo("");
+        setErrores({});
+    };
+
+    const guardar = async (evento) => {
         evento.preventDefault();
 
-        const erroresNuevos = validar({ nombre, paso, minimo, maximo }, categorias);
+        // Al editar, la categoría no se compara consigo misma: puede quedarse con su nombre y su paso.
+        const otras = categorias.filter((categoria) => categoria._id !== editando);
+        const erroresNuevos = validar({ nombre, paso, minimo, maximo }, otras);
         setErrores(erroresNuevos);
         setExito("");
         setMensaje("");
@@ -86,15 +120,14 @@ function Categorias() {
         setEnviando(true);
 
         try {
+            // Para crear, POST a /api/categorias; para editar, PATCH a /api/categorias/:id.
             // Los números van como números: el backend compara el mínimo con el máximo antes de guardar.
-            const respuesta = await pedirApi("/api/categorias", {
-                method: "POST",
+            const respuesta = await pedirApi(editando ? `/api/categorias/${editando}` : "/api/categorias", {
+                method: editando ? "PATCH" : "POST",
                 body: JSON.stringify({ nombre, paso: Number(paso), minimo: Number(minimo), maximo: Number(maximo) })
             });
             setExito(respuesta.msg);
-            setNombre("");
-            setMinimo("");
-            setMaximo("");
+            limpiarFormulario();
             // Se vuelve a pedir la lista, para ver lo que quedó guardado en la base.
             cargarCategorias();
         } catch (error) {
@@ -106,7 +139,8 @@ function Categorias() {
 
     // Qué se ve en lugar de la lista: cargando, un error, la lista vacía o la tabla.
     const mostrarLista = () => {
-        if(cargando) {
+        // "Cargando..." solo si todavía no hay nada para mostrar: al recargar, la tabla queda en su lugar.
+        if(cargando && categorias.length === 0) {
             return <p>Cargando categorías... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
         }
 
@@ -131,15 +165,19 @@ function Categorias() {
                             <th>Nombre</th>
                             <th>Mínimo</th>
                             <th>Máximo</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {categorias.map((categoria) => (
-                            <tr key={categoria._id}>
+                            <tr key={categoria._id} className={categoria._id === editando ? "editando" : ""}>
                                 <td>{categoria.paso}</td>
                                 <td>{categoria.nombre}</td>
                                 <td>{categoria.minimo}</td>
                                 <td>{categoria.maximo}</td>
+                                <td>
+                                    <button className="enlace" onClick={() => empezarEdicion(categoria)}>Editar</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -151,12 +189,12 @@ function Categorias() {
     return (
         <section>
             <h2>Categorías</h2>
-            <p>Cada categoría es un paso del armador. El mínimo y el máximo son cuántos ingredientes de esa categoría lleva cada hamburguesa.</p>
+            <p>Cada categoría es un grupo del armador, como medallones o toppings. El paso es el orden en que aparece, y el mínimo y el máximo, cuántas unidades de esa categoría lleva cada hamburguesa.</p>
 
             {mostrarLista()}
 
-            <h3>Nueva categoría</h3>
-            <form onSubmit={crear} noValidate>
+            <h3>{editando ? "Editar categoría" : "Nueva categoría"}</h3>
+            <form onSubmit={guardar} noValidate>
                 <label>
                     Nombre
                     <input type="text" value={nombre} onChange={(evento) => setNombre(evento.target.value)} />
@@ -173,6 +211,12 @@ function Categorias() {
                     Mínimo por hamburguesa
                     <input type="number" min="0" value={minimo} onChange={(evento) => setMinimo(evento.target.value)} />
                     {errores.minimo && <span className="error">{errores.minimo}</span>}
+                    {/* No es un error: avisa que, con mínimo 1 o más, sin ingredientes con stock nadie puede pedir. */}
+                    {Number(minimo) >= 1 && (
+                        <span className="aviso">
+                            Toda hamburguesa va a tener que llevar al menos {minimo} de esta categoría: si no tiene ingredientes con stock, nadie va a poder pedir.
+                        </span>
+                    )}
                 </label>
 
                 <label>
@@ -182,8 +226,10 @@ function Categorias() {
                 </label>
 
                 <button type="submit" disabled={enviando}>
-                    {enviando ? "Creando..." : "Crear categoría"}
+                    {enviando ? "Guardando..." : (editando ? "Guardar cambios" : "Crear categoría")}
                 </button>
+                {/* type="button": si no, adentro del formulario también lo enviaría. */}
+                {editando && <button type="button" className="enlace" onClick={limpiarFormulario}>Cancelar</button>}
             </form>
 
             {exito && <p className="exito">{exito}</p>}

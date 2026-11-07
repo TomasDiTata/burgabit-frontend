@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
-import { esEnteroDesde } from "../../validaciones.js";
+import { esEnteroDesde, TIENE_LETRAS } from "../../validaciones.js";
+import { formatearPrecio } from "../../formato.js";
 
-// Revisa un ingrediente nuevo antes de enviarlo, con las reglas del modelo Ingrediente del backend.
-// También mira los ingredientes que ya existen, para no repetir el nombre.
-const validar = ({ nombre, categoria, precio, cantidad }, ingredientes) => {
+// Revisa un ingrediente antes de enviarlo, con las reglas del modelo Ingrediente del backend.
+// "otros" son los demás ingredientes, para no repetir el nombre.
+// Al editar solo se cambian el nombre y el precio: la categoría y el stock llegan como undefined y no se revisan.
+const validar = ({ nombre, categoria, precio, cantidad }, otros) => {
     const errores = {};
 
     if(nombre.trim() === "") {
         errores.nombre = "Ingresá el nombre.";
-    } else if(ingredientes.some((ingrediente) => ingrediente.nombre === nombre.trim().toLowerCase())) {
+    } else if(!TIENE_LETRAS.test(nombre)) {
+        errores.nombre = "El nombre tiene que tener letras.";
+    } else if(otros.some((ingrediente) => ingrediente.nombre === nombre.trim().toLowerCase())) {
         errores.nombre = "Ya existe un ingrediente con ese nombre.";
     }
 
@@ -21,14 +25,14 @@ const validar = ({ nombre, categoria, precio, cantidad }, ingredientes) => {
         errores.precio = "El precio tiene que ser un número entero desde 0.";
     }
 
-    if(!esEnteroDesde(cantidad, 0)) {
+    if(cantidad !== undefined && !esEnteroDesde(cantidad, 0)) {
         errores.cantidad = "El stock tiene que ser un número entero desde 0.";
     }
 
     return errores;
 };
 
-// Sección de ingredientes del panel: la lista y el formulario para agregar uno nuevo.
+// Sección de ingredientes del panel: la lista, con lo que se puede hacer con cada uno, y el formulario para agregar uno nuevo.
 function Ingredientes() {
     // Las listas que manda el backend y cómo va su carga.
     const [ingredientes, setIngredientes] = useState([]);
@@ -45,6 +49,13 @@ function Ingredientes() {
     const [enviando, setEnviando] = useState(false);
     const [exito, setExito] = useState("");
     const [mensaje, setMensaje] = useState("");
+    // El ingrediente que se está editando (su id, o "" si ninguno) y los campos de su formulario.
+    const [editando, setEditando] = useState("");
+    const [nombreEditado, setNombreEditado] = useState("");
+    const [precioEditado, setPrecioEditado] = useState("");
+    const [erroresEdicion, setErroresEdicion] = useState({});
+    // El id del ingrediente que se está guardando, para mostrar "Guardando..." en su tarjeta.
+    const [actualizando, setActualizando] = useState("");
 
     // Pide los ingredientes y también las categorías: hacen falta para el formulario y para mostrar sus nombres.
     const cargarDatos = async () => {
@@ -103,9 +114,107 @@ function Ingredientes() {
         }
     };
 
-    // Qué se ve en lugar de la lista: cargando, un error, la lista vacía o la tabla.
+    // Manda un cambio de un ingrediente. Mientras tanto, su tarjeta dice "Guardando...".
+    // Salga bien o mal, se vuelve a pedir la lista, para ver lo que quedó guardado en la base.
+    const cambiar = async (id, ruta, opciones) => {
+        setActualizando(id);
+
+        try {
+            await pedirApi(ruta, opciones);
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            setActualizando("");
+            cargarDatos();
+        }
+    };
+
+    // Abre el formulario de edición en la tarjeta del ingrediente, con sus datos actuales.
+    const empezarEdicion = (ingrediente) => {
+        setEditando(ingrediente._id);
+        setNombreEditado(ingrediente.nombre);
+        setPrecioEditado(String(ingrediente.precio));
+        setErroresEdicion({});
+    };
+
+    const guardarEdicion = (evento) => {
+        evento.preventDefault();
+
+        // Se compara con los demás: el ingrediente que se edita puede quedarse con su nombre.
+        const otros = ingredientes.filter((ingrediente) => ingrediente._id !== editando);
+        const erroresNuevos = validar({ nombre: nombreEditado, precio: precioEditado }, otros);
+        setErroresEdicion(erroresNuevos);
+
+        if(Object.values(erroresNuevos).length > 0) {
+            return;
+        }
+
+        cambiar(editando, `/api/ingredientes/${editando}`, {
+            method: "PATCH",
+            body: JSON.stringify({ nombre: nombreEditado, precio: Number(precioEditado) })
+        });
+        setEditando("");
+    };
+
+    // Suma al stock lo que llegó. El backend lo suma a lo que hay en la base ($inc), sin pisar lo que se vendió mientras tanto.
+    const sumarStock = (ingrediente) => {
+        const texto = prompt(`¿Cuántas unidades de ${ingrediente.nombre} llegaron? Se suman a las ${ingrediente.cantidad} que hay.`);
+
+        if(texto === null) {
+            return;
+        }
+
+        if(!esEnteroDesde(texto, 1)) {
+            alert("Para sumar stock, escribí un número entero desde 1.");
+            return;
+        }
+
+        cambiar(ingrediente._id, `/api/ingredientes/${ingrediente._id}/stock`, {
+            method: "PATCH",
+            body: JSON.stringify({ cantidad: Number(texto) })
+        });
+    };
+
+    // Pausar es la baja lógica del backend (DELETE): el ingrediente sale del menú, pero sigue en la base.
+    // Reactivarlo es un PATCH con isDisponible en true.
+    const cambiarDisponible = (ingrediente) => {
+        if(ingrediente.isDisponible) {
+            cambiar(ingrediente._id, `/api/ingredientes/${ingrediente._id}`, { method: "DELETE" });
+        } else {
+            cambiar(ingrediente._id, `/api/ingredientes/${ingrediente._id}`, {
+                method: "PATCH",
+                body: JSON.stringify({ isDisponible: true })
+            });
+        }
+    };
+
+    // El formulario de edición, que aparece en la tarjeta del ingrediente que se está editando.
+    const formularioDeEdicion = () => (
+        <form onSubmit={guardarEdicion} noValidate>
+            <label>
+                Nombre
+                <input type="text" value={nombreEditado} onChange={(evento) => setNombreEditado(evento.target.value)} />
+                {erroresEdicion.nombre && <span className="error">{erroresEdicion.nombre}</span>}
+            </label>
+
+            <label>
+                Precio (en pesos)
+                <input type="number" min="0" value={precioEditado} onChange={(evento) => setPrecioEditado(evento.target.value)} />
+                {erroresEdicion.precio && <span className="error">{erroresEdicion.precio}</span>}
+            </label>
+
+            <div className="acciones">
+                <button type="submit" className="principal">Guardar cambios</button>
+                {/* type="button": si no, adentro del formulario también lo enviaría. */}
+                <button type="button" onClick={() => setEditando("")}>Cancelar</button>
+            </div>
+        </form>
+    );
+
+    // Qué se ve en lugar de la lista: cargando, un error, la lista vacía o una tarjeta por ingrediente.
     const mostrarLista = () => {
-        if(cargando) {
+        // "Cargando..." solo si todavía no hay nada para mostrar: al recargar, la lista queda en su lugar.
+        if(cargando && ingredientes.length === 0) {
             return <p>Cargando ingredientes... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
         }
 
@@ -121,38 +230,37 @@ function Ingredientes() {
             return <p>Todavía no hay ingredientes.</p>;
         }
 
-        return (
-            <div className="tabla">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Categoría</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Disponible</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ingredientes.map((ingrediente) => (
-                            <tr key={ingrediente._id}>
-                                <td>{ingrediente.nombre}</td>
-                                <td>{nombreDeCategoria(ingrediente.categoria)}</td>
-                                <td>${ingrediente.precio}</td>
-                                <td>{ingrediente.cantidad}</td>
-                                <td>{ingrediente.isDisponible ? "Sí" : "No"}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        );
+        // Una tarjeta por ingrediente, con sus botones a la vista. Al editarlo, la tarjeta muestra el formulario.
+        return ingredientes.map((ingrediente) => (
+            <article key={ingrediente._id} className="tarjeta">
+                {editando === ingrediente._id ? formularioDeEdicion() : (
+                    <>
+                        <p>
+                            <strong>{ingrediente.nombre}</strong> · {nombreDeCategoria(ingrediente.categoria)} · {formatearPrecio(ingrediente.precio)} · Stock: {ingrediente.cantidad}
+                            {/* Los dos motivos por los que un ingrediente no aparece en el armador. */}
+                            {!ingrediente.isDisponible && <span className="aviso"> · Pausado</span>}
+                            {ingrediente.cantidad === 0 && <span className="aviso"> · Sin stock</span>}
+                        </p>
+
+                        {actualizando === ingrediente._id ? <p>Guardando...</p> : (
+                            <div className="acciones">
+                                <button onClick={() => empezarEdicion(ingrediente)}>Editar</button>
+                                <button onClick={() => sumarStock(ingrediente)}>Sumar stock</button>
+                                <button onClick={() => cambiarDisponible(ingrediente)}>
+                                    {ingrediente.isDisponible ? "Pausar" : "Reactivar"}
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
+            </article>
+        ));
     };
 
     return (
         <section>
             <h2>Ingredientes</h2>
-            <p>Solo aparecen en el armador los ingredientes disponibles y con stock.</p>
+            <p>Solo aparecen en el armador los ingredientes disponibles y con stock. "Pausar" saca un ingrediente del menú sin borrarlo, y "Reactivar" lo vuelve a poner.</p>
 
             {mostrarLista()}
 

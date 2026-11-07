@@ -249,3 +249,14 @@ td {
 .titulo-categoria::first-letter {
     text-transform: uppercase;
 }
+
+/* Avisos que no son errores: en naranja oscuro y sin negrita, aunque estén adentro de un label. */
+.aviso {
+    color: #92400e;
+    font-weight: normal;
+}
+
+/* La fila que se está editando en el panel. */
+.editando {
+    background-color: #fdecd8;
+}
