@@ -4,7 +4,7 @@ import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
 import { subtotalDe, describirProducto } from "../../pedidos.js";
 
-// La regla de un paso, en palabras.
+// La regla de una categoría, en palabras.
 const textoDeLaRegla = (categoria) => {
     if(categoria.minimo === categoria.maximo) {
         return `Elegí ${categoria.minimo}.`;
@@ -17,16 +17,28 @@ const textoDeLaRegla = (categoria) => {
     return `Elegí entre ${categoria.minimo} y ${categoria.maximo}.`;
 };
 
-// El armador paso a paso: una categoría por paso, en el orden de su campo "paso".
-// Cuando el producto está completo, se lo pasa a la pantalla del cliente para sumarlo al pedido.
+// Qué le falta a la hamburguesa para poder agregarla al pedido. Devuelve "" si no le falta nada.
+const queFalta = (faltantes, elegidos) => {
+    if(faltantes.length > 0) {
+        const lista = faltantes.map((categoria) => `${categoria.minimo} de ${categoria.nombre}`).join(" y ");
+        return `Para agregarla, elegí al menos ${lista}.`;
+    }
+
+    if(elegidos.length === 0) {
+        return "Elegí al menos un ingrediente.";
+    }
+
+    return "";
+};
+
+// El armador: todas las categorías en una sola pantalla, en el orden de su campo "paso".
+// Cuando la hamburguesa está completa, se la pasa a la pantalla del cliente para sumarla al pedido.
 function Armador({ alAgregar }) {
     const [categorias, setCategorias] = useState([]);
     const [menu, setMenu] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [errorAlCargar, setErrorAlCargar] = useState("");
-    // pasoActual es la posición en la lista de categorías (0 es la primera), no el campo "paso".
-    const [pasoActual, setPasoActual] = useState(0);
-    // Lo que lleva elegido el producto que se está armando: un array de { ingrediente, cantidad }.
+    // Lo que lleva elegido la hamburguesa que se está armando: un array de { ingrediente, cantidad }.
     const [elegidos, setElegidos] = useState([]);
     const [aviso, setAviso] = useState("");
 
@@ -81,8 +93,7 @@ function Armador({ alAgregar }) {
     const agregarAlPedido = () => {
         alAgregar(elegidos);
         setElegidos([]);
-        setPasoActual(0);
-        setAviso("¡Listo! Lo sumaste al pedido. Podés armar otro o confirmar el pedido más abajo.");
+        setAviso("¡Listo! La sumaste al pedido. Podés armar otra o confirmar el pedido más abajo.");
     };
 
     if(cargando) {
@@ -101,61 +112,63 @@ function Armador({ alAgregar }) {
         return <p>Todavía no hay un menú cargado.</p>;
     }
 
-    const categoria = categorias[pasoActual];
-    const opciones = menu.filter((ingrediente) => ingrediente.categoria._id === categoria._id);
-    const elegidosEnElPaso = totalDeCategoria(categoria._id);
-    const esElUltimo = pasoActual === categorias.length - 1;
-    // Para pasar de paso hay que llegar al mínimo de la categoría; para agregar, cumplir el de todas.
-    const puedeSeguir = elegidosEnElPaso >= categoria.minimo;
-    const estaCompleto = elegidos.length > 0 && categorias.every((cada) => totalDeCategoria(cada._id) >= cada.minimo);
+    // Las categorías que todavía no llegan a su mínimo, y qué falta para poder agregar la hamburguesa.
+    const faltantes = categorias.filter((categoria) => totalDeCategoria(categoria._id) < categoria.minimo);
+    const falta = queFalta(faltantes, elegidos);
 
     return (
         <section>
-            <h2>Paso {pasoActual + 1} de {categorias.length}: {categoria.nombre}</h2>
-            <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnElPaso}.</p>
+            <h2>Armá tu hamburguesa</h2>
+            <p>El pan va incluido. Elegí los ingredientes con los botones + y -.</p>
 
-            {opciones.length === 0 && <p>No hay ingredientes disponibles en este paso por ahora.</p>}
+            {categorias.map((categoria) => {
+                // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
+                const opciones = menu.filter((ingrediente) => ingrediente.categoria?._id === categoria._id);
+                const elegidosEnLaCategoria = totalDeCategoria(categoria._id);
 
-            <ul className="opciones">
-                {opciones.map((ingrediente) => {
-                    const cantidad = cantidadDe(ingrediente._id);
-                    // Se puede sumar si no pasa el máximo por ingrediente, el stock ni el máximo de la categoría.
-                    const puedeSumar = cantidad < MAXIMO_POR_INGREDIENTE && cantidad < ingrediente.cantidad && elegidosEnElPaso < categoria.maximo;
+                return (
+                    <div key={categoria._id}>
+                        <h3 className="titulo-categoria">{categoria.nombre}</h3>
+                        <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
 
-                    return (
-                        <li key={ingrediente._id} className="opcion">
-                            <span>
-                                {ingrediente.nombre} <small>{formatearPrecio(ingrediente.precio)}</small>
-                            </span>
-                            <span className="contador">
-                                <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>-</button>
-                                <span>{cantidad}</span>
-                                <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
-                            </span>
-                        </li>
-                    );
-                })}
-            </ul>
+                        {opciones.length === 0 && <p>No hay ingredientes disponibles por ahora.</p>}
 
-            <div className="navegacion">
-                <button onClick={() => setPasoActual(pasoActual - 1)} disabled={pasoActual === 0}>
-                    Anterior
-                </button>
-                {esElUltimo ? (
-                    <button onClick={agregarAlPedido} disabled={!estaCompleto}>Agregar al pedido</button>
-                ) : (
-                    <button onClick={() => setPasoActual(pasoActual + 1)} disabled={!puedeSeguir}>Siguiente</button>
-                )}
-            </div>
-            {!puedeSeguir && <p>Para seguir, elegí al menos {categoria.minimo}.</p>}
+                        <ul className="opciones">
+                            {opciones.map((ingrediente) => {
+                                const cantidad = cantidadDe(ingrediente._id);
+                                // Se puede sumar si no pasa el máximo por ingrediente, el stock ni el máximo de la categoría.
+                                const puedeSumar = cantidad < MAXIMO_POR_INGREDIENTE && cantidad < ingrediente.cantidad && elegidosEnLaCategoria < categoria.maximo;
 
+                                return (
+                                    <li key={ingrediente._id} className="opcion">
+                                        <span>
+                                            {ingrediente.nombre} <small>{formatearPrecio(ingrediente.precio)}</small>
+                                        </span>
+                                        <span className="contador">
+                                            <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>-</button>
+                                            <span>{cantidad}</span>
+                                            <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                );
+            })}
+
+            {/* Siempre a mano, pegado abajo de la pantalla: lo elegido, el subtotal y el botón para agregar. */}
             <div className="resumen">
-                <strong>Lo que vas armando:</strong> {elegidos.length === 0 ? "todavía nada." : describirProducto(elegidos)}
-                <br />
-                Subtotal: {formatearPrecio(subtotalDe(elegidos))}
+                <p>
+                    <strong>Tu hamburguesa:</strong> {elegidos.length === 0 ? "todavía no elegiste nada." : describirProducto(elegidos)}
+                </p>
+                <p className="total">Subtotal: {formatearPrecio(subtotalDe(elegidos))}</p>
+                {falta && <p>{falta}</p>}
+                <button className="principal" onClick={agregarAlPedido} disabled={falta !== ""}>
+                    Agregar al pedido
+                </button>
+                {aviso && <p className="exito">{aviso}</p>}
             </div>
-
-            {aviso && <p className="exito">{aviso}</p>}
         </section>
     );
 }

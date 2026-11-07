@@ -38,7 +38,7 @@ function Pedido({ productos, alQuitar, alConfirmar }) {
             <h2>Tu pedido</h2>
 
             {productos.length === 0 ? (
-                <p>Todavía no agregaste nada. Armá tu hamburguesa paso a paso y sumala al pedido.</p>
+                <p>Todavía no agregaste nada. Armá tu hamburguesa y sumala al pedido.</p>
             ) : (
                 <>
                     <ol>
