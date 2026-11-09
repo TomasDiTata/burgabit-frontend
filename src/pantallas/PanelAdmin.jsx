@@ -2,6 +2,7 @@ import { useState } from "react";
 import Encabezado from "../componentes/Encabezado.jsx";
 import Categorias from "./admin/Categorias.jsx";
 import Ingredientes from "./admin/Ingredientes.jsx";
+import Usuarios from "./admin/Usuarios.jsx";
 
 // Pantalla del administrador, con una pestaña por sección.
 function PanelAdmin({ alCerrarSesion }) {
@@ -19,10 +20,14 @@ function PanelAdmin({ alCerrarSesion }) {
                 <button className={seccion === "ingredientes" ? "activa" : ""} onClick={() => setSeccion("ingredientes")}>
                     Ingredientes
                 </button>
+                                <button className={seccion === "usuarios" ? "activa" : ""} onClick={() => setSeccion("usuarios")}>
+                    Usuarios
+                </button>
             </nav>
 
             {seccion === "categorias" && <Categorias />}
             {seccion === "ingredientes" && <Ingredientes />}
+            {seccion === "usuarios" && <Usuarios />}
         </main>
     );
 }

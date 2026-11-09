@@ -14,7 +14,7 @@ export const esEnteroDesde = (texto, minimo) => {
     return texto !== "" && Number.isInteger(numero) && numero >= minimo;
 };
 
-// Solo letras (con tildes, ñ y ü) y espacios: el nombre de una categoría o de un ingrediente no lleva números ni símbolos.
+// Solo letras (con tildes, ñ y ü) y espacios: los nombres del menú y del personal no llevan números ni símbolos.
 export const SOLO_LETRAS = /^[a-záéíóúüñ ]+$/i;
 
 // Unidades máximas de un mismo ingrediente por producto (las controla el backend al crear el pedido).
