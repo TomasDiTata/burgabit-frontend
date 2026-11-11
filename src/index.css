@@ -89,6 +89,7 @@ select {
 /* Pestañas del panel: la elegida se ve marcada. */
 .pestanas {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     margin: 16px 0;
 }
@@ -259,4 +260,9 @@ td {
 /* La fila que se está editando en el panel. */
 .editando {
     background-color: #fdecd8;
+}
+
+/* El filtro de los pedidos del panel: no más ancho que un formulario. */
+.filtro {
+    max-width: 400px;
 }

@@ -3,6 +3,7 @@ import Encabezado from "../componentes/Encabezado.jsx";
 import Categorias from "./admin/Categorias.jsx";
 import Ingredientes from "./admin/Ingredientes.jsx";
 import Usuarios from "./admin/Usuarios.jsx";
+import Pedidos from "./admin/Pedidos.jsx";
 
 // Pantalla del administrador, con una pestaña por sección.
 function PanelAdmin({ alCerrarSesion }) {
@@ -23,11 +24,15 @@ function PanelAdmin({ alCerrarSesion }) {
                                 <button className={seccion === "usuarios" ? "activa" : ""} onClick={() => setSeccion("usuarios")}>
                     Usuarios
                 </button>
+                                <button className={seccion === "pedidos" ? "activa" : ""} onClick={() => setSeccion("pedidos")}>
+                    Pedidos
+                </button>
             </nav>
 
             {seccion === "categorias" && <Categorias />}
             {seccion === "ingredientes" && <Ingredientes />}
             {seccion === "usuarios" && <Usuarios />}
+            {seccion === "pedidos" && <Pedidos />}
         </main>
     );
 }
