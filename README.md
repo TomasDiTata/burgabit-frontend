@@ -66,7 +66,9 @@ burgabit-frontend/
 ├── index.html                 La única página: React dibuja todo adentro de <div id="root">.
 ├── .env.example               Plantilla de las variables de entorno.
 ├── vite.config.js             Configuración de Vite (el plugin de React).
-└── src/
+├── public/                    Archivos que se publican tal cual, sin procesar.
+│   └── favicon.svg            Ícono de la pestaña del navegador.
+└── src/                       El código de la aplicación.
     ├── main.jsx               Arranca React.
     ├── App.jsx                Decide qué pantalla se ve: login, registro o la del rol.
     ├── api.js                 pedirApi: la única función que habla con el backend.
@@ -75,20 +77,20 @@ burgabit-frontend/
     ├── formato.js             Precios y fechas como se leen en Argentina.
     ├── pedidos.js             Cálculos y textos de los pedidos.
     ├── index.css              Los estilos de toda la app.
-    ├── componentes/
+    ├── componentes/           Piezas que usan varias pantallas.
     │   ├── Encabezado.jsx     Barra de arriba, con "Cerrar sesión".
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
-    └── pantallas/
+    └── pantallas/             Una pantalla por rol, más el ingreso y el registro.
         ├── Login.jsx          Ingreso.
         ├── Registro.jsx       Alta de clientes.
         ├── PantallaCliente.jsx  Pestañas del cliente y pedido en curso.
         ├── PantallaCocina.jsx   Pedidos activos y cambios de estado.
         ├── PanelAdmin.jsx     Pestañas del administrador.
-        ├── cliente/
+        ├── cliente/           Las partes de la pantalla del cliente.
         │   ├── Armador.jsx    Armado de la hamburguesa.
         │   ├── Pedido.jsx     Pedido en curso y confirmación.
         │   └── MisPedidos.jsx Pedidos del cliente y cancelación.
-        └── admin/
+        └── admin/             Las secciones del panel del administrador.
             ├── Categorias.jsx   Categorías del menú.
             ├── Ingredientes.jsx Ingredientes, stock y disponibilidad.
             ├── Usuarios.jsx     Cuentas del personal.
