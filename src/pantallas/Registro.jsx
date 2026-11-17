@@ -80,79 +80,86 @@ function Registro({ alIniciarSesion }) {
     };
 
     return (
-        <main className="acceso-formulario">
-            <Link to="/" className="logo">Burga<span>Bit</span></Link>
-            <h1>Creá tu cuenta</h1>
-            <p>Registrate para armar tu hamburguesa y seguir tus pedidos.</p>
+        <div className="acceso">
+            <div className="acceso-foto">
+                <img src="/img/registro.jpg" alt="Hamburguesa con papas fritas" />
+                <p className="lema">Creá tu cuenta y armá la primera.</p>
+            </div>
 
-            <form onSubmit={enviar} noValidate>
-                <label>
-                    Nombre
-                    <input
-                        type="text"
-                        autoComplete="given-name"
-                        value={nombre}
-                        onChange={(evento) => setNombre(evento.target.value)}
-                    />
-                    {errores.nombre && <span className="error">{errores.nombre}</span>}
-                </label>
+            <main className="acceso-formulario">
+                <Link to="/" className="logo">Burga<span>Bit</span></Link>
+                <h1>Creá tu cuenta</h1>
+                <p>Registrate para armar tu hamburguesa y seguir tus pedidos.</p>
 
-                <label>
-                    Apellido
-                    <input
-                        type="text"
-                        autoComplete="family-name"
-                        value={apellido}
-                        onChange={(evento) => setApellido(evento.target.value)}
-                    />
-                    {errores.apellido && <span className="error">{errores.apellido}</span>}
-                </label>
+                <form onSubmit={enviar} noValidate>
+                    <label>
+                        Nombre
+                        <input
+                            type="text"
+                            autoComplete="given-name"
+                            value={nombre}
+                            onChange={(evento) => setNombre(evento.target.value)}
+                        />
+                        {errores.nombre && <span className="error">{errores.nombre}</span>}
+                    </label>
 
-                <label>
-                    Email
-                    <input
-                        type="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(evento) => setEmail(evento.target.value)}
-                    />
-                    {errores.email && <span className="error">{errores.email}</span>}
-                </label>
+                    <label>
+                        Apellido
+                        <input
+                            type="text"
+                            autoComplete="family-name"
+                            value={apellido}
+                            onChange={(evento) => setApellido(evento.target.value)}
+                        />
+                        {errores.apellido && <span className="error">{errores.apellido}</span>}
+                    </label>
 
-                <label>
-                    Contraseña (al menos {MINIMO_PASSWORD} caracteres)
-                    <input
-                        type="password"
-                        autoComplete="new-password"
-                        value={password}
-                        onChange={(evento) => setPassword(evento.target.value)}
-                    />
-                    {errores.password && <span className="error">{errores.password}</span>}
-                </label>
+                    <label>
+                        Email
+                        <input
+                            type="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(evento) => setEmail(evento.target.value)}
+                        />
+                        {errores.email && <span className="error">{errores.email}</span>}
+                    </label>
 
-                <label>
-                    Repetí la contraseña
-                    <input
-                        type="password"
-                        autoComplete="new-password"
-                        value={repetida}
-                        onChange={(evento) => setRepetida(evento.target.value)}
-                    />
-                    {errores.repetida && <span className="error">{errores.repetida}</span>}
-                </label>
+                    <label>
+                        Contraseña (al menos {MINIMO_PASSWORD} caracteres)
+                        <input
+                            type="password"
+                            autoComplete="new-password"
+                            value={password}
+                            onChange={(evento) => setPassword(evento.target.value)}
+                        />
+                        {errores.password && <span className="error">{errores.password}</span>}
+                    </label>
 
-                <button type="submit" className="principal" disabled={enviando}>
-                    {enviando ? "Creando la cuenta..." : "Crear cuenta"}
-                </button>
-            </form>
+                    <label>
+                        Repetí la contraseña
+                        <input
+                            type="password"
+                            autoComplete="new-password"
+                            value={repetida}
+                            onChange={(evento) => setRepetida(evento.target.value)}
+                        />
+                        {errores.repetida && <span className="error">{errores.repetida}</span>}
+                    </label>
 
-            {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
-            {mensaje && <p className="error">{mensaje}</p>}
+                    <button type="submit" className="principal" disabled={enviando}>
+                        {enviando ? "Creando la cuenta..." : "Crear cuenta"}
+                    </button>
+                </form>
 
-            <p>
-                ¿Ya tenés cuenta? <Link to="/ingresar">Iniciá sesión</Link>
-            </p>
-        </main>
+                {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
+                {mensaje && <p className="error">{mensaje}</p>}
+
+                <p>
+                    ¿Ya tenés cuenta? <Link to="/ingresar">Iniciá sesión</Link>
+                </p>
+            </main>
+        </div>
     );
 }
 

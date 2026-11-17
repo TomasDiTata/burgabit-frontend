@@ -3,6 +3,7 @@ import { pedirApi } from "../../api.js";
 import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
 import { subtotalDe, describirProducto } from "../../pedidos.js";
+import { fotoDeCategoria } from "../../fotos.js";
 
 // La regla de una categoría, en palabras.
 const textoDeLaRegla = (categoria) => {
@@ -118,41 +119,54 @@ function Armador({ alAgregar }) {
 
     return (
         <section>
-            <h2>Armá tu hamburguesa</h2>
-            <p>El pan va incluido. Elegí los ingredientes con los botones + y −.</p>
+            <div className="banner">
+                <img src="/img/armar.jpg" alt="Hamburguesa doble con papas fritas" />
+                <div className="banner-texto">
+                    <h2>Armá tu hamburguesa</h2>
+                    <p>El pan va incluido. Elegí los ingredientes con los botones + y −.</p>
+                </div>
+            </div>
 
-            {categorias.map((categoria) => {
+            {categorias.map((categoria, posicion) => {
                 // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
                 const opciones = menu.filter((ingrediente) => ingrediente.categoria?._id === categoria._id);
                 const elegidosEnLaCategoria = totalDeCategoria(categoria._id);
 
                 return (
-                    <article key={categoria._id} className="tarjeta">
-                        <h3 className="titulo-categoria">{categoria.nombre}</h3>
-                        <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
+                    <article key={categoria._id} className="tarjeta paso">
+                        <div className="paso-foto">
+                            {/* alt vacío: la foto decora, y el nombre de la categoría ya está en el título. */}
+                            <img src={fotoDeCategoria(categoria.nombre)} alt="" loading="lazy" />
+                            <span>Paso {posicion + 1}</span>
+                        </div>
 
-                        {opciones.length === 0 && <p>No hay ingredientes disponibles por ahora.</p>}
+                        <div className="paso-contenido">
+                            <h3 className="titulo-categoria">{categoria.nombre}</h3>
+                            <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
 
-                        <ul className="opciones">
-                            {opciones.map((ingrediente) => {
-                                const cantidad = cantidadDe(ingrediente._id);
-                                // Se puede sumar si no pasa el máximo por ingrediente, el stock ni el máximo de la categoría.
-                                const puedeSumar = cantidad < MAXIMO_POR_INGREDIENTE && cantidad < ingrediente.cantidad && elegidosEnLaCategoria < categoria.maximo;
+                            {opciones.length === 0 && <p>No hay ingredientes disponibles por ahora.</p>}
 
-                                return (
-                                    <li key={ingrediente._id} className="opcion">
-                                        <span>
-                                            {ingrediente.nombre} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
-                                        </span>
-                                        <span className="contador">
-                                            <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
-                                            <span>{cantidad}</span>
-                                            <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
-                                        </span>
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                            <ul className="opciones">
+                                {opciones.map((ingrediente) => {
+                                    const cantidad = cantidadDe(ingrediente._id);
+                                    // Se puede sumar si no pasa el máximo por ingrediente, el stock ni el máximo de la categoría.
+                                    const puedeSumar = cantidad < MAXIMO_POR_INGREDIENTE && cantidad < ingrediente.cantidad && elegidosEnLaCategoria < categoria.maximo;
+
+                                    return (
+                                        <li key={ingrediente._id} className="opcion">
+                                            <span>
+                                                {ingrediente.nombre} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
+                                            </span>
+                                            <span className="contador">
+                                                <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
+                                                <span>{cantidad}</span>
+                                                <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
+                                            </span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
                     </article>
                 );
             })}

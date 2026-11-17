@@ -101,11 +101,18 @@ function MisPedidos({ aviso }) {
 
     return (
         <section>
+            <div className="banner banner-chico">
+                <img src="/img/pedidos.jpg" alt="Hamburguesa con papas fritas" />
+                <div className="banner-texto">
+                    <h2>Mis pedidos</h2>
+                    <p>Seguí cómo avanzan en la cocina.</p>
+                </div>
+            </div>
+
             <div className="titulo-con-boton">
-                <h2>Mis pedidos</h2>
+                <p>Tocá "Actualizar" para ver el estado más reciente.</p>
                 <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
             </div>
-            <p>Tocá "Actualizar" para ver cómo avanzan tus pedidos en la cocina.</p>
 
             {aviso && <p className="exito">{aviso}</p>}
             {mensaje && <p className="error">{mensaje}</p>}

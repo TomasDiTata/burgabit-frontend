@@ -301,6 +301,155 @@ section > h3 {
     margin-top: 24px;
 }
 
+/* Banners con foto: la imagen cubre todo y el texto va encima, sobre un degradé oscuro. */
+.banner {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 220px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background-color: var(--carbon);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+.banner img,
+.portada img,
+.acceso-foto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* El degradé: oscuro donde va el texto y transparente del otro lado, para que se vea la foto. */
+.banner::after,
+.portada::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(31, 26, 23, 0.9) 0%, rgba(31, 26, 23, 0.45) 55%, rgba(31, 26, 23, 0) 100%);
+}
+
+.banner-texto {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    padding: 24px;
+    color: var(--blanco);
+}
+
+.banner-texto h2 {
+    margin: 0 0 6px;
+    font-size: 2.6rem;
+    color: var(--mostaza);
+}
+
+.banner-texto p {
+    margin: 0;
+}
+
+.banner-chico {
+    min-height: 160px;
+}
+
+/* La portada: la foto ocupa casi toda la pantalla, con el mensaje y los botones encima. */
+.portada {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 88vh;
+    overflow: hidden;
+    background-color: var(--carbon);
+}
+
+.portada-texto {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    padding: 32px 24px;
+    color: var(--blanco);
+}
+
+.portada-texto .logo {
+    margin: 0 0 12px;
+    font-size: 2.4rem;
+    color: var(--blanco);
+}
+
+.portada-texto .logo span {
+    color: var(--mostaza);
+}
+
+/* clamp: el título crece con el ancho de la pantalla, entre 3rem y 5.5rem. */
+.portada-texto h1 {
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    color: var(--blanco);
+}
+
+.portada-texto > p {
+    max-width: 460px;
+    font-size: 1.15rem;
+}
+
+.portada .acciones {
+    margin-top: 24px;
+}
+
+/* Los pasos de la portada: tantas columnas como entren, de al menos 240px cada una. */
+.pasos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.paso-portada {
+    margin: 0;
+}
+
+.paso-portada img {
+    width: 100%;
+    height: 160px;
+    margin-bottom: 12px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Ingreso y registro: en el celular, la foto arriba y el formulario abajo. */
+.acceso {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.acceso-foto {
+    position: relative;
+    min-height: 220px;
+    background-color: var(--carbon);
+}
+
+.acceso-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(31, 26, 23, 0.85) 0%, rgba(31, 26, 23, 0) 70%);
+}
+
+.acceso-foto .lema {
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+    left: 24px;
+    z-index: 1;
+    margin: 0;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--blanco);
+}
+
 /* El formulario del ingreso y el registro: centrado y no más ancho que 460px. */
 .acceso-formulario {
     width: 100%;
@@ -320,6 +469,74 @@ section > h3 {
 
 .acceso-formulario button[type="submit"] {
     width: 100%;
+}
+
+/* En pantallas anchas, la foto a la izquierda (fija mientras se baja) y el formulario a la derecha. */
+@media (min-width: 860px) {
+    .acceso {
+        flex-direction: row;
+    }
+
+    .acceso-foto {
+        position: sticky;
+        top: 0;
+        flex: 1.2;
+        min-height: 100vh;
+    }
+
+    .acceso-foto .lema {
+        bottom: 40px;
+        left: 40px;
+        font-size: 3.4rem;
+    }
+
+    .acceso-formulario {
+        flex: 1;
+        align-self: center;
+    }
+}
+
+/* El armador: cada categoría es un paso, con su foto arriba (o a la izquierda en pantallas anchas). */
+.paso {
+    padding: 0;
+    overflow: hidden;
+}
+
+.paso-foto {
+    position: relative;
+    height: 140px;
+}
+
+.paso-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.paso-foto span {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 12px;
+    font-weight: 800;
+    background-color: var(--mostaza);
+    border-radius: 999px;
+}
+
+.paso-contenido {
+    padding: 16px;
+}
+
+@media (min-width: 720px) {
+    .paso {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+    }
+
+    .paso-foto {
+        height: auto;
+        min-height: 180px;
+    }
 }
 
 /* El nombre de cada categoría empieza con mayúscula, aunque en la base esté en minúsculas. */
@@ -531,6 +748,14 @@ th {
     text-align: center;
 }
 
+.no-encontrada img {
+    width: 100%;
+    height: 220px;
+    margin-bottom: 16px;
+    object-fit: cover;
+    border-radius: var(--radio);
+}
+
 /* En pantallas angostas (celulares): títulos, encabezado y tablas un poco más chicos. */
 @media (max-width: 480px) {
     h1 {
@@ -546,7 +771,8 @@ th {
         font-size: 0.9rem;
     }
 
-    h2 {
+    h2,
+    .banner-texto h2 {
         font-size: 1.9rem;
     }
 
