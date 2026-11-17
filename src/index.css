@@ -69,7 +69,7 @@ select {
 }
 
 
-/* Botón con aspecto de enlace: para pasar del login al registro y al revés. */
+/* Botón con aspecto de enlace, como "Reintentar" y "Quitar". */
 .enlace {
     background: none;
     border: none;
@@ -86,12 +86,22 @@ select {
     margin: 0;
 }
 
-/* Pestañas del panel: la elegida se ve marcada. */
+/* Pestañas del cliente y del panel: la de la dirección actual se ve marcada. */
 .pestanas {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin: 16px 0;
+}
+
+/* Las pestañas son enlaces (NavLink), pero se ven como botones. */
+.pestanas a {
+    padding: 10px 16px;
+    color: #2b2b2b;
+    text-decoration: none;
+    background-color: #efefef;
+    border: 1px solid #c9c2b8;
+    border-radius: 6px;
 }
 
 .pestanas .activa {

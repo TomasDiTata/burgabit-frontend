@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import { pedirApi } from "../api.js";
 import { FORMATO_EMAIL, MINIMO_PASSWORD } from "../validaciones.js";
 
@@ -33,8 +34,8 @@ const validar = ({ nombre, apellido, email, password, repetida }) => {
     return errores;
 };
 
-// Pantalla para crear una cuenta de cliente. Si sale bien, inicia sesión con los mismos datos.
-function Registro({ alIniciarSesion, alIrAlLogin }) {
+// Pantalla para crear una cuenta de cliente (/registro). Si sale bien, inicia sesión con los mismos datos.
+function Registro({ alIniciarSesion }) {
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [email, setEmail] = useState("");
@@ -148,7 +149,7 @@ function Registro({ alIniciarSesion, alIrAlLogin }) {
             {mensaje && <p className="error">{mensaje}</p>}
 
             <p>
-                ¿Ya tenés cuenta? <button className="enlace" onClick={alIrAlLogin}>Iniciá sesión</button>
+                ¿Ya tenés cuenta? <Link to="/ingresar">Iniciá sesión</Link>
             </p>
         </main>
     );

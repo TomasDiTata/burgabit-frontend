@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Navigate, NavLink, Route, Routes } from "react-router";
+import { clasePestana } from "../rutas.js";
 import Encabezado from "../componentes/Encabezado.jsx";
 import Categorias from "./admin/Categorias.jsx";
 import Ingredientes from "./admin/Ingredientes.jsx";
@@ -6,33 +7,28 @@ import Usuarios from "./admin/Usuarios.jsx";
 import Pedidos from "./admin/Pedidos.jsx";
 
 // Pantalla del administrador, con una pestaña por sección.
+// Cada sección tiene su dirección: /admin/categorias, /admin/ingredientes, /admin/usuarios y /admin/pedidos.
 function PanelAdmin({ alCerrarSesion }) {
-    // Qué pestaña se ve. Arranca en categorías porque cada ingrediente necesita una.
-    const [seccion, setSeccion] = useState("categorias");
-
     return (
         <main>
             <Encabezado seccion="Administración" alCerrarSesion={alCerrarSesion} />
 
             <nav className="pestanas">
-                <button className={seccion === "categorias" ? "activa" : ""} onClick={() => setSeccion("categorias")}>
-                    Categorías
-                </button>
-                <button className={seccion === "ingredientes" ? "activa" : ""} onClick={() => setSeccion("ingredientes")}>
-                    Ingredientes
-                </button>
-                                <button className={seccion === "usuarios" ? "activa" : ""} onClick={() => setSeccion("usuarios")}>
-                    Usuarios
-                </button>
-                                <button className={seccion === "pedidos" ? "activa" : ""} onClick={() => setSeccion("pedidos")}>
-                    Pedidos
-                </button>
+                <NavLink to="/admin/categorias" className={clasePestana}>Categorías</NavLink>
+                <NavLink to="/admin/ingredientes" className={clasePestana}>Ingredientes</NavLink>
+                <NavLink to="/admin/usuarios" className={clasePestana}>Usuarios</NavLink>
+                <NavLink to="/admin/pedidos" className={clasePestana}>Pedidos</NavLink>
             </nav>
 
-            {seccion === "categorias" && <Categorias />}
-            {seccion === "ingredientes" && <Ingredientes />}
-            {seccion === "usuarios" && <Usuarios />}
-            {seccion === "pedidos" && <Pedidos />}
+            {/* Las rutas de adentro: el "/*" de App deja que el panel decida qué sección se ve. */}
+            <Routes>
+                <Route path="categorias" element={<Categorias />} />
+                <Route path="ingredientes" element={<Ingredientes />} />
+                <Route path="usuarios" element={<Usuarios />} />
+                <Route path="pedidos" element={<Pedidos />} />
+                {/* /admin sola, o una sección que no existe: va a categorías, porque cada ingrediente necesita una. */}
+                <Route path="*" element={<Navigate to="/admin/categorias" replace />} />
+            </Routes>
         </main>
     );
 }
