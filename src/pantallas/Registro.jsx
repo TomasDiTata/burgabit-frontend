@@ -80,9 +80,10 @@ function Registro({ alIniciarSesion }) {
     };
 
     return (
-        <main>
-            <h1>BurgaBit</h1>
-            <p>Creá tu cuenta para armar tu hamburguesa y seguir tus pedidos.</p>
+        <main className="acceso-formulario">
+            <Link to="/" className="logo">Burga<span>Bit</span></Link>
+            <h1>Creá tu cuenta</h1>
+            <p>Registrate para armar tu hamburguesa y seguir tus pedidos.</p>
 
             <form onSubmit={enviar} noValidate>
                 <label>
@@ -140,7 +141,7 @@ function Registro({ alIniciarSesion }) {
                     {errores.repetida && <span className="error">{errores.repetida}</span>}
                 </label>
 
-                <button type="submit" disabled={enviando}>
+                <button type="submit" className="principal" disabled={enviando}>
                     {enviando ? "Creando la cuenta..." : "Crear cuenta"}
                 </button>
             </form>

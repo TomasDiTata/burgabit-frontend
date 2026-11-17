@@ -91,7 +91,7 @@ function MisPedidos({ aviso }) {
                 {pedido.estado === "Cancelado" && <p>Motivo: {motivoDeCancelacion(pedido)}</p>}
 
                 {pedido.estado === "Pendiente" && (
-                    <button onClick={() => cancelar(pedido._id)} disabled={cancelando === pedido._id}>
+                    <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={cancelando === pedido._id}>
                         {cancelando === pedido._id ? "Cancelando..." : "Cancelar pedido"}
                     </button>
                 )}

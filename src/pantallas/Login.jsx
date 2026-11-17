@@ -61,8 +61,9 @@ function Login({ alIniciarSesion }) {
     };
 
     return (
-        <main>
-            <h1>BurgaBit</h1>
+        <main className="acceso-formulario">
+            <Link to="/" className="logo">Burga<span>Bit</span></Link>
+            <h1>Ingresá</h1>
             <p>Iniciá sesión para armar tu hamburguesa y seguir tus pedidos.</p>
 
             {/* noValidate: los avisos los muestra validar(), en castellano y al lado de cada campo. */}
@@ -89,7 +90,7 @@ function Login({ alIniciarSesion }) {
                     {errores.password && <span className="error">{errores.password}</span>}
                 </label>
 
-                <button type="submit" disabled={enviando}>
+                <button type="submit" className="principal" disabled={enviando}>
                     {enviando ? "Ingresando..." : "Ingresar"}
                 </button>
             </form>

@@ -119,7 +119,7 @@ function Armador({ alAgregar }) {
     return (
         <section>
             <h2>Armá tu hamburguesa</h2>
-            <p>El pan va incluido. Elegí los ingredientes con los botones + y -.</p>
+            <p>El pan va incluido. Elegí los ingredientes con los botones + y −.</p>
 
             {categorias.map((categoria) => {
                 // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
@@ -127,7 +127,7 @@ function Armador({ alAgregar }) {
                 const elegidosEnLaCategoria = totalDeCategoria(categoria._id);
 
                 return (
-                    <div key={categoria._id}>
+                    <article key={categoria._id} className="tarjeta">
                         <h3 className="titulo-categoria">{categoria.nombre}</h3>
                         <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
 
@@ -142,10 +142,10 @@ function Armador({ alAgregar }) {
                                 return (
                                     <li key={ingrediente._id} className="opcion">
                                         <span>
-                                            {ingrediente.nombre} <small>{formatearPrecio(ingrediente.precio)}</small>
+                                            {ingrediente.nombre} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
                                         </span>
                                         <span className="contador">
-                                            <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>-</button>
+                                            <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
                                             <span>{cantidad}</span>
                                             <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
                                         </span>
@@ -153,7 +153,7 @@ function Armador({ alAgregar }) {
                                 );
                             })}
                         </ul>
-                    </div>
+                    </article>
                 );
             })}
 

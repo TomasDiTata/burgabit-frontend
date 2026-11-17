@@ -118,7 +118,7 @@ function PantallaCocina({ alCerrarSesion }) {
                         {actualizando === pedido._id ? "Guardando..." : SIGUIENTE_PASO[pedido.estado].texto}
                     </button>
                     {SE_PUEDE_CANCELAR.includes(pedido.estado) && (
-                        <button onClick={() => cancelar(pedido._id)} disabled={actualizando === pedido._id}>
+                        <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={actualizando === pedido._id}>
                             Cancelar pedido
                         </button>
                     )}
@@ -128,19 +128,21 @@ function PantallaCocina({ alCerrarSesion }) {
     };
 
     return (
-        <main>
+        <>
             <Encabezado seccion="Cocina" alCerrarSesion={alCerrarSesion} />
 
-            <div className="titulo-con-boton">
-                <h2>Pedidos activos</h2>
-                <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
-            </div>
-            <p>Del más viejo al más nuevo. Tocá "Actualizar" para ver los pedidos que van entrando.</p>
+            <main>
+                <div className="titulo-con-boton">
+                    <h2>Pedidos activos</h2>
+                    <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
+                </div>
+                <p>Del más viejo al más nuevo. Tocá "Actualizar" para ver los pedidos que van entrando.</p>
 
-            {mensaje && <p className="error">{mensaje}</p>}
+                {mensaje && <p className="error">{mensaje}</p>}
 
-            {mostrarPedidos()}
-        </main>
+                {mostrarPedidos()}
+            </main>
+        </>
     );
 }
 
