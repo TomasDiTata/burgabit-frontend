@@ -1,3 +1,26 @@
+/* Letra de los títulos: Bebas Neue, guardada en public/fonts (licencia OFL, en public/fonts/OFL.txt). */
+@font-face {
+    font-family: "Bebas Neue";
+    src: url("/fonts/bebas-neue.woff2") format("woff2");
+    font-display: swap;
+}
+
+/* Los colores de la marca, en un solo lugar: ketchup, mostaza, pan y carbón. */
+:root {
+    --crema: #fff6e9;
+    --crema-oscura: #f3dfc1;
+    --ketchup: #d62828;
+    --ketchup-oscuro: #a61e1e;
+    --mostaza: #ffb703;
+    --mostaza-oscura: #e09f00;
+    --carbon: #1f1a17;
+    --texto-suave: #5f5650;
+    --blanco: #ffffff;
+    --verde: #1e6b34;
+    --sombra: 0 8px 24px rgba(31, 26, 23, 0.12);
+    --radio: 16px;
+}
+
 /* Estilos base de toda la aplicación. */
 * {
     box-sizing: border-box;
@@ -6,254 +29,514 @@
 body {
     margin: 0;
     font-family: system-ui, sans-serif;
-    background-color: #fffaf3;
-    color: #2b2b2b;
+    line-height: 1.5;
+    background-color: var(--crema);
+    color: var(--carbon);
+}
+
+img {
+    display: block;
+    max-width: 100%;
 }
 
 main {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 16px;
 }
 
-button {
-    font-size: 1rem;
-    padding: 10px 16px;
+/* Títulos con la letra gruesa de los carteles de hamburguesería. */
+h1,
+h2,
+h3,
+.logo {
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    line-height: 1;
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: 3rem;
+    color: var(--ketchup);
+}
+
+h2 {
+    margin: 24px 0 8px;
+    font-size: 2.2rem;
+    color: var(--ketchup);
+}
+
+h3 {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+}
+
+a {
+    color: var(--ketchup);
+    font-weight: 700;
+}
+
+/* El logo: "Burga" y "Bit" en dos colores. */
+.logo {
+    font-size: 2rem;
+    color: var(--ketchup);
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--mostaza-oscura);
+}
+
+/* Botones redondeados y con borde grueso. .boton es para los enlaces que se ven como botones. */
+button,
+.boton {
+    display: inline-block;
+    padding: 10px 18px;
+    font: inherit;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    color: var(--carbon);
+    background-color: var(--blanco);
+    border: 2px solid var(--carbon);
+    border-radius: 999px;
     cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+button:hover:not(:disabled),
+.boton:hover {
+    transform: translateY(-1px);
 }
 
 button:disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.5;
+}
+
+/* La acción principal de cada pantalla, en mostaza: ingresar, agregar, confirmar, y el botón que envía cada formulario. */
+.principal,
+form button[type="submit"] {
+    background-color: var(--mostaza);
+}
+
+.principal:hover:not(:disabled),
+form button[type="submit"]:hover:not(:disabled) {
+    background-color: var(--mostaza-oscura);
+}
+
+/* Las acciones que no se pueden deshacer, como cancelar un pedido: en rojo. */
+.peligro {
+    color: var(--ketchup);
+    border-color: var(--ketchup);
+}
+
+.peligro:hover:not(:disabled) {
+    color: var(--blanco);
+    background-color: var(--ketchup);
+}
+
+/* Botón claro, para usar sobre fondos oscuros o fotos. */
+.boton-claro {
+    color: var(--blanco);
+    background-color: transparent;
+    border-color: var(--blanco);
+}
+
+.boton-claro:hover:not(:disabled) {
+    color: var(--carbon);
+    background-color: var(--blanco);
+}
+
+/* Botón con aspecto de enlace, como "Reintentar" y "Quitar". */
+.enlace {
+    padding: 0;
+    color: var(--ketchup);
+    background: none;
+    border: none;
+    border-radius: 0;
+    text-decoration: underline;
+}
+
+.enlace:hover:not(:disabled) {
+    transform: none;
 }
 
 /* Formularios: un campo debajo del otro. */
 form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    max-width: 400px;
+    gap: 14px;
+    max-width: 420px;
 }
 
 label {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    font-weight: 600;
+    gap: 6px;
+    font-weight: 700;
 }
 
 /* Letra de 16px (1rem): con menos, el iPhone hace zoom al tocar el campo. */
 input,
 select {
+    padding: 12px;
+    font: inherit;
     font-size: 1rem;
-    padding: 10px;
-    border: 1px solid #c9c2b8;
-    border-radius: 6px;
+    color: var(--carbon);
+    background-color: var(--blanco);
+    border: 2px solid var(--crema-oscura);
+    border-radius: 12px;
 }
 
-/* Mensajes de error: en rojo, para que se vean enseguida. */
+input:focus,
+select:focus {
+    border-color: var(--carbon);
+    outline: 3px solid var(--mostaza);
+}
+
+/* Mensajes: los errores en rojo y lo que salió bien en verde, para que se vean enseguida. */
 .error {
-    color: #b3261e;
-    font-weight: normal;
     margin: 0;
+    font-weight: 600;
+    color: var(--ketchup-oscuro);
 }
 
-/* Barra de arriba: el nombre de la app a la izquierda y "Cerrar sesión" a la derecha. */
+.exito {
+    margin: 0;
+    font-weight: 600;
+    color: var(--verde);
+}
+
+/* Avisos que no son errores: en naranja oscuro y sin negrita, aunque estén adentro de un label. */
+.aviso {
+    font-weight: normal;
+    color: #92400e;
+}
+
+/* Barra de arriba de las pantallas con sesión: oscura, de lado a lado y siempre visible. */
 .encabezado {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
     gap: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e6dccf;
+    padding: 10px 16px;
+    color: var(--blanco);
+    background-color: var(--carbon);
 }
 
-
-/* Botón con aspecto de enlace, como "Reintentar" y "Quitar". */
-.enlace {
-    background: none;
-    border: none;
-    padding: 0;
-    font: inherit;
-    color: #9a3412;
-    text-decoration: underline;
+.encabezado .logo {
+    color: var(--blanco);
 }
 
-
-/* Mensajes de que algo salió bien: en verde. */
-.exito {
-    color: #1e6b34;
-    margin: 0;
+.encabezado .logo span {
+    color: var(--mostaza);
 }
 
-/* Pestañas del cliente y del panel: la de la dirección actual se ve marcada. */
+.encabezado .seccion {
+    padding: 2px 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background-color: var(--ketchup);
+    border-radius: 999px;
+}
+
+/* margin-left: auto empuja "Cerrar sesión" a la derecha. */
+.encabezado button {
+    margin-left: auto;
+    padding: 6px 14px;
+}
+
+/* Pestañas: son enlaces (NavLink), y la de la dirección actual se ve marcada. */
 .pestanas {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 16px 0;
+    margin: 8px 0 16px;
 }
 
-/* Las pestañas son enlaces (NavLink), pero se ven como botones. */
 .pestanas a {
-    padding: 10px 16px;
-    color: #2b2b2b;
+    padding: 8px 16px;
+    color: var(--carbon);
     text-decoration: none;
-    background-color: #efefef;
-    border: 1px solid #c9c2b8;
-    border-radius: 6px;
+    background-color: var(--blanco);
+    border: 2px solid var(--carbon);
+    border-radius: 999px;
 }
 
-.pestanas .activa {
-    background-color: #9a3412;
-    border-color: #9a3412;
-    color: #fffaf3;
+.pestanas a.activa {
+    color: var(--blanco);
+    background-color: var(--ketchup);
+    border-color: var(--ketchup);
 }
 
-/* Si la tabla no entra en el celular, se desplaza ella sola y no toda la página. */
-.tabla {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    text-align: left;
-    padding: 8px;
-    border-bottom: 1px solid #e6dccf;
-}
-
-/* En pantallas angostas (celulares), las tablas usan letra y márgenes más chicos para entrar a lo ancho. */
-@media (max-width: 480px) {
-    th,
-    td {
-        padding: 6px 4px;
-        font-size: 0.875rem;
-    }
-}
-
-
-/* Armador: cada ingrediente en una fila, con el nombre a la izquierda y el contador a la derecha. */
-.opciones {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.opcion {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid #e6dccf;
-}
-
-/* Los botones - y + del contador: cuadrados y con lugar para el dedo en el celular. */
-.contador {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.contador button {
-    width: 44px;
-    height: 44px;
-    padding: 0;
-}
-
-
-
-/* Recuadros: lo que se va armando y cada pedido. */
-.resumen,
-.tarjeta {
-    border: 1px solid #e6dccf;
-    border-radius: 8px;
-    padding: 12px;
+/* Recuadros: cada pedido, cada paso del armador y cada tarjeta del panel. */
+.tarjeta,
+.resumen {
     margin: 16px 0;
-    background-color: #ffffff;
+    padding: 16px;
+    background-color: var(--blanco);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
 }
 
-/* El pedido en curso, separado del armador. */
-.pedido-actual {
-    border-top: 2px solid #9a3412;
+/* Sin márgenes de más arriba y abajo adentro de cada tarjeta. */
+.tarjeta > :first-child {
+    margin-top: 0;
+}
+
+.tarjeta > :last-child {
+    margin-bottom: 0;
+}
+
+/* Los subtítulos de una sección, como "Nueva categoría", separados de lo que tienen arriba. */
+section > h3 {
     margin-top: 24px;
 }
 
-.total {
-    font-weight: 700;
+/* Banners con foto: la imagen cubre todo y el texto va encima, sobre un degradé oscuro. */
+.banner {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 220px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background-color: var(--carbon);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
 }
 
-/* Un título con un botón al costado, como "Mis pedidos" y "Actualizar". */
-.titulo-con-boton {
+.banner img,
+.portada img,
+.acceso-foto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* El degradé: oscuro donde va el texto y transparente del otro lado, para que se vea la foto. */
+.banner::after,
+.portada::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(31, 26, 23, 0.9) 0%, rgba(31, 26, 23, 0.45) 55%, rgba(31, 26, 23, 0) 100%);
+}
+
+.banner-texto {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+    padding: 24px;
+    color: var(--blanco);
+}
+
+.banner-texto h2 {
+    margin: 0 0 6px;
+    font-size: 2.6rem;
+    color: var(--mostaza);
+}
+
+.banner-texto p {
+    margin: 0;
+}
+
+.banner-chico {
+    min-height: 160px;
+}
+
+/* La portada: la foto ocupa casi toda la pantalla, con el mensaje y los botones encima. */
+.portada {
+    position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    min-height: 88vh;
+    overflow: hidden;
+    background-color: var(--carbon);
 }
 
-/* El estado de un pedido: una etiqueta con un color por estado. */
-.estado {
-    display: inline-block;
-    padding: 2px 8px;
+.portada-texto {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    padding: 32px 24px;
+    color: var(--blanco);
+}
+
+.portada-texto .logo {
+    margin: 0 0 12px;
+    font-size: 2.4rem;
+    color: var(--blanco);
+}
+
+.portada-texto .logo span {
+    color: var(--mostaza);
+}
+
+/* clamp: el título crece con el ancho de la pantalla, entre 3rem y 5.5rem. */
+.portada-texto h1 {
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    color: var(--blanco);
+}
+
+.portada-texto > p {
+    max-width: 460px;
+    font-size: 1.15rem;
+}
+
+.portada .acciones {
+    margin-top: 24px;
+}
+
+/* Los pasos de la portada: tantas columnas como entren, de al menos 240px cada una. */
+.pasos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.paso-portada {
+    margin: 0;
+}
+
+.paso-portada img {
+    width: 100%;
+    height: 160px;
+    margin-bottom: 12px;
+    object-fit: cover;
     border-radius: 12px;
-    font-size: 0.875rem;
-    font-weight: 600;
 }
 
-.pendiente {
-    background-color: #fde68a;
-    color: #713f12;
-}
-
-.preparacion {
-    background-color: #bfdbfe;
-    color: #1e3a8a;
-}
-
-.lista {
-    background-color: #bbf7d0;
-    color: #14532d;
-}
-
-.entregada {
-    background-color: #e5e7eb;
-    color: #374151;
-}
-
-.cancelado {
-    background-color: #fecaca;
-    color: #7f1d1d;
-}
-
-
-/* Botones de cada pedido en la cocina: uno al lado del otro, y abajo si no entran. */
-.acciones {
+/* Ingreso y registro: en el celular, la foto arriba y el formulario abajo. */
+.acceso {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* El botón de la acción principal, resaltado con el color de la marca. */
-.principal {
-    background-color: #9a3412;
-    border-color: #9a3412;
-    color: #fffaf3;
+.acceso-foto {
+    position: relative;
+    min-height: 220px;
+    background-color: var(--carbon);
 }
 
-
-/* El resumen del armador queda siempre a mano: pegado abajo de la pantalla mientras se eligen los ingredientes. */
-.resumen {
-    position: sticky;
-    bottom: 0;
+.acceso-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(31, 26, 23, 0.85) 0%, rgba(31, 26, 23, 0) 70%);
 }
 
-.resumen p {
-    margin: 4px 0;
+.acceso-foto .lema {
+    position: absolute;
+    right: 24px;
+    bottom: 16px;
+    left: 24px;
+    z-index: 1;
+    margin: 0;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--blanco);
+}
+
+/* El formulario del ingreso y el registro: centrado y no más ancho que 460px. */
+.acceso-formulario {
+    width: 100%;
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+}
+
+.acceso-formulario .logo {
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.acceso-formulario form {
+    max-width: none;
+}
+
+.acceso-formulario button[type="submit"] {
+    width: 100%;
+}
+
+/* En pantallas anchas, la foto a la izquierda (fija mientras se baja) y el formulario a la derecha. */
+@media (min-width: 860px) {
+    .acceso {
+        flex-direction: row;
+    }
+
+    .acceso-foto {
+        position: sticky;
+        top: 0;
+        flex: 1.2;
+        min-height: 100vh;
+    }
+
+    .acceso-foto .lema {
+        bottom: 40px;
+        left: 40px;
+        font-size: 3.4rem;
+    }
+
+    .acceso-formulario {
+        flex: 1;
+        align-self: center;
+    }
+}
+
+/* El armador: cada categoría es un paso, con su foto arriba (o a la izquierda en pantallas anchas). */
+.paso {
+    padding: 0;
+    overflow: hidden;
+}
+
+.paso-foto {
+    position: relative;
+    height: 140px;
+}
+
+.paso-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.paso-foto span {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 12px;
+    font-weight: 800;
+    background-color: var(--mostaza);
+    border-radius: 999px;
+}
+
+.paso-contenido {
+    padding: 16px;
+}
+
+@media (min-width: 720px) {
+    .paso {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+    }
+
+    .paso-foto {
+        height: auto;
+        min-height: 180px;
+    }
 }
 
 /* El nombre de cada categoría empieza con mayúscula, aunque en la base esté en minúsculas. */
@@ -261,18 +544,241 @@ td {
     text-transform: uppercase;
 }
 
-/* Avisos que no son errores: en naranja oscuro y sin negrita, aunque estén adentro de un label. */
-.aviso {
-    color: #92400e;
-    font-weight: normal;
+/* Cada ingrediente en una fila: el nombre y el precio a la izquierda, el contador a la derecha. */
+.opciones {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.opcion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--crema-oscura);
+}
+
+.opcion:last-child {
+    border-bottom: none;
+}
+
+.precio {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ketchup-oscuro);
+    background-color: var(--crema);
+    border-radius: 999px;
+}
+
+/* Los botones - y + del contador: redondos y con lugar para el dedo en el celular. */
+.contador {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+}
+
+.contador button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+/* El + en mostaza: es el botón que más se usa. */
+.contador button:last-child {
+    background-color: var(--mostaza);
+}
+
+/* El resumen del armador queda siempre a mano: pegado abajo de la pantalla mientras se eligen los ingredientes. */
+/* Es una grilla de dos columnas: cada renglón ocupa todo el ancho, salvo el subtotal y el botón,
+   que van juntos en la segunda fila para que el resumen tape poco. */
+.resumen {
+    position: sticky;
+    bottom: 8px;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 12px;
+    padding: 12px 16px;
+    color: var(--blanco);
+    background-color: var(--carbon);
+    border: 2px solid var(--mostaza);
+}
+
+.resumen > * {
+    grid-column: 1 / -1;
+}
+
+.resumen .total {
+    grid-row: 2;
+    grid-column: 1;
+}
+
+.resumen button {
+    grid-row: 2;
+    grid-column: 2;
+}
+
+.resumen p {
+    margin: 4px 0;
+}
+
+.resumen .total {
+    font-size: 1.2rem;
+    color: var(--mostaza);
+}
+
+.resumen .exito {
+    color: #9be7b0;
+}
+
+/* El pedido en curso, separado del armador con una franja de ketchup. */
+.pedido-actual {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: var(--blanco);
+    border-top: 6px solid var(--ketchup);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+
+.pedido-actual h2 {
+    margin-top: 0;
+}
+
+.total {
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+/* Un texto o un título con un botón al costado, como "Actualizar". */
+.titulo-con-boton {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Botones de cada pedido: uno al lado del otro, y abajo si no entran. */
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* El estado de un pedido: una etiqueta con un color por estado. */
+.estado {
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 999px;
+}
+
+.pendiente {
+    color: #6b4a00;
+    background-color: #ffe8a3;
+}
+
+.preparacion {
+    color: #1e3a8a;
+    background-color: #cfe3ff;
+}
+
+.lista {
+    color: #14532d;
+    background-color: #c9f2d6;
+}
+
+.entregada {
+    color: #3f3a36;
+    background-color: #e7e2dc;
+}
+
+.cancelado {
+    color: #8a1c1c;
+    background-color: #ffd0cc;
+}
+
+/* Tablas del panel. Si no entran en el celular, se desplazan ellas solas y no toda la página. */
+.tabla {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--blanco);
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--crema-oscura);
+}
+
+th {
+    background-color: var(--crema-oscura);
 }
 
 /* La fila que se está editando en el panel. */
 .editando {
-    background-color: #fdecd8;
+    background-color: #fff1c9;
 }
 
 /* El filtro de los pedidos del panel: no más ancho que un formulario. */
 .filtro {
-    max-width: 400px;
+    max-width: 420px;
+}
+
+/* La página de una dirección que no existe. */
+.no-encontrada {
+    max-width: 520px;
+    padding-top: 48px;
+    text-align: center;
+}
+
+.no-encontrada img {
+    width: 100%;
+    height: 220px;
+    margin-bottom: 16px;
+    object-fit: cover;
+    border-radius: var(--radio);
+}
+
+/* En pantallas angostas (celulares): títulos, encabezado y tablas un poco más chicos. */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.4rem;
+    }
+
+    .encabezado .logo {
+        font-size: 1.7rem;
+    }
+
+    .encabezado button {
+        padding: 5px 12px;
+        font-size: 0.9rem;
+    }
+
+    h2,
+    .banner-texto h2 {
+        font-size: 1.9rem;
+    }
+
+    th,
+    td {
+        padding: 6px 4px;
+        font-size: 0.875rem;
+    }
 }

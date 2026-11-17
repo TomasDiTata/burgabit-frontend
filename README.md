@@ -20,16 +20,37 @@ La pantalla depende del rol de la cuenta con la que se ingresa:
 
 Los clientes se registran desde la app. Las cuentas de cocina y de administración las crea un administrador desde el panel.
 
+## Pantallas y direcciones
+
+Cada pantalla tiene su dirección, así que se puede guardar o compartir el enlace, recargar sin perder la pantalla y usar "Atrás" y "Adelante" del navegador sin salir de BurgaBit.
+
+| Dirección | Pantalla | Para quién |
+|---|---|---|
+| `/` | Portada | Todos |
+| `/ingresar` | Ingreso | Quien no ingresó |
+| `/registro` | Registro de clientes | Quien no ingresó |
+| `/cliente/armar` | Armar la hamburguesa y confirmar el pedido | Cliente |
+| `/cliente/pedidos` | Mis pedidos | Cliente |
+| `/cocina` | Pedidos activos | Cocina |
+| `/admin/categorias`, `/admin/ingredientes`, `/admin/usuarios`, `/admin/pedidos` | Panel del administrador | Administración |
+
+- Sin sesión, las pantallas de los roles mandan al ingreso. Con otro rol, mandan a la pantalla de ese rol. Es solo para la navegación: los permisos los controla siempre el backend.
+- Después de ingresar, el ingreso se reemplaza en el historial, así "Atrás" no vuelve al formulario.
+- Cualquier otra dirección muestra una página de BurgaBit que avisa que no existe.
+
 ## Librerías
 
 | Librería | Para qué se usa |
 |---|---|
 | `react` | Construir la interfaz con componentes y estado (`useState`, `useEffect`). |
 | `react-dom` | Dibujar los componentes de React en la página. |
+| `react-router` | Las rutas: una dirección por pantalla, con `BrowserRouter`, `Routes`, `Route`, `Link`, `NavLink`, `Navigate` y `useNavigate`. |
 | `vite` | Servidor de desarrollo y armado de la versión para publicar (*build*). |
 | `@vitejs/plugin-react` | Hace que Vite entienda JSX. |
 
-No se usan otras librerías: los pedidos a la API se hacen con `fetch`, los estilos son CSS propio y la navegación entre pantallas se resuelve con el estado de React.
+No se usan otras librerías: los pedidos a la API se hacen con `fetch` y los estilos son CSS propio.
+
+De React Router se usa la versión 7. La 8 se usa igual, pero pide Node.js 22.22 o más nuevo.
 
 ## Entorno
 
@@ -66,26 +87,35 @@ burgabit-frontend/
 ├── index.html                 La única página: React dibuja todo adentro de <div id="root">.
 ├── .env.example               Plantilla de las variables de entorno.
 ├── vite.config.js             Configuración de Vite (el plugin de React).
+├── vercel.json                Le dice a Vercel que responda con index.html en cualquier dirección.
 ├── public/                    Archivos que se publican tal cual, sin procesar.
-│   └── favicon.svg            Ícono de la pestaña del navegador.
+│   ├── favicon.svg            Ícono de la pestaña del navegador: una hamburguesa.
+│   ├── fonts/                 La letra de los títulos (Bebas Neue) y su licencia.
+│   └── img/                   Las fotos: portada, banners y una por tipo de categoría.
 └── src/                       El código de la aplicación.
-    ├── main.jsx               Arranca React.
-    ├── App.jsx                Decide qué pantalla se ve: login, registro o la del rol.
+    ├── main.jsx               Arranca React, envuelto en BrowserRouter.
+    ├── App.jsx                Las rutas: qué pantalla va en cada dirección, y cuáles piden sesión y rol.
+    ├── rutas.js               La pantalla de inicio de cada rol y la clase de las pestañas.
+    ├── fotos.js               Elige la foto de cada categoría según su nombre.
     ├── api.js                 pedirApi: la única función que habla con el backend.
     ├── sesion.js              Guarda, lee y borra el token (JWT) en el navegador.
     ├── validaciones.js        Reglas que comparten los formularios.
     ├── formato.js             Precios y fechas como se leen en Argentina.
     ├── pedidos.js             Cálculos y textos de los pedidos.
-    ├── index.css              Los estilos de toda la app.
+    ├── index.css              Los estilos de toda la app, con los colores de la marca.
     ├── componentes/           Piezas que usan varias pantallas.
-    │   ├── Encabezado.jsx     Barra de arriba, con "Cerrar sesión".
+    │   ├── Cargando.jsx       El aviso de "Cargando..." mientras llegan los datos.
+    │   ├── Encabezado.jsx     Barra de arriba: el logo, la sección y "Cerrar sesión".
+    │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
-    └── pantallas/             Una pantalla por rol, más el ingreso y el registro.
+    └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
+        ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
         ├── Login.jsx          Ingreso.
         ├── Registro.jsx       Alta de clientes.
-        ├── PantallaCliente.jsx  Pestañas del cliente y pedido en curso.
+        ├── NoEncontrada.jsx   Para las direcciones que no existen.
+        ├── PantallaCliente.jsx  Pestañas del cliente, sus rutas y el pedido en curso.
         ├── PantallaCocina.jsx   Pedidos activos y cambios de estado.
-        ├── PanelAdmin.jsx     Pestañas del administrador.
+        ├── PanelAdmin.jsx     Pestañas del administrador y sus rutas.
         ├── cliente/           Las partes de la pantalla del cliente.
         │   ├── Armador.jsx    Armado de la hamburguesa.
         │   ├── Pedido.jsx     Pedido en curso y confirmación.
@@ -104,6 +134,33 @@ burgabit-frontend/
 - El frontend lee del token el rol, para elegir la pantalla, y el vencimiento, para pedir el ingreso de nuevo. Los permisos los controla siempre el backend.
 - Los formularios se validan antes de enviar, y cada pedido a la API muestra que está en curso ("Cargando...", "Guardando...") y avisa si falla.
 
+## Diseño
+
+- **Estilo de hamburguesería:** fondo crema, rojo ketchup, amarillo mostaza y negro carbón. Los colores están como variables al principio de `src/index.css`.
+- **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
+- **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
+
+### Fotos
+
+Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web.
+
+| Archivo | Dónde se ve | Origen |
+|---|---|---|
+| `portada.jpg` | Portada e ingreso | [Pexels 1639557](https://www.pexels.com/photo/1639557/) |
+| `registro.jpg` | Registro | [Unsplash](https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5) |
+| `armar.jpg` | Banner del armador | [Unsplash](https://images.unsplash.com/photo-1561758033-d89a9ad46330) |
+| `pedidos.jpg` | Banner de "Mis pedidos" y portada | [Pexels 2271107](https://www.pexels.com/photo/2271107/) |
+| `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
+| `vegetales.jpg` | Categorías de toppings, verduras o vegetales, y portada | [Pexels 1435904](https://www.pexels.com/photo/1435904/) |
+| `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |
+| `panes.jpg` | Categorías de panes | [Unsplash](https://images.unsplash.com/photo-1568901346375-23c9450c58cd) |
+| `salsas.jpg` | Categorías de salsas o aderezos | [Unsplash](https://images.unsplash.com/photo-1472476443507-c7a5948772fc) |
+| `panceta.jpg` | Categorías de panceta | [Unsplash](https://images.unsplash.com/photo-1528607929212-2636ec44253e) |
+| `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
+| `hamburguesa.jpg` | Cualquier otra categoría, y la página de dirección inexistente | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
+
 ## Publicación
 
 La app está publicada en Vercel, conectada a este repositorio: cada cambio en la rama `main` se publica solo. La variable `VITE_API_URL` está cargada en el panel de Vercel. El trabajo se hace en la rama `Pruebas` y pasa a `main` con un Pull Request.
+
+Como cada pantalla tiene su dirección, `vercel.json` le indica a Vercel que responda con `index.html` en cualquier dirección. Después, React Router dibuja la pantalla que corresponde. Sin ese archivo, recargar en `/cliente/pedidos` daría un error 404 de Vercel.

@@ -32,31 +32,33 @@ function PantallaCliente({ alCerrarSesion }) {
     };
 
     return (
-        <main>
+        <>
             <Encabezado seccion="Cliente" alCerrarSesion={alCerrarSesion} />
 
-            <nav className="pestanas">
-                <NavLink to="/cliente/armar" className={clasePestana} onClick={() => setAviso("")}>
-                    Armar pedido{carrito.length > 0 && ` (${carrito.length})`}
-                </NavLink>
-                <NavLink to="/cliente/pedidos" className={clasePestana} onClick={() => setAviso("")}>
-                    Mis pedidos
-                </NavLink>
-            </nav>
+            <main>
+                <nav className="pestanas">
+                    <NavLink to="/cliente/armar" className={clasePestana} onClick={() => setAviso("")}>
+                        Armar pedido{carrito.length > 0 && ` (${carrito.length})`}
+                    </NavLink>
+                    <NavLink to="/cliente/pedidos" className={clasePestana} onClick={() => setAviso("")}>
+                        Mis pedidos
+                    </NavLink>
+                </nav>
 
-            {/* Las rutas de adentro: el "/*" de App deja que esta pantalla decida qué sección se ve. */}
-            <Routes>
-                <Route path="armar" element={
-                    <>
-                        <Armador alAgregar={agregarProducto} />
-                        <Pedido productos={carrito} alQuitar={quitarProducto} alConfirmar={pedidoConfirmado} />
-                    </>
-                } />
-                <Route path="pedidos" element={<MisPedidos aviso={aviso} />} />
-                {/* /cliente sola, o una sección que no existe: va a armar. */}
-                <Route path="*" element={<Navigate to="/cliente/armar" replace />} />
-            </Routes>
-        </main>
+                {/* Las rutas de adentro: el "/*" de App deja que esta pantalla decida qué sección se ve. */}
+                <Routes>
+                    <Route path="armar" element={
+                        <>
+                            <Armador alAgregar={agregarProducto} />
+                            <Pedido productos={carrito} alQuitar={quitarProducto} alConfirmar={pedidoConfirmado} />
+                        </>
+                    } />
+                    <Route path="pedidos" element={<MisPedidos aviso={aviso} />} />
+                    {/* /cliente sola, o una sección que no existe: va a armar. */}
+                    <Route path="*" element={<Navigate to="/cliente/armar" replace />} />
+                </Routes>
+            </main>
+        </>
     );
 }
 

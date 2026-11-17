@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // Revisa un ingrediente antes de enviarlo, con las reglas del modelo Ingrediente del backend.
 // "otros" son los demás ingredientes, para no repetir el nombre.
@@ -215,15 +217,11 @@ function Ingredientes() {
     const mostrarLista = () => {
         // "Cargando..." solo si todavía no hay nada para mostrar: al recargar, la lista queda en su lugar.
         if(cargando && ingredientes.length === 0) {
-            return <p>Cargando ingredientes... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+            return <Cargando que="ingredientes" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarDatos}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarDatos} />;
         }
 
         if(ingredientes.length === 0) {

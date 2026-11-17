@@ -3,6 +3,8 @@ import { pedirApi } from "../../api.js";
 import { formatearFecha, formatearPrecio } from "../../formato.js";
 import { listarIngredientes } from "../../pedidos.js";
 import Estado from "../../componentes/Estado.jsx";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // Si un pedido se canceló, el motivo está en su historial de estados.
 const motivoDeCancelacion = (pedido) => {
@@ -59,15 +61,11 @@ function MisPedidos({ aviso }) {
     // Qué se ve: cargando, un error, la lista vacía o los pedidos.
     const mostrarPedidos = () => {
         if(cargando) {
-            return <p>Cargando tus pedidos...</p>;
+            return <Cargando que="tus pedidos" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarPedidos}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarPedidos} />;
         }
 
         if(pedidos.length === 0) {
@@ -91,7 +89,7 @@ function MisPedidos({ aviso }) {
                 {pedido.estado === "Cancelado" && <p>Motivo: {motivoDeCancelacion(pedido)}</p>}
 
                 {pedido.estado === "Pendiente" && (
-                    <button onClick={() => cancelar(pedido._id)} disabled={cancelando === pedido._id}>
+                    <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={cancelando === pedido._id}>
                         {cancelando === pedido._id ? "Cancelando..." : "Cancelar pedido"}
                     </button>
                 )}
@@ -101,11 +99,18 @@ function MisPedidos({ aviso }) {
 
     return (
         <section>
+            <div className="banner banner-chico">
+                <img src="/img/pedidos.jpg" alt="Hamburguesa con papas fritas" />
+                <div className="banner-texto">
+                    <h2>Mis pedidos</h2>
+                    <p>Seguí cómo avanzan en la cocina.</p>
+                </div>
+            </div>
+
             <div className="titulo-con-boton">
-                <h2>Mis pedidos</h2>
+                <p>Tocá "Actualizar" para ver el estado más reciente.</p>
                 <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
             </div>
-            <p>Tocá "Actualizar" para ver cómo avanzan tus pedidos en la cocina.</p>
 
             {aviso && <p className="exito">{aviso}</p>}
             {mensaje && <p className="error">{mensaje}</p>}

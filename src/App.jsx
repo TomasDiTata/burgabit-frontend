@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { guardarToken, borrarToken, leerSesion } from "./sesion.js";
 import { inicioDe } from "./rutas.js";
+import Portada from "./pantallas/Portada.jsx";
 import Login from "./pantallas/Login.jsx";
 import Registro from "./pantallas/Registro.jsx";
 import PanelAdmin from "./pantallas/PanelAdmin.jsx";
@@ -50,8 +51,7 @@ function App() {
 
     return (
         <Routes>
-            {/* La raíz manda a la pantalla del rol, o al ingreso si no hay sesión. */}
-            <Route path="/" element={<Navigate to={sesion ? inicioDe(sesion.rol) : "/ingresar"} replace />} />
+            <Route path="/" element={<Portada sesion={sesion} />} />
             <Route path="/ingresar" element={sinSesion(<Login alIniciarSesion={iniciarSesion} />)} />
             <Route path="/registro" element={sinSesion(<Registro alIniciarSesion={iniciarSesion} />)} />
             {/* El "/*" deja que la pantalla tenga sus propias rutas adentro, como /cliente/armar y /cliente/pedidos. */}

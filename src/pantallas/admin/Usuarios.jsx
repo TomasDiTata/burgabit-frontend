@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { leerSesion } from "../../sesion.js";
 import { MINIMO_PASSWORD, SOLO_LETRAS } from "../../validaciones.js";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // Los grupos de la lista, en este orden: el rol como lo guarda el backend y el título que se muestra.
 const GRUPOS = [
@@ -152,15 +154,11 @@ function Usuarios() {
     const mostrarLista = () => {
         // "Cargando..." solo si todavía no hay nada para mostrar: al recargar, la lista queda en su lugar.
         if(cargando && usuarios.length === 0) {
-            return <p>Cargando usuarios... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+            return <Cargando que="usuarios" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarUsuarios}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarUsuarios} />;
         }
 
         // Un grupo por rol: con filter se queda con las cuentas de ese rol.

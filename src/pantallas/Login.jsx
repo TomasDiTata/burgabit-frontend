@@ -61,46 +61,54 @@ function Login({ alIniciarSesion }) {
     };
 
     return (
-        <main>
-            <h1>BurgaBit</h1>
-            <p>Iniciá sesión para armar tu hamburguesa y seguir tus pedidos.</p>
+        <div className="acceso">
+            <div className="acceso-foto">
+                <img src="/img/portada.jpg" alt="Hamburguesa con cheddar, tomate y lechuga" />
+                <p className="lema">Las mejores hamburguesas, armadas por vos.</p>
+            </div>
 
-            {/* noValidate: los avisos los muestra validar(), en castellano y al lado de cada campo. */}
-            <form onSubmit={enviar} noValidate>
-                <label>
-                    Email
-                    <input
-                        type="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(evento) => setEmail(evento.target.value)}
-                    />
-                    {errores.email && <span className="error">{errores.email}</span>}
-                </label>
+            <main className="acceso-formulario">
+                <Link to="/" className="logo">Burga<span>Bit</span></Link>
+                <h1>Ingresá</h1>
+                <p>Iniciá sesión para armar tu hamburguesa y seguir tus pedidos.</p>
 
-                <label>
-                    Contraseña
-                    <input
-                        type="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={(evento) => setPassword(evento.target.value)}
-                    />
-                    {errores.password && <span className="error">{errores.password}</span>}
-                </label>
+                {/* noValidate: los avisos los muestra validar(), en castellano y al lado de cada campo. */}
+                <form onSubmit={enviar} noValidate>
+                    <label>
+                        Email
+                        <input
+                            type="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(evento) => setEmail(evento.target.value)}
+                        />
+                        {errores.email && <span className="error">{errores.email}</span>}
+                    </label>
 
-                <button type="submit" disabled={enviando}>
-                    {enviando ? "Ingresando..." : "Ingresar"}
-                </button>
-            </form>
+                    <label>
+                        Contraseña
+                        <input
+                            type="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(evento) => setPassword(evento.target.value)}
+                        />
+                        {errores.password && <span className="error">{errores.password}</span>}
+                    </label>
 
-            {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
-            {mensaje && <p className="error">{mensaje}</p>}
+                    <button type="submit" className="principal" disabled={enviando}>
+                        {enviando ? "Ingresando..." : "Ingresar"}
+                    </button>
+                </form>
 
-            <p>
-                ¿No tenés cuenta? <Link to="/registro">Registrate</Link>
-            </p>
-        </main>
+                {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
+                {mensaje && <p className="error">{mensaje}</p>}
+
+                <p>
+                    ¿No tenés cuenta? <Link to="/registro">Registrate</Link>
+                </p>
+            </main>
+        </div>
     );
 }
 
