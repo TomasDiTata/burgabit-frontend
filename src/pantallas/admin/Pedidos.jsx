@@ -3,6 +3,8 @@ import { pedirApi } from "../../api.js";
 import { formatearFecha, formatearPrecio } from "../../formato.js";
 import { listarIngredientes } from "../../pedidos.js";
 import Estado from "../../componentes/Estado.jsx";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // Los estados de un pedido, para el filtro. Son los del modelo Orden del backend.
 const ESTADOS = ["Pendiente", "En preparación", "Lista para retirar", "Entregada", "Cancelado"];
@@ -72,15 +74,11 @@ function Pedidos() {
     const mostrarPedidos = () => {
         // "Cargando..." solo si todavía no hay nada para mostrar: al actualizar, la lista queda en su lugar.
         if(cargando && pedidos.length === 0) {
-            return <p>Cargando los pedidos... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+            return <Cargando que="los pedidos" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarPedidos}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarPedidos} />;
         }
 
         if(pedidos.length === 0) {

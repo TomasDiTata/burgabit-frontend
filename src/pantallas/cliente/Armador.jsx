@@ -4,6 +4,8 @@ import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
 import { subtotalDe, describirProducto } from "../../pedidos.js";
 import { fotoDeCategoria } from "../../fotos.js";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // La regla de una categoría, en palabras.
 const textoDeLaRegla = (categoria) => {
@@ -98,15 +100,11 @@ function Armador({ alAgregar }) {
     };
 
     if(cargando) {
-        return <p>Cargando el menú... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+        return <Cargando que="el menú" />;
     }
 
     if(errorAlCargar) {
-        return (
-            <p className="error">
-                {errorAlCargar} <button className="enlace" onClick={cargarMenu}>Reintentar</button>
-            </p>
-        );
+        return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarMenu} />;
     }
 
     if(categorias.length === 0) {

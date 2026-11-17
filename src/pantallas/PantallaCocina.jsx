@@ -4,6 +4,8 @@ import { formatearFecha, formatearPrecio } from "../formato.js";
 import { listarIngredientes } from "../pedidos.js";
 import Encabezado from "../componentes/Encabezado.jsx";
 import Estado from "../componentes/Estado.jsx";
+import Cargando from "../componentes/Cargando.jsx";
+import ErrorAlCargar from "../componentes/ErrorAlCargar.jsx";
 
 // Lo que puede hacer la cocina con un pedido según su estado: el texto del botón y el estado al que pasa.
 // Son las mismas transiciones que permite el backend (cocineroControlador).
@@ -81,15 +83,11 @@ function PantallaCocina({ alCerrarSesion }) {
     // Qué se ve: cargando, un error, la lista vacía o los pedidos.
     const mostrarPedidos = () => {
         if(cargando) {
-            return <p>Cargando los pedidos... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+            return <Cargando que="los pedidos" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarPedidos}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarPedidos} />;
         }
 
         if(pedidos.length === 0) {

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // El paso que sigue al último: es el que se propone para una categoría nueva, y el más alto que se puede usar.
 const pasoSiguiente = (categorias) => categorias.reduce((mayor, categoria) => Math.max(mayor, categoria.paso), 0) + 1;
@@ -141,15 +143,11 @@ function Categorias() {
     const mostrarLista = () => {
         // "Cargando..." solo si todavía no hay nada para mostrar: al recargar, la tabla queda en su lugar.
         if(cargando && categorias.length === 0) {
-            return <p>Cargando categorías... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+            return <Cargando que="categorías" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarCategorias}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarCategorias} />;
         }
 
         if(categorias.length === 0) {

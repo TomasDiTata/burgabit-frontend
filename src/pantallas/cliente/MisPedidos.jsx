@@ -3,6 +3,8 @@ import { pedirApi } from "../../api.js";
 import { formatearFecha, formatearPrecio } from "../../formato.js";
 import { listarIngredientes } from "../../pedidos.js";
 import Estado from "../../componentes/Estado.jsx";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // Si un pedido se canceló, el motivo está en su historial de estados.
 const motivoDeCancelacion = (pedido) => {
@@ -59,15 +61,11 @@ function MisPedidos({ aviso }) {
     // Qué se ve: cargando, un error, la lista vacía o los pedidos.
     const mostrarPedidos = () => {
         if(cargando) {
-            return <p>Cargando tus pedidos...</p>;
+            return <Cargando que="tus pedidos" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarPedidos}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarPedidos} />;
         }
 
         if(pedidos.length === 0) {
