@@ -141,10 +141,11 @@ burgabit-frontend/
 - **Estilo de hamburguesería:** fondo crema, rojo ketchup, amarillo mostaza y negro carbón. Los colores están como variables al principio de `src/index.css`.
 - **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
 - **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
+- **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
 
 ### Fotos
 
-Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web.
+Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web. Las de la cocina y el panel, además, están recortadas en una franja ancha, que es la parte que muestra el banner.
 
 | Archivo | Dónde se ve | Origen |
 |---|---|---|
@@ -152,6 +153,11 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `registro.jpg` | Registro | [Unsplash](https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5) |
 | `armar.jpg` | Banner del armador | [Unsplash](https://images.unsplash.com/photo-1561758033-d89a9ad46330) |
 | `pedidos.jpg` | Banner de "Mis pedidos" y portada | [Pexels 2271107](https://www.pexels.com/photo/2271107/) |
+| `cocina.jpg` | Banner de la cocina | [Unsplash](https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf) |
+| `categorias.jpg` | Banner de categorías, en el panel | [Unsplash](https://images.unsplash.com/photo-1498837167922-ddd27525d352) |
+| `ingredientes.jpg` | Banner de ingredientes, en el panel | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
+| `usuarios.jpg` | Banner de usuarios, en el panel | [Unsplash](https://images.unsplash.com/photo-1555992336-03a23c7b20ee) |
+| `pedidos-panel.jpg` | Banner de pedidos, en el panel | [Unsplash](https://images.unsplash.com/photo-1466978913421-dad2ebd01d17) |
 | `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
 | `vegetales.jpg` | Categorías de toppings, verduras o vegetales, y portada | [Pexels 1435904](https://www.pexels.com/photo/1435904/) |
 | `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |

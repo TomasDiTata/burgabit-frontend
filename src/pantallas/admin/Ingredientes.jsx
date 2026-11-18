@@ -4,6 +4,7 @@ import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
+import Banner from "../../componentes/Banner.jsx";
 
 // Revisa un ingrediente antes de enviarlo, con las reglas del modelo Ingrediente del backend.
 // "otros" son los demás ingredientes, para no repetir el nombre.
@@ -257,7 +258,13 @@ function Ingredientes() {
 
     return (
         <section>
-            <h2>Ingredientes</h2>
+            <Banner
+                chico
+                foto="/img/ingredientes.jpg"
+                descripcion="Verduras, huevos y hongos sobre una tabla de madera"
+                titulo="Ingredientes"
+                texto="Lo que el cliente elige en cada paso del armador."
+            />
             <p>Solo aparecen en el armador los ingredientes disponibles y con stock. "Pausar" saca un ingrediente del menú sin borrarlo, y "Reactivar" lo vuelve a poner.</p>
 
             {mostrarLista()}

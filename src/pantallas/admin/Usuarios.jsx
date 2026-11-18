@@ -4,6 +4,7 @@ import { leerSesion } from "../../sesion.js";
 import { MINIMO_PASSWORD, SOLO_LETRAS } from "../../validaciones.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
+import Banner from "../../componentes/Banner.jsx";
 
 // Los grupos de la lista, en este orden: el rol como lo guarda el backend y el título que se muestra.
 const GRUPOS = [
@@ -186,7 +187,13 @@ function Usuarios() {
 
     return (
         <section>
-            <h2>Usuarios</h2>
+            <Banner
+                chico
+                foto="/img/usuarios.jpg"
+                descripcion="Salón de una hamburguesería con sillones rojos"
+                titulo="Usuarios"
+                texto="Las cuentas de la cocina, la administración y los clientes."
+            />
 
             {/* El formulario va arriba: los clientes pueden ser muchos, y así no hay que bajar hasta el final para crear una cuenta. */}
             <h3>Nueva cuenta del personal</h3>
