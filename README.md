@@ -142,6 +142,7 @@ burgabit-frontend/
 - **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
 - **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
 - **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
+- **Hamburguesa y papas a los costados:** en pantallas de 1300 px o más sobra lugar a los costados de la columna del medio. Ahí van una hamburguesa (a la izquierda) y unas papas fritas (a la derecha), fijas mientras se baja y desvaneciéndose hacia el centro con un degradé crema. En esas pantallas los banners quedan como carteles sin foto, y su foto ni se descarga (`loading="lazy"`). En el celular no hay costados: ahí cada banner muestra su foto.
 
 ### Fotos
 
@@ -158,8 +159,10 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `ingredientes.jpg` | Banner de ingredientes, en el panel | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
 | `usuarios.jpg` | Banner de usuarios, en el panel | [Unsplash](https://images.unsplash.com/photo-1555992336-03a23c7b20ee) |
 | `pedidos-panel.jpg` | Banner de pedidos, en el panel | [Unsplash](https://images.unsplash.com/photo-1466978913421-dad2ebd01d17) |
+| `costado-hamburguesa.jpg` | Costado izquierdo, en pantallas anchas | [Pexels 8365318](https://www.pexels.com/photo/8365318/) |
+| `costado-papas.jpg` | Costado derecho, en pantallas anchas | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
 | `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
-| `vegetales.jpg` | Categorías de toppings, verduras o vegetales, y portada | [Pexels 1435904](https://www.pexels.com/photo/1435904/) |
+| `vegetales.jpg` | Categorías de toppings, verduras o vegetales, y portada | [Pexels 19247582](https://www.pexels.com/photo/19247582/) |
 | `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |
 | `panes.jpg` | Categorías de panes | [Unsplash](https://images.unsplash.com/photo-1568901346375-23c9450c58cd) |
 | `salsas.jpg` | Categorías de salsas o aderezos | [Unsplash](https://images.unsplash.com/photo-1472476443507-c7a5948772fc) |
