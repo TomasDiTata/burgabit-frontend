@@ -160,6 +160,31 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
 | `hamburguesa.jpg` | Cualquier otra categoría, y la página de dirección inexistente | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
 
+## Diseño
+
+- **Estilo de hamburguesería:** fondo crema, rojo ketchup, amarillo mostaza y negro carbón. Los colores están como variables al principio de `src/index.css`.
+- **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
+- **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
+
+### Fotos
+
+Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web.
+
+| Archivo | Dónde se ve | Origen |
+|---|---|---|
+| `portada.jpg` | Portada e ingreso | [Pexels 1639557](https://www.pexels.com/photo/1639557/) |
+| `registro.jpg` | Registro | [Unsplash](https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5) |
+| `armar.jpg` | Banner del armador | [Unsplash](https://images.unsplash.com/photo-1561758033-d89a9ad46330) |
+| `pedidos.jpg` | Banner de "Mis pedidos" y portada | [Pexels 2271107](https://www.pexels.com/photo/2271107/) |
+| `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
+| `vegetales.jpg` | Categorías de toppings, verduras o vegetales, y portada | [Pexels 1435904](https://www.pexels.com/photo/1435904/) |
+| `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |
+| `panes.jpg` | Categorías de panes | [Unsplash](https://images.unsplash.com/photo-1568901346375-23c9450c58cd) |
+| `salsas.jpg` | Categorías de salsas o aderezos | [Unsplash](https://images.unsplash.com/photo-1472476443507-c7a5948772fc) |
+| `panceta.jpg` | Categorías de panceta | [Unsplash](https://images.unsplash.com/photo-1528607929212-2636ec44253e) |
+| `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
+| `hamburguesa.jpg` | Cualquier otra categoría, y la página de dirección inexistente | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
+
 ## Publicación
 
 La app está publicada en Vercel, conectada a este repositorio: cada cambio en la rama `main` se publica solo. La variable `VITE_API_URL` está cargada en el panel de Vercel. El trabajo se hace en la rama `Pruebas` y pasa a `main` con un Pull Request.

@@ -50,7 +50,7 @@ function Pedido({ productos, alQuitar, alConfirmar }) {
                         ))}
                     </ol>
                     <p className="total">Total: {formatearPrecio(total)}</p>
-                    <button onClick={confirmar} disabled={enviando}>
+                    <button className="principal" onClick={confirmar} disabled={enviando}>
                         {enviando ? "Confirmando..." : "Confirmar pedido"}
                     </button>
                 </>

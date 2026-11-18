@@ -1,48 +1,67 @@
 import { useState } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { guardarToken, borrarToken, leerSesion } from "./sesion.js";
+import { inicioDe } from "./rutas.js";
+import Portada from "./pantallas/Portada.jsx";
 import Login from "./pantallas/Login.jsx";
 import Registro from "./pantallas/Registro.jsx";
 import PanelAdmin from "./pantallas/PanelAdmin.jsx";
 import PantallaCliente from "./pantallas/PantallaCliente.jsx";
 import PantallaCocina from "./pantallas/PantallaCocina.jsx";
+import NoEncontrada from "./pantallas/NoEncontrada.jsx";
 
-// Decide qué pantalla mostrar: sin sesión, el login o el registro; con sesión, la de cada rol.
+// Las rutas de la app: qué pantalla se ve en cada dirección.
+// Además guarda la sesión y protege las pantallas de cada rol.
 function App() {
     // Al abrir la app se lee la sesión guardada: si el token sigue vigente, no hace falta volver a ingresar.
     const [sesion, setSesion] = useState(leerSesion());
-    // Sin sesión, indica cuál de las dos pantallas se ve: false es el login y true, el registro.
-    const [verRegistro, setVerRegistro] = useState(false);
+    // navigate cambia de dirección desde el código, por ejemplo después de ingresar.
+    const navigate = useNavigate();
 
     const iniciarSesion = (token) => {
         guardarToken(token);
-        setSesion(leerSesion());
+        const sesionNueva = leerSesion();
+        setSesion(sesionNueva);
+        // replace: el ingreso se reemplaza en el historial, así "Atrás" no vuelve al formulario.
+        navigate(inicioDe(sesionNueva.rol), { replace: true });
     };
 
     const cerrarSesion = () => {
         borrarToken();
         setSesion(null);
-        // Al salir se vuelve siempre al login, aunque se haya entrado desde el registro.
-        setVerRegistro(false);
+        navigate("/ingresar", { replace: true });
     };
 
-    if(!sesion) {
-        if(verRegistro) {
-            return <Registro alIniciarSesion={iniciarSesion} alIrAlLogin={() => setVerRegistro(false)} />;
+    // Una pantalla con sesión: sin sesión, manda al ingreso; con otro rol, a la pantalla de su rol.
+    // Es solo para la navegación: los permisos los sigue controlando el backend en cada pedido.
+    const soloPara = (rol, pantalla) => {
+        if(!sesion) {
+            return <Navigate to="/ingresar" replace />;
         }
-        return <Login alIniciarSesion={iniciarSesion} alIrAlRegistro={() => setVerRegistro(true)} />;
-    }
 
-    // Cada rol ve su pantalla.
-    if(sesion.rol === "administrador") {
-        return <PanelAdmin alCerrarSesion={cerrarSesion} />;
-    }
+        if(sesion.rol !== rol) {
+            return <Navigate to={inicioDe(sesion.rol)} replace />;
+        }
 
-    if(sesion.rol === "cliente") {
-        return <PantallaCliente alCerrarSesion={cerrarSesion} />;
-    }
+        return pantalla;
+    };
 
-    // El rol que queda es el de cocinero.
-    return <PantallaCocina alCerrarSesion={cerrarSesion} />;
+    // El ingreso y el registro son para quien todavía no entró: con sesión, manda a la pantalla de su rol.
+    const sinSesion = (pantalla) => (sesion ? <Navigate to={inicioDe(sesion.rol)} replace /> : pantalla);
+
+    return (
+        <Routes>
+            <Route path="/" element={<Portada sesion={sesion} />} />
+            <Route path="/ingresar" element={sinSesion(<Login alIniciarSesion={iniciarSesion} />)} />
+            <Route path="/registro" element={sinSesion(<Registro alIniciarSesion={iniciarSesion} />)} />
+            {/* El "/*" deja que la pantalla tenga sus propias rutas adentro, como /cliente/armar y /cliente/pedidos. */}
+            <Route path="/cliente/*" element={soloPara("cliente", <PantallaCliente alCerrarSesion={cerrarSesion} />)} />
+            <Route path="/cocina" element={soloPara("cocinero", <PantallaCocina alCerrarSesion={cerrarSesion} />)} />
+            <Route path="/admin/*" element={soloPara("administrador", <PanelAdmin alCerrarSesion={cerrarSesion} />)} />
+            {/* Cualquier otra dirección: una página de BurgaBit que avisa que no existe. */}
+            <Route path="*" element={<NoEncontrada sesion={sesion} />} />
+        </Routes>
+    );
 }
 
 export default App;

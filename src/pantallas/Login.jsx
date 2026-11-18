@@ -1,8 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import { pedirApi } from "../api.js";
 import { FORMATO_EMAIL } from "../validaciones.js";
-
-
 
 // Revisa los datos antes de enviarlos. Devuelve un objeto con un mensaje por cada campo con problemas:
 // si está todo bien, el objeto queda vacío.
@@ -22,8 +21,8 @@ const validar = (email, password) => {
     return errores;
 };
 
-// Pantalla de inicio de sesión. Cuando el backend acepta los datos, le pasa el token a App.
-function Login({ alIniciarSesion, alIrAlRegistro }) {
+// Pantalla de inicio de sesión (/ingresar). Cuando el backend acepta los datos, le pasa el token a App.
+function Login({ alIniciarSesion }) {
     // Un estado por campo: lo que el usuario va escribiendo.
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -62,48 +61,54 @@ function Login({ alIniciarSesion, alIrAlRegistro }) {
     };
 
     return (
-        <main>
-            <h1>BurgaBit</h1>
-            <p>Iniciá sesión para armar tu hamburguesa y seguir tus pedidos.</p>
+        <div className="acceso">
+            <div className="acceso-foto">
+                <img src="/img/portada.jpg" alt="Hamburguesa con cheddar, tomate y lechuga" />
+                <p className="lema">Las mejores hamburguesas, armadas por vos.</p>
+            </div>
 
-            {/* noValidate: los avisos los muestra validar(), en castellano y al lado de cada campo. */}
-            <form onSubmit={enviar} noValidate>
-                <label>
-                    Email
-                    <input
-                        type="email"
-                        autoComplete="email"
-                        value={email}
-                        onChange={(evento) => setEmail(evento.target.value)}
-                    />
-                    {errores.email && <span className="error">{errores.email}</span>}
-                </label>
+            <main className="acceso-formulario">
+                <Link to="/" className="logo">Burga<span>Bit</span></Link>
+                <h1>Ingresá</h1>
+                <p>Iniciá sesión para armar tu hamburguesa y seguir tus pedidos.</p>
 
-                <label>
-                    Contraseña
-                    <input
-                        type="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={(evento) => setPassword(evento.target.value)}
-                    />
-                    {errores.password && <span className="error">{errores.password}</span>}
-                </label>
+                {/* noValidate: los avisos los muestra validar(), en castellano y al lado de cada campo. */}
+                <form onSubmit={enviar} noValidate>
+                    <label>
+                        Email
+                        <input
+                            type="email"
+                            autoComplete="email"
+                            value={email}
+                            onChange={(evento) => setEmail(evento.target.value)}
+                        />
+                        {errores.email && <span className="error">{errores.email}</span>}
+                    </label>
 
-                <button type="submit" disabled={enviando}>
-                    {enviando ? "Ingresando..." : "Ingresar"}
-                </button>
-            </form>
+                    <label>
+                        Contraseña
+                        <input
+                            type="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={(evento) => setPassword(evento.target.value)}
+                        />
+                        {errores.password && <span className="error">{errores.password}</span>}
+                    </label>
 
-            {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
-            {mensaje && <p className="error">{mensaje}</p>}
+                    <button type="submit" className="principal" disabled={enviando}>
+                        {enviando ? "Ingresando..." : "Ingresar"}
+                    </button>
+                </form>
 
-            
-            <p>
-                ¿No tenés cuenta? <button className="enlace" onClick={alIrAlRegistro}>Registrate</button>
-            </p>
-            
-        </main>
+                {enviando && <p>Si el servidor estaba dormido, puede tardar hasta un minuto.</p>}
+                {mensaje && <p className="error">{mensaje}</p>}
+
+                <p>
+                    ¿No tenés cuenta? <Link to="/registro">Registrate</Link>
+                </p>
+            </main>
+        </div>
     );
 }
 
