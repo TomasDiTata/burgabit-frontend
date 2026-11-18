@@ -357,6 +357,47 @@ section > h3 {
     min-height: 160px;
 }
 
+/* Pantallas anchas: a los costados de la columna del medio (960 px) sobra lugar.
+   Ahí van una hamburguesa a la izquierda y unas papas fritas a la derecha, fijas mientras se baja.
+   Cada costado tiene dos fondos, uno encima del otro: un degradé crema que desvanece la foto hacia el centro, y la foto. */
+@media (min-width: 1300px) {
+    .con-costados::before,
+    .con-costados::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+        /* Lo que sobra a cada lado de la columna. */
+        width: calc((100% - 960px) / 2);
+        background-size: cover;
+        background-position: center;
+    }
+
+    /* La foto corrida al 30 %: así la hamburguesa queda del lado de afuera, antes de que empiece el degradé. */
+    .con-costados::before {
+        left: 0;
+        background-image: linear-gradient(90deg, rgba(255, 246, 233, 0) 55%, var(--crema) 100%), url("/img/costado-hamburguesa.jpg");
+        background-position: 30% center;
+    }
+
+    .con-costados::after {
+        right: 0;
+        background-image: linear-gradient(270deg, rgba(255, 246, 233, 0) 55%, var(--crema) 100%), url("/img/costado-papas.jpg");
+    }
+
+    /* Con las fotos a los costados, los banners quedan como carteles sin foto. */
+    .banner,
+    .banner-chico {
+        min-height: 0;
+    }
+
+    .banner img,
+    .banner::after {
+        display: none;
+    }
+}
+
 /* La portada: la foto ocupa casi toda la pantalla, con el mensaje y los botones encima. */
 .portada {
     position: relative;

@@ -130,7 +130,8 @@ function PantallaCocina({ alCerrarSesion }) {
         <>
             <Encabezado seccion="Cocina" alCerrarSesion={alCerrarSesion} />
 
-            <main>
+            {/* con-costados: en pantallas anchas, la hamburguesa y las papas a los costados (index.css). */}
+            <main className="con-costados">
                 <Banner
                     chico
                     foto="/img/cocina.jpg"
