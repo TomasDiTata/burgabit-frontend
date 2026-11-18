@@ -162,11 +162,12 @@ function Usuarios() {
         }
 
         // Un grupo por rol: con filter se queda con las cuentas de ese rol.
+        // Cada grupo es una sección con su título: así le llega el margen de los subtítulos (section > h3 en index.css).
         return GRUPOS.map((grupo) => {
             const delGrupo = usuarios.filter((usuario) => usuario.rol === grupo.rol);
 
             return (
-                <div key={grupo.rol}>
+                <section key={grupo.rol}>
                     <h3>{grupo.titulo} ({delGrupo.length})</h3>
                     {delGrupo.length === 0 && <p>No hay cuentas.</p>}
                     {delGrupo.map((usuario) => (
@@ -178,7 +179,7 @@ function Usuarios() {
                             {accionesDe(usuario)}
                         </article>
                     ))}
-                </div>
+                </section>
             );
         });
     };

@@ -165,11 +165,13 @@ form button[type="submit"]:hover:not(:disabled) {
 }
 
 /* Formularios: un campo debajo del otro. */
+/* El margen de abajo separa del botón lo que venga después, como un mensaje o un título. */
 form {
     display: flex;
     flex-direction: column;
     gap: 14px;
     max-width: 420px;
+    margin-bottom: 16px;
 }
 
 label {
