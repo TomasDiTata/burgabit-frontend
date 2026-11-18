@@ -104,6 +104,7 @@ burgabit-frontend/
     ├── pedidos.js             Cálculos y textos de los pedidos.
     ├── index.css              Los estilos de toda la app, con los colores de la marca.
     ├── componentes/           Piezas que usan varias pantallas.
+    │   ├── Banner.jsx         La foto de arriba de una sección, con el título y un texto encima.
     │   ├── Cargando.jsx       El aviso de "Cargando..." mientras llegan los datos.
     │   ├── Encabezado.jsx     Barra de arriba: el logo, la sección y "Cerrar sesión".
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".

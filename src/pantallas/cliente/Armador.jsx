@@ -6,6 +6,7 @@ import { subtotalDe, describirProducto } from "../../pedidos.js";
 import { fotoDeCategoria } from "../../fotos.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
+import Banner from "../../componentes/Banner.jsx";
 
 // La regla de una categoría, en palabras.
 const textoDeLaRegla = (categoria) => {
@@ -117,13 +118,12 @@ function Armador({ alAgregar }) {
 
     return (
         <section>
-            <div className="banner">
-                <img src="/img/armar.jpg" alt="Hamburguesa doble con papas fritas" />
-                <div className="banner-texto">
-                    <h2>Armá tu hamburguesa</h2>
-                    <p>El pan va incluido. Elegí los ingredientes con los botones + y −.</p>
-                </div>
-            </div>
+            <Banner
+                foto="/img/armar.jpg"
+                descripcion="Hamburguesa doble con papas fritas"
+                titulo="Armá tu hamburguesa"
+                texto="El pan va incluido. Elegí los ingredientes con los botones + y −."
+            />
 
             {categorias.map((categoria, posicion) => {
                 // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
