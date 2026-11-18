@@ -3,6 +3,7 @@ import { pedirApi } from "../../api.js";
 import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
+import Banner from "../../componentes/Banner.jsx";
 
 // El paso que sigue al último: es el que se propone para una categoría nueva, y el más alto que se puede usar.
 const pasoSiguiente = (categorias) => categorias.reduce((mayor, categoria) => Math.max(mayor, categoria.paso), 0) + 1;
@@ -186,8 +187,14 @@ function Categorias() {
 
     return (
         <section>
-            <h2>Categorías</h2>
-            <p>Cada categoría es un grupo del armador, como medallones o toppings. El paso es el orden en que aparece, y el mínimo y el máximo, cuántas unidades de esa categoría lleva cada hamburguesa.</p>
+            <Banner
+                chico
+                foto="/img/categorias.jpg"
+                descripcion="Ingredientes separados en recipientes"
+                titulo="Categorías"
+                texto="Los grupos del armador, como medallones o toppings."
+            />
+            <p>El paso es el orden en que aparece cada categoría en el armador, y el mínimo y el máximo, cuántas unidades de esa categoría lleva cada hamburguesa.</p>
 
             {mostrarLista()}
 

@@ -5,6 +5,7 @@ import { listarIngredientes } from "../../pedidos.js";
 import Estado from "../../componentes/Estado.jsx";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
+import Banner from "../../componentes/Banner.jsx";
 
 // Si un pedido se canceló, el motivo está en su historial de estados.
 const motivoDeCancelacion = (pedido) => {
@@ -99,13 +100,13 @@ function MisPedidos({ aviso }) {
 
     return (
         <section>
-            <div className="banner banner-chico">
-                <img src="/img/pedidos.jpg" alt="Hamburguesa con papas fritas" />
-                <div className="banner-texto">
-                    <h2>Mis pedidos</h2>
-                    <p>Seguí cómo avanzan en la cocina.</p>
-                </div>
-            </div>
+            <Banner
+                chico
+                foto="/img/pedidos.jpg"
+                descripcion="Hamburguesa con papas fritas"
+                titulo="Mis pedidos"
+                texto="Seguí cómo avanzan en la cocina."
+            />
 
             <div className="titulo-con-boton">
                 <p>Tocá "Actualizar" para ver el estado más reciente.</p>

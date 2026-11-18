@@ -165,11 +165,13 @@ form button[type="submit"]:hover:not(:disabled) {
 }
 
 /* Formularios: un campo debajo del otro. */
+/* El margen de abajo separa del botón lo que venga después, como un mensaje o un título. */
 form {
     display: flex;
     flex-direction: column;
     gap: 14px;
     max-width: 420px;
+    margin-bottom: 16px;
 }
 
 label {
@@ -660,12 +662,19 @@ section > h3 {
 }
 
 /* Un texto o un título con un botón al costado, como "Actualizar". */
+/* El margen va en la fila y no en el texto: así queda el mismo espacio arriba y abajo,
+   también en el celular, cuando el botón baja de renglón. */
 .titulo-con-boton {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
+    margin: 16px 0;
+}
+
+.titulo-con-boton > * {
+    margin: 0;
 }
 
 /* Botones de cada pedido: uno al lado del otro, y abajo si no entran. */

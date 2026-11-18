@@ -6,6 +6,7 @@ import Encabezado from "../componentes/Encabezado.jsx";
 import Estado from "../componentes/Estado.jsx";
 import Cargando from "../componentes/Cargando.jsx";
 import ErrorAlCargar from "../componentes/ErrorAlCargar.jsx";
+import Banner from "../componentes/Banner.jsx";
 
 // Lo que puede hacer la cocina con un pedido según su estado: el texto del botón y el estado al que pasa.
 // Son las mismas transiciones que permite el backend (cocineroControlador).
@@ -130,11 +131,18 @@ function PantallaCocina({ alCerrarSesion }) {
             <Encabezado seccion="Cocina" alCerrarSesion={alCerrarSesion} />
 
             <main>
+                <Banner
+                    chico
+                    foto="/img/cocina.jpg"
+                    descripcion="Cocinero con una sartén en el fuego"
+                    titulo="Pedidos activos"
+                    texto="Del más viejo al más nuevo, para prepararlos en orden."
+                />
+
                 <div className="titulo-con-boton">
-                    <h2>Pedidos activos</h2>
+                    <p>Tocá "Actualizar" para ver los pedidos que van entrando.</p>
                     <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
                 </div>
-                <p>Del más viejo al más nuevo. Tocá "Actualizar" para ver los pedidos que van entrando.</p>
 
                 {mensaje && <p className="error">{mensaje}</p>}
 

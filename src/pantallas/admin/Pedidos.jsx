@@ -5,6 +5,7 @@ import { listarIngredientes } from "../../pedidos.js";
 import Estado from "../../componentes/Estado.jsx";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
+import Banner from "../../componentes/Banner.jsx";
 
 // Los estados de un pedido, para el filtro. Son los del modelo Orden del backend.
 const ESTADOS = ["Pendiente", "En preparación", "Lista para retirar", "Entregada", "Cancelado"];
@@ -128,11 +129,18 @@ function Pedidos() {
 
     return (
         <section>
+            <Banner
+                chico
+                foto="/img/pedidos-panel.jpg"
+                descripcion="Mesa vista desde arriba, con hamburguesas y papas fritas"
+                titulo="Pedidos"
+                texto="Los pedidos de todos los clientes, del más nuevo al más viejo."
+            />
+
             <div className="titulo-con-boton">
-                <h2>Pedidos</h2>
+                <p>Acá se consultan: los cambia el cliente o la cocina.</p>
                 <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
             </div>
-            <p>Los pedidos, del más nuevo al más viejo. Acá se consultan: los cambia el cliente o la cocina.</p>
 
             {/* Mientras carga, el filtro se deshabilita: así no salen dos pedidos al backend que puedan llegar cruzados. */}
             <label className="filtro">
