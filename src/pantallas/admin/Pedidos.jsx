@@ -3,11 +3,14 @@ import { pedirApi } from "../../api.js";
 import { formatearFecha, formatearPrecio } from "../../formato.js";
 import { listarIngredientes } from "../../pedidos.js";
 import Estado from "../../componentes/Estado.jsx";
+import Cargando from "../../componentes/Cargando.jsx";
+import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 
 // Los estados de un pedido, para el filtro. Son los del modelo Orden del backend.
 const ESTADOS = ["Pendiente", "En preparación", "Lista para retirar", "Entregada", "Cancelado"];
 
-// Sección de pedidos del panel: todos los pedidos, del más nuevo al más viejo.
+// Sección de pedidos del panel: los pedidos del estado elegido (o todos), del más nuevo al más viejo.
+// El filtro lo hace el backend: solo viajan los pedidos que se van a mostrar.
 // El administrador los consulta, pero no los cambia: de eso se ocupan el cliente y la cocina.
 function Pedidos() {
     // La lista que manda el backend y cómo va su carga.
@@ -25,7 +28,10 @@ function Pedidos() {
         setErrorAlCargar("");
 
         try {
-            setPedidos(await pedirApi("/api/admin"));
+            // El filtro viaja como parámetro de consulta, y el backend busca solo los pedidos de ese estado.
+            // encodeURIComponent hace que el espacio y la tilde de "En preparación" viajen bien en la dirección.
+            const ruta = filtro === "" ? "/api/admin" : `/api/admin?estado=${encodeURIComponent(filtro)}`;
+            setPedidos(await pedirApi(ruta));
         } catch (error) {
             setErrorAlCargar(error.message);
         } finally {
@@ -33,10 +39,16 @@ function Pedidos() {
         }
     };
 
-    // Al abrir la sección se pide la lista una sola vez.
+    // Se piden los pedidos al abrir la sección y cada vez que cambia el filtro: por eso [filtro] y no [].
     useEffect(() => {
         cargarPedidos();
-    }, []);
+    }, [filtro]);
+
+    // Al cambiar el filtro se vacía la lista, así no se ven los pedidos del filtro anterior mientras llegan los nuevos.
+    const cambiarFiltro = (estado) => {
+        setPedidos([]);
+        setFiltro(estado);
+    };
 
     // Pide un pedido solo: el backend lo manda con el nombre y el rol de quien hizo cada cambio de estado.
     const verHistorial = async (id) => {
@@ -72,29 +84,23 @@ function Pedidos() {
     const mostrarPedidos = () => {
         // "Cargando..." solo si todavía no hay nada para mostrar: al actualizar, la lista queda en su lugar.
         if(cargando && pedidos.length === 0) {
-            return <p>Cargando los pedidos... Si el servidor estaba dormido, puede tardar hasta un minuto.</p>;
+            return <Cargando que="los pedidos" />;
         }
 
         if(errorAlCargar) {
-            return (
-                <p className="error">
-                    {errorAlCargar} <button className="enlace" onClick={cargarPedidos}>Reintentar</button>
-                </p>
-            );
+            return <ErrorAlCargar mensaje={errorAlCargar} alReintentar={cargarPedidos} />;
         }
 
         if(pedidos.length === 0) {
-            return <p>Todavía no hay pedidos.</p>;
+            return <p>{filtro === "" ? "Todavía no hay pedidos." : `No hay pedidos en estado ${filtro}.`}</p>;
         }
 
-        // Con filter quedan los pedidos del estado elegido; sin filtro, todos.
-        const visibles = pedidos.filter((pedido) => filtro === "" || pedido.estado === filtro);
-
+        // La lista ya llega filtrada del backend: se muestra tal cual.
         return (
             <>
-                <p>Mostrando {visibles.length} de {pedidos.length}.</p>
+                <p>{pedidos.length === 1 ? "1 pedido" : `${pedidos.length} pedidos`}{filtro !== "" && ` en estado ${filtro}`}.</p>
 
-                {visibles.map((pedido) => (
+                {pedidos.map((pedido) => (
                     <article key={pedido._id} className="tarjeta">
                         <p>
                             <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
@@ -126,11 +132,12 @@ function Pedidos() {
                 <h2>Pedidos</h2>
                 <button onClick={cargarPedidos} disabled={cargando}>Actualizar</button>
             </div>
-            <p>Todos los pedidos, del más nuevo al más viejo. Acá se consultan: los cambia el cliente o la cocina.</p>
+            <p>Los pedidos, del más nuevo al más viejo. Acá se consultan: los cambia el cliente o la cocina.</p>
 
+            {/* Mientras carga, el filtro se deshabilita: así no salen dos pedidos al backend que puedan llegar cruzados. */}
             <label className="filtro">
                 Mostrar
-                <select value={filtro} onChange={(evento) => setFiltro(evento.target.value)}>
+                <select value={filtro} onChange={(evento) => cambiarFiltro(evento.target.value)} disabled={cargando}>
                     <option value="">Todos los estados</option>
                     {ESTADOS.map((estado) => (
                         <option key={estado} value={estado}>{estado}</option>
