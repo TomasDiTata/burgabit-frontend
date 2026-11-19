@@ -34,9 +34,9 @@ Cada pantalla tiene su dirección, así que se puede guardar o compartir el enla
 | `/cocina` | Pedidos activos | Cocina |
 | `/admin/categorias`, `/admin/ingredientes`, `/admin/usuarios`, `/admin/pedidos` | Panel del administrador | Administración |
 
-- Sin sesión, las pantallas de los roles mandan al ingreso. Con otro rol, mandan a la pantalla de ese rol. Es solo para la navegación: los permisos los controla siempre el backend.
+- Sin sesión, las pantallas de los roles muestran el error 401, con botones para ingresar o crear una cuenta. Con una cuenta de otro rol, muestran el error 403 y ofrecen ir a la sección propia. Son los mismos códigos que usa el backend, y es solo para la navegación: los permisos los controla siempre el backend.
 - Después de ingresar, el ingreso se reemplaza en el historial, así "Atrás" no vuelve al formulario.
-- Cualquier otra dirección muestra una página de BurgaBit que avisa que no existe.
+- Cualquier otra dirección muestra el error 404. Los tres errores usan la misma página (`PaginaDeError.jsx`), con la foto de una hamburguesa desarmada.
 
 ## Librerías
 
@@ -115,7 +115,7 @@ burgabit-frontend/
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
         ├── Login.jsx          Ingreso.
         ├── Registro.jsx       Alta de clientes.
-        ├── NoEncontrada.jsx   Para las direcciones que no existen.
+        ├── PaginaDeError.jsx  Los errores 401, 403 y 404: qué pasó y qué hacer.
         ├── PantallaCliente.jsx  Pestañas del cliente, sus rutas y el pedido en curso.
         ├── PantallaCocina.jsx   Pedidos activos y cambios de estado.
         ├── PanelAdmin.jsx     Pestañas del administrador y sus rutas.
@@ -164,6 +164,7 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `ingredientes.jpg` | Banner de ingredientes, en el panel | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
 | `usuarios.jpg` | Banner de usuarios, en el panel | [Unsplash](https://images.unsplash.com/photo-1555992336-03a23c7b20ee) |
 | `pedidos-panel.jpg` | Banner de pedidos, en el panel | [Unsplash](https://images.unsplash.com/photo-1466978913421-dad2ebd01d17) |
+| `error-parada.jpg`, `error-acostada.jpg` | Página de error: parada en pantallas anchas (con amarillo agregado a los costados) y acostada en el celular | [Pexels 7497213](https://www.pexels.com/photo/7497213/) |
 | `costado-hamburguesa.jpg` | Costado izquierdo, en pantallas anchas | [Pexels 8365318](https://www.pexels.com/photo/8365318/) |
 | `costado-papas.jpg` | Costado derecho, en pantallas anchas | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
 | `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
@@ -173,7 +174,7 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `salsas.jpg` | Categorías de salsas o aderezos | [Unsplash](https://images.unsplash.com/photo-1472476443507-c7a5948772fc) |
 | `panceta.jpg` | Categorías de panceta | [Unsplash](https://images.unsplash.com/photo-1528607929212-2636ec44253e) |
 | `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
-| `hamburguesa.jpg` | Cualquier otra categoría, y la página de dirección inexistente | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
+| `hamburguesa.jpg` | Cualquier otra categoría | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
 
 ## Publicación
 

@@ -1112,18 +1112,50 @@ th {
 }
 
 /* La página de una dirección que no existe. */
-.no-encontrada {
-    max-width: 520px;
-    padding-top: 48px;
-    text-align: center;
+/* La página de error (401, 403 y 404): usa el diseño del ingreso, con la foto de una hamburguesa desarmada.
+   La foto es una toma desde arriba, así que se puede girar: en el celular va acostada, para que entre en la franja de arriba,
+   y en pantallas anchas va parada, como se arma una hamburguesa (con amarillo agregado a los costados, para que llene la columna). */
+.error-foto {
+    background-color: #dacb6f;
+    background-image: url("/img/error-acostada.jpg");
+    background-position: center;
+    background-size: cover;
 }
 
-.no-encontrada img {
-    width: 100%;
-    height: 220px;
-    margin-bottom: 16px;
-    object-fit: cover;
-    border-radius: var(--radio);
+/* Sobre el amarillo no hace falta el degradé oscuro del ingreso: el lema va en negro. */
+.error-foto::after {
+    display: none;
+}
+
+.error-foto .lema {
+    font-size: 1.6rem;
+    color: var(--carbon);
+}
+
+@media (min-width: 860px) {
+    .error-foto {
+        background-image: url("/img/error-parada.jpg");
+    }
+
+    /* En pantallas anchas, el lema en una columna angosta a la izquierda, para no tapar la hamburguesa del medio. */
+    .error-foto .lema {
+        max-width: 4.6em;
+        font-size: 3.4rem;
+    }
+}
+
+/* El código del error, bien grande: es lo primero que se lee. */
+.error-codigo {
+    margin: 0 0 4px;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: clamp(4rem, 12vw, 6.5rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--mostaza-oscura);
+}
+
+.acceso-formulario .acciones {
+    margin-top: 24px;
 }
 
 /* En pantallas angostas (celulares): títulos, encabezado y tablas un poco más chicos. */
