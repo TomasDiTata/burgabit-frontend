@@ -1,3 +1,5 @@
+import { conMayuscula } from "./formato.js";
+
 // El dibujo de la hamburguesa: qué capa le toca a cada ingrediente y en qué orden se apilan.
 // Los ingredientes los crea el administrador, así que la capa se elige por palabras del nombre (como en fotos.js).
 // El orden importa: "panceta" va antes que "pan", porque "panceta" también contiene "pan".
@@ -44,7 +46,7 @@ export const capasDe = (ingredientes) => {
         }
 
         for(let unidad = 1; unidad <= ingrediente.cantidad; unidad++) {
-            capas.push({ clave: `${ingrediente.nombre} ${unidad}`, nombre: ingrediente.nombre, tipo });
+            capas.push({ clave: `${ingrediente.nombre} ${unidad}`, nombre: conMayuscula(ingrediente.nombre), tipo });
         }
     }
 

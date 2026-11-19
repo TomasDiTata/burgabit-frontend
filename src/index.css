@@ -621,11 +621,6 @@ section > h3 {
     }
 }
 
-/* El nombre de cada categoría empieza con mayúscula, aunque en la base esté en minúsculas. */
-.titulo-categoria::first-letter {
-    text-transform: uppercase;
-}
-
 /* Cada ingrediente en una fila: el nombre y el precio a la izquierda, el contador a la derecha. */
 .opciones {
     margin: 0;

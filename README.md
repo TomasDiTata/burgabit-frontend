@@ -136,6 +136,7 @@ burgabit-frontend/
 - Al ingresar, el backend devuelve un token JWT. Se guarda en `localStorage` y viaja en cada pedido en el encabezado `Authorization: Bearer <token>`.
 - El frontend lee del token el rol, para elegir la pantalla, y el vencimiento, para pedir el ingreso de nuevo. Los permisos los controla siempre el backend.
 - Los formularios se validan antes de enviar, y cada pedido a la API muestra que está en curso ("Cargando...", "Guardando...") y avisa si falla.
+- Los nombres de categorías e ingredientes llegan en minúscula: el backend los guarda así (`lowercase: true` en los modelos) para que "Cheddar" y "cheddar" no cuenten como dos distintos. El frontend los muestra con la primera letra en mayúscula, con `conMayuscula` (`src/formato.js`).
 - Los pedidos del panel del administrador se piden ya filtrados: al elegir un estado, el pedido es `/api/admin?estado=...` y el backend devuelve solo esos. Así no viajan todos los pedidos para descartarlos en el navegador.
 
 ## Diseño

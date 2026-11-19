@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
-import { formatearPrecio } from "../../formato.js";
+import { formatearPrecio, conMayuscula } from "../../formato.js";
 import { subtotalDe, describirProducto, ingredientesDe } from "../../pedidos.js";
 import { fotoDeCategoria } from "../../fotos.js";
 import Cargando from "../../componentes/Cargando.jsx";
@@ -144,7 +144,7 @@ function Armador({ alAgregar }) {
                             </div>
 
                             <div className="paso-contenido">
-                                <h3 className="titulo-categoria">{categoria.nombre}</h3>
+                                <h3>{conMayuscula(categoria.nombre)}</h3>
                                 <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
 
                                 {opciones.length === 0 && <p>No hay ingredientes disponibles por ahora.</p>}
@@ -158,12 +158,12 @@ function Armador({ alAgregar }) {
                                         return (
                                             <li key={ingrediente._id} className="opcion">
                                                 <span>
-                                                    {ingrediente.nombre} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
+                                                    {conMayuscula(ingrediente.nombre)} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
                                                 </span>
                                                 <span className="contador">
-                                                    <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
+                                                    <button aria-label={`Quitar ${conMayuscula(ingrediente.nombre)}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
                                                     <span>{cantidad}</span>
-                                                    <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
+                                                    <button aria-label={`Agregar ${conMayuscula(ingrediente.nombre)}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
                                                 </span>
                                             </li>
                                         );
