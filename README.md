@@ -97,6 +97,7 @@ burgabit-frontend/
     ├── App.jsx                Las rutas: qué pantalla va en cada dirección, y cuáles piden sesión y rol.
     ├── rutas.js               La pantalla de inicio de cada rol y la clase de las pestañas.
     ├── fotos.js               Elige la foto de cada categoría según su nombre.
+    ├── hamburguesa.js         Qué capa del dibujo le toca a cada ingrediente, y en qué orden se apilan.
     ├── api.js                 pedirApi: la única función que habla con el backend.
     ├── sesion.js              Guarda, lee y borra el token (JWT) en el navegador.
     ├── validaciones.js        Reglas que comparten los formularios.
@@ -108,6 +109,7 @@ burgabit-frontend/
     │   ├── Cargando.jsx       El aviso de "Cargando..." mientras llegan los datos.
     │   ├── Encabezado.jsx     Barra de arriba: el logo, la sección y "Cerrar sesión".
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
+    │   ├── Hamburguesa.jsx    El dibujo de una hamburguesa: el pan, una capa por ingrediente y el pan.
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
     └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
@@ -142,6 +144,7 @@ burgabit-frontend/
 - **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
 - **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
 - **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
+- **La hamburguesa se dibuja mientras se arma:** en el armador, cada vez que se toca "+" cae una capa nueva sobre el pan (carne, cheddar, lechuga, tomate, salsa...). La capa se elige por palabras del nombre del ingrediente (`src/hamburguesa.js`), y el dibujo es todo CSS: no usa imágenes. En la compu, el resumen queda fijo a la derecha con el dibujo grande; en el celular, la barra de abajo lo muestra chico. Los pasos que ya tienen lo necesario se marcan en verde y con ✓.
 - **Hamburguesa y papas a los costados:** en pantallas de 1300 px o más sobra lugar a los costados de la columna del medio. Ahí van una hamburguesa (a la izquierda) y unas papas fritas (a la derecha), fijas mientras se baja y desvaneciéndose hacia el centro con un degradé crema. En esas pantallas los banners quedan como carteles sin foto, y su foto ni se descarga (`loading="lazy"`). En el celular no hay costados: ahí cada banner muestra su foto.
 
 ### Fotos

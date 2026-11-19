@@ -14,7 +14,12 @@ export const listarIngredientes = (ingredientes) => {
         .join(", ");
 };
 
-// Lo mismo, para un producto que se está armando.
+// Un producto que se está armando, como lista de { nombre, cantidad }: la misma forma que guarda el backend en cada pedido.
+export const ingredientesDe = (producto) => {
+    return producto.map((elegido) => ({ nombre: elegido.ingrediente.nombre, cantidad: elegido.cantidad }));
+};
+
+// Lo mismo que listarIngredientes, para un producto que se está armando.
 export const describirProducto = (producto) => {
-    return listarIngredientes(producto.map((elegido) => ({ nombre: elegido.ingrediente.nombre, cantidad: elegido.cantidad })));
+    return listarIngredientes(ingredientesDe(producto));
 };

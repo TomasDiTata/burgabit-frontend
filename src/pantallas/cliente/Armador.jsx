@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
 import { formatearPrecio } from "../../formato.js";
-import { subtotalDe, describirProducto } from "../../pedidos.js";
+import { subtotalDe, describirProducto, ingredientesDe } from "../../pedidos.js";
 import { fotoDeCategoria } from "../../fotos.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 import Banner from "../../componentes/Banner.jsx";
+import Hamburguesa from "../../componentes/Hamburguesa.jsx";
 
 // La regla de una categoría, en palabras.
 const textoDeLaRegla = (categoria) => {
@@ -117,7 +118,7 @@ function Armador({ alAgregar }) {
     const falta = queFalta(faltantes, elegidos);
 
     return (
-        <section>
+        <section className="armador">
             <Banner
                 foto="/img/armar.jpg"
                 descripcion="Hamburguesa doble con papas fritas"
@@ -125,53 +126,60 @@ function Armador({ alAgregar }) {
                 texto="El pan va incluido. Elegí los ingredientes con los botones + y −."
             />
 
-            {categorias.map((categoria, posicion) => {
-                // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
-                const opciones = menu.filter((ingrediente) => ingrediente.categoria?._id === categoria._id);
-                const elegidosEnLaCategoria = totalDeCategoria(categoria._id);
+            {/* Los pasos. En la compu van a la izquierda, y el resumen con el dibujo queda fijo a la derecha. */}
+            <div className="armador-pasos">
+                {categorias.map((categoria, posicion) => {
+                    // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
+                    const opciones = menu.filter((ingrediente) => ingrediente.categoria?._id === categoria._id);
+                    const elegidosEnLaCategoria = totalDeCategoria(categoria._id);
+                    // Un paso está listo cuando ya tiene algo elegido y llegó a su mínimo: se marca en verde y con ✓.
+                    const listo = elegidosEnLaCategoria > 0 && elegidosEnLaCategoria >= categoria.minimo;
 
-                return (
-                    <article key={categoria._id} className="tarjeta paso">
-                        <div className="paso-foto">
-                            {/* alt vacío: la foto decora, y el nombre de la categoría ya está en el título. */}
-                            <img src={fotoDeCategoria(categoria.nombre)} alt="" loading="lazy" />
-                            <span>Paso {posicion + 1}</span>
-                        </div>
+                    return (
+                        <article key={categoria._id} className="tarjeta paso">
+                            <div className="paso-foto">
+                                {/* alt vacío: la foto decora, y el nombre de la categoría ya está en el título. */}
+                                <img src={fotoDeCategoria(categoria.nombre)} alt="" loading="lazy" />
+                                <span className={listo ? "paso-listo" : ""}>Paso {posicion + 1}{listo && " ✓"}</span>
+                            </div>
 
-                        <div className="paso-contenido">
-                            <h3 className="titulo-categoria">{categoria.nombre}</h3>
-                            <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
+                            <div className="paso-contenido">
+                                <h3 className="titulo-categoria">{categoria.nombre}</h3>
+                                <p>{textoDeLaRegla(categoria)} Llevás {elegidosEnLaCategoria}.</p>
 
-                            {opciones.length === 0 && <p>No hay ingredientes disponibles por ahora.</p>}
+                                {opciones.length === 0 && <p>No hay ingredientes disponibles por ahora.</p>}
 
-                            <ul className="opciones">
-                                {opciones.map((ingrediente) => {
-                                    const cantidad = cantidadDe(ingrediente._id);
-                                    // Se puede sumar si no pasa el máximo por ingrediente, el stock ni el máximo de la categoría.
-                                    const puedeSumar = cantidad < MAXIMO_POR_INGREDIENTE && cantidad < ingrediente.cantidad && elegidosEnLaCategoria < categoria.maximo;
+                                <ul className="opciones">
+                                    {opciones.map((ingrediente) => {
+                                        const cantidad = cantidadDe(ingrediente._id);
+                                        // Se puede sumar si no pasa el máximo por ingrediente, el stock ni el máximo de la categoría.
+                                        const puedeSumar = cantidad < MAXIMO_POR_INGREDIENTE && cantidad < ingrediente.cantidad && elegidosEnLaCategoria < categoria.maximo;
 
-                                    return (
-                                        <li key={ingrediente._id} className="opcion">
-                                            <span>
-                                                {ingrediente.nombre} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
-                                            </span>
-                                            <span className="contador">
-                                                <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
-                                                <span>{cantidad}</span>
-                                                <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
-                                            </span>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </article>
-                );
-            })}
+                                        return (
+                                            <li key={ingrediente._id} className="opcion">
+                                                <span>
+                                                    {ingrediente.nombre} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
+                                                </span>
+                                                <span className="contador">
+                                                    <button aria-label={`Quitar ${ingrediente.nombre}`} onClick={() => restar(ingrediente)} disabled={cantidad === 0}>−</button>
+                                                    <span>{cantidad}</span>
+                                                    <button aria-label={`Agregar ${ingrediente.nombre}`} onClick={() => sumar(ingrediente)} disabled={!puedeSumar}>+</button>
+                                                </span>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        </article>
+                    );
+                })}
+            </div>
 
-            {/* Siempre a mano, pegado abajo de la pantalla: lo elegido, el subtotal y el botón para agregar. */}
+            {/* Siempre a mano (abajo en el celu, al costado en la compu): el dibujo, lo elegido, el subtotal y el botón para agregar. */}
+            {/* El dibujo cambia con cada + y −, porque se arma con lo que hay en el estado elegidos. */}
             <div className="resumen">
-                <p>
+                <Hamburguesa ingredientes={ingredientesDe(elegidos)} />
+                <p className="descripcion">
                     <strong>Tu hamburguesa:</strong> {elegidos.length === 0 ? "todavía no elegiste nada." : describirProducto(elegidos)}
                 </p>
                 <p className="total">Subtotal: {formatearPrecio(subtotalDe(elegidos))}</p>

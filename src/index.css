@@ -566,6 +566,12 @@ section > h3 {
     border-radius: 999px;
 }
 
+/* El paso que ya tiene lo que necesita: en verde y con ✓ (el texto también cambia, no solo el color). */
+.paso-foto span.paso-listo {
+    color: var(--blanco);
+    background-color: var(--verde);
+}
+
 .paso-contenido {
     padding: 16px;
 }
@@ -640,14 +646,14 @@ section > h3 {
 }
 
 /* El resumen del armador queda siempre a mano: pegado abajo de la pantalla mientras se eligen los ingredientes. */
-/* Es una grilla de dos columnas: cada renglón ocupa todo el ancho, salvo el subtotal y el botón,
-   que van juntos en la segunda fila para que el resumen tape poco. */
+/* Es una grilla de tres columnas. Arriba, el dibujo chico y, al lado, lo elegido en un solo renglón.
+   Abajo, el subtotal y el botón juntos, para que el resumen tape poco. El resto ocupa todo el ancho. */
 .resumen {
     position: sticky;
     bottom: 8px;
     z-index: 5;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     column-gap: 12px;
     padding: 12px 16px;
@@ -660,14 +666,48 @@ section > h3 {
     grid-column: 1 / -1;
 }
 
+.resumen .hamburguesa {
+    grid-row: 1;
+    grid-column: 1;
+    font-size: 4px;
+}
+
+/* Lo elegido, en un solo renglón (con "..." al final): el dibujo ya muestra lo que lleva. */
+.resumen .descripcion {
+    grid-row: 1;
+    grid-column: 2 / -1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .resumen .total {
     grid-row: 2;
-    grid-column: 1;
+    grid-column: 1 / 3;
 }
 
 .resumen button {
     grid-row: 2;
-    grid-column: 2;
+    grid-column: 3;
+}
+
+/* nowrap: el texto del botón no se corta en dos renglones. */
+@media (min-width: 360px) {
+    .resumen button {
+        white-space: nowrap;
+    }
+}
+
+/* En celulares de menos de 360 px no entran el subtotal y el botón juntos: el botón baja a su propio renglón. */
+@media (max-width: 359px) {
+    .resumen .total {
+        grid-column: 1 / -1;
+    }
+
+    .resumen button {
+        grid-row: 3;
+        grid-column: 1 / -1;
+    }
 }
 
 .resumen p {
@@ -681,6 +721,233 @@ section > h3 {
 
 .resumen .exito {
     color: #9be7b0;
+}
+
+/* En la compu, el armador en dos columnas: los pasos a la izquierda y, a la derecha, el resumen fijo
+   (sticky) con el dibujo grande, que se va armando mientras se eligen los ingredientes. */
+@media (min-width: 1000px) {
+    .armador {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        column-gap: 24px;
+        align-items: start;
+    }
+
+    .armador > .banner {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+    }
+
+    .resumen {
+        top: 76px;
+        bottom: auto;
+        display: block;
+        padding: 16px 20px;
+    }
+
+    .resumen .hamburguesa {
+        margin: 8px auto 16px;
+        font-size: 16px;
+    }
+
+    .resumen .descripcion {
+        white-space: normal;
+    }
+
+    /* Con el resumen al costado, la foto de cada paso un poco más angosta, para que entren los ingredientes. */
+    .paso {
+        grid-template-columns: 180px 1fr;
+    }
+
+    .resumen button {
+        width: 100%;
+        margin: 8px 0;
+    }
+}
+
+/* El dibujo de la hamburguesa (componente Hamburguesa): el pan de arriba, una capa por ingrediente y el pan de abajo.
+   Todas las medidas están en em: con una letra más chica (.hamburguesa-chica), sale el mismo dibujo más chico. */
+.hamburguesa {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 12em;
+    font-size: 16px;
+}
+
+.hamburguesa-chica {
+    font-size: 5px;
+}
+
+/* El pan de arriba: media elipse dorada, con brillo y semillas de sésamo (cada semilla es un degradé chiquito). */
+.pan-arriba {
+    width: 100%;
+    height: 4.4em;
+    border-radius: 50% 50% 0.8em 0.8em / 100% 100% 0.8em 0.8em;
+    background-color: #e39a45;
+    background-image:
+        radial-gradient(0.17em 0.32em at 27% 34%, #fff1cf 90%, transparent),
+        radial-gradient(0.32em 0.17em at 41% 20%, #fff1cf 90%, transparent),
+        radial-gradient(0.17em 0.32em at 56% 30%, #fff1cf 90%, transparent),
+        radial-gradient(0.32em 0.17em at 71% 22%, #fff1cf 90%, transparent),
+        radial-gradient(0.17em 0.32em at 35% 56%, #fff1cf 90%, transparent),
+        radial-gradient(0.32em 0.17em at 50% 46%, #fff1cf 90%, transparent),
+        radial-gradient(0.17em 0.32em at 66% 52%, #fff1cf 90%, transparent),
+        radial-gradient(0.32em 0.17em at 81% 44%, #fff1cf 90%, transparent),
+        radial-gradient(0.17em 0.32em at 19% 58%, #fff1cf 90%, transparent),
+        radial-gradient(ellipse at 38% 22%, #ffd894 0%, #f0a64c 42%, #cf7d2b 100%);
+    box-shadow: inset 0 -0.3em 0 rgba(120, 60, 10, 0.25);
+}
+
+/* El pan de abajo: más finito y un poco más angosto. */
+.pan-abajo {
+    width: 96%;
+    height: 1.5em;
+    margin-top: -0.1em;
+    border-radius: 0.4em 0.4em 1.2em 1.2em / 0.4em 0.4em 1em 1em;
+    background: linear-gradient(#f2b462, #c9792c);
+}
+
+/* Cada capa se superpone un poquito con la de abajo, como en una hamburguesa de verdad. */
+.capa {
+    width: 100%;
+    margin-top: -0.12em;
+    border-radius: 999px;
+    box-shadow: 0 0.08em 0 rgba(0, 0, 0, 0.18);
+    animation: caer 0.3s ease-out;
+}
+
+/* Al sumar un ingrediente, su capa cae desde arriba. Responde a lo que hizo la persona: no se mueve sola. */
+@keyframes caer {
+    from {
+        transform: translateY(-2em);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* En las listas, el dibujo chico no se anima: solo el del armador, que cambia cuando se toca "+". */
+.hamburguesa-chica .capa {
+    animation: none;
+}
+
+.capa-carne {
+    width: 104%;
+    height: 1.35em;
+    border-radius: 0.7em;
+    background-color: #5a3420;
+    background-image:
+        radial-gradient(circle at 18% 35%, rgba(0, 0, 0, 0.35) 0.1em, transparent 0.12em),
+        radial-gradient(circle at 42% 65%, rgba(0, 0, 0, 0.35) 0.1em, transparent 0.12em),
+        radial-gradient(circle at 67% 30%, rgba(0, 0, 0, 0.35) 0.1em, transparent 0.12em),
+        radial-gradient(circle at 85% 60%, rgba(0, 0, 0, 0.35) 0.1em, transparent 0.12em),
+        linear-gradient(#7d4b2d, #5a3420 55%, #3e2315);
+}
+
+.capa-pollo {
+    width: 102%;
+    height: 1.3em;
+    border-radius: 0.65em;
+    background-color: #c98a3e;
+    background-image:
+        radial-gradient(circle at 25% 40%, rgba(255, 230, 170, 0.6) 0.1em, transparent 0.12em),
+        radial-gradient(circle at 55% 65%, rgba(255, 230, 170, 0.6) 0.1em, transparent 0.12em),
+        radial-gradient(circle at 80% 35%, rgba(255, 230, 170, 0.6) 0.1em, transparent 0.12em),
+        linear-gradient(#ecb767, #c98a3e 55%, #a5652a);
+}
+
+/* El cheddar: una feta más ancha que la carne, con gotas que se derriten (clip-path recorta la forma). */
+.capa-queso {
+    width: 108%;
+    height: 1em;
+    border-radius: 0.15em;
+    background: #ffbf1f;
+    box-shadow: none;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 93% 45%, 92% 85%, 89% 95%, 87% 85%, 86% 45%, 63% 45%, 62% 100%, 59% 100%, 58% 45%, 30% 45%, 29% 80%, 26% 80%, 25% 45%, 9% 45%, 8% 90%, 5% 90%, 4% 45%, 0 45%);
+}
+
+.capa-panceta {
+    width: 104%;
+    height: 0.6em;
+    border-radius: 0.3em;
+    background: repeating-linear-gradient(90deg, #a8432e 0 0.9em, #dc8a72 0.9em 1.3em);
+}
+
+.capa-huevo {
+    height: 0.8em;
+    background: radial-gradient(ellipse 1.7em 0.45em at 50% 50%, #ffb703 92%, #fff8ec 100%);
+}
+
+.capa-lechuga {
+    width: 112%;
+    height: 0.8em;
+    border-radius: 50% 50% 40% 40% / 80% 80% 40% 40%;
+    background: linear-gradient(#8fd05f, #4d9a2e);
+}
+
+/* El tomate: dos rodajas, con un corte en el medio. */
+.capa-tomate {
+    width: 98%;
+    height: 0.62em;
+    border-radius: 0.31em;
+    background: linear-gradient(90deg, #e8432f 0 48.5%, transparent 48.5% 51.5%, #e8432f 51.5%);
+    box-shadow: none;
+}
+
+.capa-cebolla {
+    width: 96%;
+    height: 0.5em;
+    border: 0.14em solid #9b59a8;
+    background: #f6e8f5;
+}
+
+.capa-pepino {
+    width: 88%;
+    height: 0.4em;
+    background: repeating-linear-gradient(90deg, #79a33c 0 1.4em, transparent 1.4em 1.8em);
+    box-shadow: none;
+}
+
+/* Las salsas: un hilo finito, de su color. */
+.capa-barbacoa,
+.capa-ketchup,
+.capa-mostaza,
+.capa-mayonesa {
+    width: 92%;
+    height: 0.32em;
+}
+
+.capa-barbacoa {
+    background: #6b2a14;
+}
+
+.capa-ketchup {
+    background: #c8102e;
+}
+
+.capa-mostaza {
+    background: #e3a913;
+}
+
+.capa-mayonesa {
+    background: #f4ead2;
+}
+
+/* Cualquier otro ingrediente: una capa de color neutro. */
+.capa-otro {
+    width: 96%;
+    height: 0.6em;
+    background: #c9a77e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .capa {
+        animation: none;
+    }
 }
 
 /* El pedido en curso, separado del armador con una franja de ketchup. */
