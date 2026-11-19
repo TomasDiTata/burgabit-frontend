@@ -102,7 +102,7 @@ function PantallaCocina({ alCerrarSesion }) {
                     <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
                     <Estado estado={pedido.estado} />
                 </p>
-                {/* Cada hamburguesa con su dibujo chico al lado: en la cocina sirve como guía de cómo armarla. */}
+                {/* Cada hamburguesa con su foto chica al lado: en la cocina sirve como guía de cómo armarla. */}
                 <ol className="productos">
                     {pedido.productos.map((producto) => (
                         <li key={producto._id}>

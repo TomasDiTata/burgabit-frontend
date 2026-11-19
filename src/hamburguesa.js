@@ -1,9 +1,10 @@
 import { conMayuscula } from "./formato.js";
 
-// El dibujo de la hamburguesa: qué capa le toca a cada ingrediente y en qué orden se apilan.
+// Las capas de la hamburguesa: qué foto le toca a cada ingrediente y en qué orden se apilan.
+// Cada tipo es una foto en public/img/capas (por ejemplo, "carne" es carne.webp).
 // Los ingredientes los crea el administrador, así que la capa se elige por palabras del nombre (como en fotos.js).
 // El orden importa: "panceta" va antes que "pan", porque "panceta" también contiene "pan".
-// tipo null: no es una capa. El pan ya está dibujado arriba y abajo, y las papas o la bebida van al costado.
+// tipo null: no es una capa. El pan ya está siempre (arriba y abajo), y las papas o la bebida van al costado.
 const TIPOS = [
     { palabras: ["panceta", "bacon"], tipo: "panceta" },
     { palabras: ["pan"], tipo: null },
@@ -18,23 +19,24 @@ const TIPOS = [
     { palabras: ["pepino", "pickle"], tipo: "pepino" },
     { palabras: ["ketchup"], tipo: "ketchup" },
     { palabras: ["mostaza"], tipo: "mostaza" },
-    { palabras: ["mayo", "alioli"], tipo: "mayonesa" },
-    { palabras: ["barbacoa", "salsa"], tipo: "barbacoa" }
+    { palabras: ["barbacoa", "bbq"], tipo: "barbacoa" },
+    { palabras: ["mayo", "alioli", "salsa", "aderezo"], tipo: "mayonesa" }
 ];
 
 // De abajo hacia arriba, como se arma una hamburguesa de verdad: la carne sobre el pan y las salsas arriba de todo.
-// "otro" es cualquier ingrediente que no coincide con ninguna palabra: va en el medio, con un color neutro.
-const ORDEN = ["carne", "pollo", "queso", "panceta", "huevo", "otro", "cebolla", "tomate", "pepino", "lechuga", "barbacoa", "ketchup", "mostaza", "mayonesa"];
+const ORDEN = ["carne", "pollo", "queso", "panceta", "huevo", "cebolla", "tomate", "pepino", "lechuga", "barbacoa", "ketchup", "mostaza", "mayonesa"];
 
+// El tipo de capa de un ingrediente. Si ninguna palabra coincide, null: ese ingrediente no tiene foto y no se apila
+// (igual aparece escrito en el resumen).
 const tipoDe = (nombre) => {
     const texto = nombre.toLowerCase();
     const encontrado = TIPOS.find((opcion) => opcion.palabras.some((palabra) => texto.includes(palabra)));
-    return encontrado ? encontrado.tipo : "otro";
+    return encontrado ? encontrado.tipo : null;
 };
 
 // Las capas de un producto, de abajo hacia arriba: una por cada unidad de cada ingrediente.
 // Recibe objetos con nombre y cantidad, como los que guarda el backend en cada pedido.
-// clave identifica cada capa (por ejemplo, "Cheddar 2"): así React sabe cuál es nueva y la anima al caer.
+// clave identifica cada capa (por ejemplo, "cheddar 2"): así React sabe cuál es nueva y la anima al caer.
 export const capasDe = (ingredientes) => {
     const capas = [];
 
@@ -51,5 +53,22 @@ export const capasDe = (ingredientes) => {
     }
 
     // sort con una función de comparación: va primero la capa cuyo tipo está antes en ORDEN.
-    return capas.sort((una, otra) => ORDEN.indexOf(una.tipo) - ORDEN.indexOf(otra.tipo));
+    capas.sort((una, otra) => ORDEN.indexOf(una.tipo) - ORDEN.indexOf(otra.tipo));
+
+    // Una feta de queso arriba de cada medallón, como en una hamburguesa doble: medallón, queso, medallón, queso.
+    // Las fetas que sobran van juntas arriba del último medallón.
+    const medallones = capas.filter((capa) => capa.tipo === "carne" || capa.tipo === "pollo");
+    const quesos = capas.filter((capa) => capa.tipo === "queso");
+    const resto = capas.filter((capa) => !medallones.includes(capa) && !quesos.includes(capa));
+    const apiladas = [];
+
+    medallones.forEach((medallon, posicion) => {
+        apiladas.push(medallon);
+
+        if(posicion < quesos.length) {
+            apiladas.push(quesos[posicion]);
+        }
+    });
+
+    return [...apiladas, ...quesos.slice(medallones.length), ...resto];
 };

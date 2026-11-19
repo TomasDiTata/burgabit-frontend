@@ -79,7 +79,7 @@ function MisPedidos({ aviso }) {
                 <p>
                     <strong>{formatearFecha(pedido.createdAt)}</strong> <Estado estado={pedido.estado} />
                 </p>
-                {/* Cada hamburguesa con su dibujo chico al lado: se ve de un vistazo qué lleva. */}
+                {/* Cada hamburguesa con su foto chica al lado: se ve de un vistazo qué lleva. */}
                 <ol className="productos">
                     {pedido.productos.map((producto) => (
                         <li key={producto._id}>

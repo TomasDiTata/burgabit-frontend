@@ -42,7 +42,7 @@ function Pedido({ productos, alQuitar, alConfirmar }) {
                 <p>Todavía no agregaste nada. Armá tu hamburguesa y sumala al pedido.</p>
             ) : (
                 <>
-                    {/* Cada hamburguesa con su dibujo chico al lado: se ve de un vistazo qué lleva. */}
+                    {/* Cada hamburguesa con su foto chica al lado: se ve de un vistazo qué lleva. */}
                     <ol className="productos">
                         {productos.map((producto, posicion) => (
                             <li key={posicion}>

@@ -139,7 +139,7 @@ function Armador({ alAgregar }) {
                 texto="El pan va incluido. Elegí los ingredientes con los botones + y −."
             />
 
-            {/* Los pasos. En la compu van a la izquierda, y el resumen con el dibujo queda fijo a la derecha. */}
+            {/* Los pasos. En la compu van a la izquierda, y el resumen con la hamburguesa queda fijo a la derecha. */}
             <div className="armador-pasos">
                 {categorias.map((categoria, posicion) => {
                     // ?. por si un ingrediente quedó sin categoría (por ejemplo, si la borraron a mano en la base).
@@ -191,7 +191,7 @@ function Armador({ alAgregar }) {
             </div>
 
             {/* Siempre a mano (abajo en el celu, al costado en la compu): qué lleva, cuánto cuesta y el botón para seguir. */}
-            {/* El dibujo cambia con cada + y −, porque se arma con lo que hay en el estado elegidos. */}
+            {/* La hamburguesa cambia con cada + y −, porque se arma con lo que hay en el estado elegidos. */}
             <div className="resumen">
                 <Hamburguesa ingredientes={ingredientesDe(elegidos)} />
 

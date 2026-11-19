@@ -108,7 +108,7 @@ function Pedidos() {
                             <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
                             <Estado estado={pedido.estado} />
                         </p>
-                        {/* Cada hamburguesa con su dibujo chico al lado: se ve de un vistazo qué lleva. */}
+                        {/* Cada hamburguesa con su foto chica al lado: se ve de un vistazo qué lleva. */}
                         <ol className="productos">
                             {pedido.productos.map((producto) => (
                                 <li key={producto._id}>

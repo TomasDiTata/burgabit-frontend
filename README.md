@@ -92,13 +92,14 @@ burgabit-frontend/
 │   ├── favicon.svg            Ícono de la pestaña del navegador: una hamburguesa.
 │   ├── fonts/                 La letra de los títulos (Bebas Neue) y su licencia.
 │   └── img/                   Las fotos: portada, banners, una por tipo de categoría y,
-│                              en img/ingredientes, una miniatura por ingrediente.
+│                              en img/ingredientes, una miniatura por ingrediente y, en img/capas,
+│                              las capas de la hamburguesa que se arma.
 └── src/                       El código de la aplicación.
     ├── main.jsx               Arranca React, envuelto en BrowserRouter.
     ├── App.jsx                Las rutas: qué pantalla va en cada dirección, y cuáles piden sesión y rol.
     ├── rutas.js               La pantalla de inicio de cada rol y la clase de las pestañas.
     ├── fotos.js               Elige la foto de cada categoría y de cada ingrediente según su nombre.
-    ├── hamburguesa.js         Qué capa del dibujo le toca a cada ingrediente, y en qué orden se apilan.
+    ├── hamburguesa.js         Qué foto de capa le toca a cada ingrediente, y en qué orden se apilan.
     ├── api.js                 pedirApi: la única función que habla con el backend.
     ├── sesion.js              Guarda, lee y borra el token (JWT) en el navegador.
     ├── validaciones.js        Reglas que comparten los formularios.
@@ -110,7 +111,7 @@ burgabit-frontend/
     │   ├── Cargando.jsx       El aviso de "Cargando..." mientras llegan los datos.
     │   ├── Encabezado.jsx     Barra de arriba: el logo, la sección y "Cerrar sesión".
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
-    │   ├── Hamburguesa.jsx    El dibujo de una hamburguesa: el pan, una capa por ingrediente y el pan.
+    │   ├── Hamburguesa.jsx    La hamburguesa armada con fotos: el pan, una capa por ingrediente y el pan.
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
     └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
@@ -146,7 +147,7 @@ burgabit-frontend/
 - **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
 - **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. En los banners, la foto va arriba y el título abajo, así el texto no tapa la foto. El resumen del armador queda pegado abajo de la pantalla.
 - **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
-- **La hamburguesa se dibuja mientras se arma:** en el armador, cada vez que se toca "+" cae una capa nueva sobre el pan (carne, cheddar, lechuga, tomate, salsa...). La capa se elige por palabras del nombre del ingrediente (`src/hamburguesa.js`), y el dibujo es todo CSS: no usa imágenes. En la compu, el resumen queda fijo a la derecha con el dibujo grande; en el celular, la barra de abajo lo muestra chico. Los pasos que ya tienen lo necesario se marcan en verde y con ✓. El mismo dibujo, en chico, acompaña cada hamburguesa del pedido, de "Mis pedidos", de la cocina y del panel.
+- **La hamburguesa se arma mientras se elige:** en el armador, cada vez que se toca "+" cae una capa nueva sobre el pan: carne, cheddar, panceta, huevo, cebolla, tomate, pepinos, lechuga o salsa. Cada capa es una foto real recortada, con fondo transparente (`public/img/capas`), y se elige por palabras del nombre del ingrediente (`src/hamburguesa.js`). Las fotos se apilan con CSS: cada una se mete un poco en la de abajo, con márgenes negativos, como en una hamburguesa de verdad. Si hay más de un medallón, va una feta de queso arriba de cada uno. En la compu, el resumen queda fijo a la derecha con la hamburguesa grande; en el celular, la barra de abajo la muestra chica. Los pasos que ya tienen lo necesario se marcan en verde y con ✓. La misma hamburguesa, en chico, acompaña cada producto del pedido, de "Mis pedidos", de la cocina y del panel.
 - **Miniaturas de los ingredientes:** en el armador, cada ingrediente tiene al lado una foto chica y redonda. Se elige por palabras del nombre, como las fotos de las categorías; si ninguna coincide, se usa la foto de su categoría.
 - **Resumen compacto:** "Tu hamburguesa" con la cantidad de ingredientes, el subtotal grande y el botón. Al tocar la cantidad se despliega el detalle, con el precio de cada ingrediente. Si falta algo para poder agregarla, lo dice debajo del botón.
 - **Portada:** la foto grande con los botones para empezar, los tres pasos y, al final, una franja con otra invitación a pedir ("¿Se te hizo agua la boca?").
@@ -199,6 +200,16 @@ Las miniaturas de `public/img/ingredientes` son recortes cuadrados de 160 × 160
 | `pan.jpg`, `pollo.jpg` | [Pexels 7497213](https://www.pexels.com/photo/7497213/) |
 | `palta.jpg` | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
 | `papas.jpg` | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
+
+Las capas de `public/img/capas` son recortes con fondo transparente (WebP), sacados de fotos con fondo negro y la misma luz, así combinan entre sí:
+
+| Capas | Origen |
+|---|---|
+| `pan-arriba.webp`, `pan-abajo.webp`, `lechuga.webp`, `tomate.webp`, `cebolla.webp`, `queso.webp` | [Pexels 19247575](https://www.pexels.com/photo/19247575/) |
+| `carne.webp`, `mayonesa.webp` (y sus versiones teñidas: `ketchup.webp`, `mostaza.webp`, `barbacoa.webp`) | [Pexels 18713425](https://www.pexels.com/photo/18713425/) |
+| `panceta.webp` | [Pexels 19247565](https://www.pexels.com/photo/19247565/) |
+| `pollo.webp`, `pepino.webp` | [Pexels 19247582](https://www.pexels.com/photo/19247582/) |
+| `huevo.webp` | [Pexels 1251198](https://www.pexels.com/photo/1251198/) |
 
 ## Publicación
 
