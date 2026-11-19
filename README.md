@@ -91,12 +91,13 @@ burgabit-frontend/
 ├── public/                    Archivos que se publican tal cual, sin procesar.
 │   ├── favicon.svg            Ícono de la pestaña del navegador: una hamburguesa.
 │   ├── fonts/                 La letra de los títulos (Bebas Neue) y su licencia.
-│   └── img/                   Las fotos: portada, banners y una por tipo de categoría.
+│   └── img/                   Las fotos: portada, banners, una por tipo de categoría y,
+│                              en img/ingredientes, una miniatura por ingrediente.
 └── src/                       El código de la aplicación.
     ├── main.jsx               Arranca React, envuelto en BrowserRouter.
     ├── App.jsx                Las rutas: qué pantalla va en cada dirección, y cuáles piden sesión y rol.
     ├── rutas.js               La pantalla de inicio de cada rol y la clase de las pestañas.
-    ├── fotos.js               Elige la foto de cada categoría según su nombre.
+    ├── fotos.js               Elige la foto de cada categoría y de cada ingrediente según su nombre.
     ├── hamburguesa.js         Qué capa del dibujo le toca a cada ingrediente, y en qué orden se apilan.
     ├── api.js                 pedirApi: la única función que habla con el backend.
     ├── sesion.js              Guarda, lee y borra el token (JWT) en el navegador.
@@ -146,6 +147,7 @@ burgabit-frontend/
 - **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
 - **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
 - **La hamburguesa se dibuja mientras se arma:** en el armador, cada vez que se toca "+" cae una capa nueva sobre el pan (carne, cheddar, lechuga, tomate, salsa...). La capa se elige por palabras del nombre del ingrediente (`src/hamburguesa.js`), y el dibujo es todo CSS: no usa imágenes. En la compu, el resumen queda fijo a la derecha con el dibujo grande; en el celular, la barra de abajo lo muestra chico. Los pasos que ya tienen lo necesario se marcan en verde y con ✓. El mismo dibujo, en chico, acompaña cada hamburguesa del pedido, de "Mis pedidos", de la cocina y del panel.
+- **Miniaturas de los ingredientes:** en el armador, cada ingrediente tiene al lado una foto chica y redonda. Se elige por palabras del nombre, como las fotos de las categorías; si ninguna coincide, se usa la foto de su categoría.
 - **Resumen compacto:** "Tu hamburguesa" con la cantidad de ingredientes, el subtotal grande y el botón. Al tocar la cantidad se despliega el detalle, con el precio de cada ingrediente. Si falta algo para poder agregarla, lo dice debajo del botón.
 - **Portada:** la foto grande con los botones para empezar, los tres pasos y, al final, una franja con otra invitación a pedir ("¿Se te hizo agua la boca?").
 - **Teclado:** al moverse con Tab, el botón o enlace que tiene el foco se marca con un borde mostaza, visible también sobre los fondos oscuros.
@@ -177,6 +179,26 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `panceta.jpg` | Categorías de panceta | [Unsplash](https://images.unsplash.com/photo-1528607929212-2636ec44253e) |
 | `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
 | `hamburguesa.jpg` | Cualquier otra categoría | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
+
+Las miniaturas de `public/img/ingredientes` son recortes cuadrados de 160 × 160 px, de estas fotos:
+
+| Miniaturas | Origen |
+|---|---|
+| `lechuga.jpg` | [Pexels 1213859](https://www.pexels.com/photo/1213859/) |
+| `tomate.jpg` | [Pexels 8771640](https://www.pexels.com/photo/8771640/) |
+| `queso.jpg` | [Pexels 6004145](https://www.pexels.com/photo/6004145/) |
+| `panceta.jpg` | [Pexels 14133033](https://www.pexels.com/photo/14133033/) |
+| `cebolla.jpg` | [Pexels 8859774](https://www.pexels.com/photo/8859774/) |
+| `huevo.jpg` | [Pexels 722223](https://www.pexels.com/photo/722223/) |
+| `carne.jpg` | [Pexels 8365312](https://www.pexels.com/photo/8365312/) |
+| `pepinos.jpg` | [Pexels 8599636](https://www.pexels.com/photo/8599636/) |
+| `mostaza.jpg`, `mayonesa.jpg` | [Pexels 1435901](https://www.pexels.com/photo/1435901/) |
+| `barbacoa.jpg` | [Pexels 3622479](https://www.pexels.com/photo/3622479/) |
+| `ketchup.jpg` | [Pexels 8165241](https://www.pexels.com/photo/8165241/) |
+| `hongos.jpg` | [Pexels 1435904](https://www.pexels.com/photo/1435904/) |
+| `pan.jpg`, `pollo.jpg` | [Pexels 7497213](https://www.pexels.com/photo/7497213/) |
+| `palta.jpg` | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
+| `papas.jpg` | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
 
 ## Publicación
 

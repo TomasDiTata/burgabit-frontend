@@ -630,7 +630,6 @@ section > h3 {
 
 .opcion {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 12px;
     padding: 10px 0;
@@ -639,6 +638,22 @@ section > h3 {
 
 .opcion:last-child {
     border-bottom: none;
+}
+
+/* La miniatura de cada ingrediente: una foto chica y redonda, a la izquierda del nombre.
+   flex-shrink: 0: no se achica aunque el nombre sea largo. */
+.miniatura {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--crema-oscura);
+}
+
+/* El nombre y el precio ocupan todo el lugar que queda: así el contador queda a la derecha. */
+.opcion-texto {
+    flex: 1;
 }
 
 .precio {

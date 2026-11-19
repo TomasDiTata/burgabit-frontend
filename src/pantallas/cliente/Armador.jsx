@@ -3,7 +3,7 @@ import { pedirApi } from "../../api.js";
 import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
 import { formatearPrecio, conMayuscula } from "../../formato.js";
 import { subtotalDe, ingredientesDe } from "../../pedidos.js";
-import { fotoDeCategoria } from "../../fotos.js";
+import { fotoDeCategoria, fotoDeIngrediente } from "../../fotos.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 import Banner from "../../componentes/Banner.jsx";
@@ -170,7 +170,9 @@ function Armador({ alAgregar }) {
 
                                         return (
                                             <li key={ingrediente._id} className="opcion">
-                                                <span>
+                                                {/* alt vacío: la miniatura acompaña al nombre, que ya está escrito al lado. */}
+                                                <img className="miniatura" src={fotoDeIngrediente(ingrediente.nombre, categoria.nombre)} alt="" loading="lazy" />
+                                                <span className="opcion-texto">
                                                     {conMayuscula(ingrediente.nombre)} <span className="precio">{formatearPrecio(ingrediente.precio)}</span>
                                                 </span>
                                                 <span className="contador">
