@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { MAXIMO_POR_INGREDIENTE } from "../../validaciones.js";
 import { formatearPrecio, conMayuscula } from "../../formato.js";
-import { subtotalDe, describirProducto, ingredientesDe } from "../../pedidos.js";
+import { subtotalDe, ingredientesDe } from "../../pedidos.js";
 import { fotoDeCategoria } from "../../fotos.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
@@ -26,7 +26,7 @@ const textoDeLaRegla = (categoria) => {
 const queFalta = (faltantes, elegidos) => {
     if(faltantes.length > 0) {
         const lista = faltantes.map((categoria) => `${categoria.minimo} de ${categoria.nombre}`).join(" y ");
-        return `Para agregarla, elegí al menos ${lista}.`;
+        return `Falta elegir ${lista}.`;
     }
 
     if(elegidos.length === 0) {
@@ -34,6 +34,15 @@ const queFalta = (faltantes, elegidos) => {
     }
 
     return "";
+};
+
+// Cuántos ingredientes lleva, en palabras: "Sin ingredientes", "1 ingrediente" o "6 ingredientes".
+const textoDeUnidades = (unidades) => {
+    if(unidades === 0) {
+        return "Sin ingredientes";
+    }
+
+    return unidades === 1 ? "1 ingrediente" : `${unidades} ingredientes`;
 };
 
 // El armador: todas las categorías en una sola pantalla, en el orden de su campo "paso".
@@ -46,6 +55,8 @@ function Armador({ alAgregar }) {
     // Lo que lleva elegido la hamburguesa que se está armando: un array de { ingrediente, cantidad }.
     const [elegidos, setElegidos] = useState([]);
     const [aviso, setAviso] = useState("");
+    // Si el resumen muestra el detalle: cada ingrediente con su precio. Se abre y se cierra tocando la cantidad.
+    const [verDetalle, setVerDetalle] = useState(false);
 
     // Pide las categorías (todas, ordenadas por paso) y el menú (solo los ingredientes disponibles y con stock).
     const cargarMenu = async () => {
@@ -98,6 +109,7 @@ function Armador({ alAgregar }) {
     const agregarAlPedido = () => {
         alAgregar(elegidos);
         setElegidos([]);
+        setVerDetalle(false);
         setAviso("¡Listo! La sumaste al pedido. Podés armar otra o confirmar el pedido más abajo.");
     };
 
@@ -116,6 +128,7 @@ function Armador({ alAgregar }) {
     // Las categorías que todavía no llegan a su mínimo, y qué falta para poder agregar la hamburguesa.
     const faltantes = categorias.filter((categoria) => totalDeCategoria(categoria._id) < categoria.minimo);
     const falta = queFalta(faltantes, elegidos);
+    const unidades = elegidos.reduce((suma, elegido) => suma + elegido.cantidad, 0);
 
     return (
         <section className="armador">
@@ -175,18 +188,38 @@ function Armador({ alAgregar }) {
                 })}
             </div>
 
-            {/* Siempre a mano (abajo en el celu, al costado en la compu): el dibujo, lo elegido, el subtotal y el botón para agregar. */}
+            {/* Siempre a mano (abajo en el celu, al costado en la compu): qué lleva, cuánto cuesta y el botón para seguir. */}
             {/* El dibujo cambia con cada + y −, porque se arma con lo que hay en el estado elegidos. */}
             <div className="resumen">
                 <Hamburguesa ingredientes={ingredientesDe(elegidos)} />
-                <p className="descripcion">
-                    <strong>Tu hamburguesa:</strong> {elegidos.length === 0 ? "todavía no elegiste nada." : describirProducto(elegidos)}
+
+                <div className="resumen-cabecera">
+                    <strong>Tu hamburguesa</strong>
+                    {/* aria-expanded le avisa al lector de pantalla si el detalle está abierto. */}
+                    <button className="cantidad" onClick={() => setVerDetalle(!verDetalle)} aria-expanded={verDetalle} disabled={unidades === 0}>
+                        {textoDeUnidades(unidades)} {verDetalle ? "▴" : "▾"}
+                    </button>
+                </div>
+
+                {verDetalle && unidades > 0 && (
+                    <ul className="detalle">
+                        {elegidos.map((elegido) => (
+                            <li key={elegido.ingrediente._id}>
+                                <span>{conMayuscula(elegido.ingrediente.nombre)}{elegido.cantidad > 1 && ` x${elegido.cantidad}`}</span>
+                                <span>{formatearPrecio(elegido.ingrediente.precio * elegido.cantidad)}</span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
+                <p className="subtotal">
+                    <span>Subtotal</span>
+                    <strong>{formatearPrecio(subtotalDe(elegidos))}</strong>
                 </p>
-                <p className="total">Subtotal: {formatearPrecio(subtotalDe(elegidos))}</p>
-                {falta && <p>{falta}</p>}
                 <button className="principal" onClick={agregarAlPedido} disabled={falta !== ""}>
                     Agregar al pedido
                 </button>
+                {falta && <p className="falta">{falta}</p>}
                 {aviso && <p className="exito">{aviso}</p>}
             </div>
         </section>

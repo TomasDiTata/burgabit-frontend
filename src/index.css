@@ -674,8 +674,9 @@ section > h3 {
 }
 
 /* El resumen del armador queda siempre a mano: pegado abajo de la pantalla mientras se eligen los ingredientes. */
-/* Es una grilla de tres columnas. Arriba, el dibujo chico y, al lado, lo elegido en un solo renglón.
-   Abajo, el subtotal y el botón juntos, para que el resumen tape poco. El resto ocupa todo el ancho. */
+/* Es una grilla de tres columnas. En el primer renglón, el dibujo chico y, al lado, "Tu hamburguesa" con la cantidad.
+   El resto va en renglones que se arman solos, en el mismo orden que en el JSX: el detalle (si está abierto),
+   el subtotal y el botón juntos, lo que falta y el aviso. Todos usan el ancho completo, para que entren en el celular. */
 .resumen {
     position: sticky;
     bottom: 8px;
@@ -697,43 +698,83 @@ section > h3 {
 .resumen .hamburguesa {
     grid-row: 1;
     grid-column: 1;
-    font-size: 4px;
+    font-size: 5px;
 }
 
-/* Lo elegido, en un solo renglón (con "..." al final): el dibujo ya muestra lo que lleva. */
-.resumen .descripcion {
+/* "Tu hamburguesa" a la izquierda y la cantidad a la derecha. Si no entran juntas, la cantidad baja (flex-wrap). */
+.resumen-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px 8px;
+}
+
+.resumen .resumen-cabecera {
     grid-row: 1;
     grid-column: 2 / -1;
-    overflow: hidden;
+}
+
+/* La cantidad: una etiqueta verde que, al tocarla, abre o cierra el detalle. */
+.resumen .cantidad {
+    padding: 2px 10px;
+    font-size: 0.85rem;
     white-space: nowrap;
-    text-overflow: ellipsis;
+    color: #9be7b0;
+    background-color: rgba(155, 231, 176, 0.12);
+    border: 1px solid rgba(155, 231, 176, 0.45);
 }
 
-.resumen .total {
-    grid-row: 2;
+/* El detalle: cada ingrediente con su precio, debajo de una línea finita. */
+.detalle {
+    margin: 8px 0 4px;
+    padding: 8px 0 0;
+    list-style: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.detalle li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.95rem;
+}
+
+/* El subtotal: la palabra chica, en mostaza, y el precio grande. */
+.resumen .subtotal {
     grid-column: 1 / 3;
+    margin: 4px 0 0;
 }
 
-.resumen button {
-    grid-row: 2;
+.subtotal span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--mostaza);
+}
+
+.subtotal strong {
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+
+.resumen .principal {
     grid-column: 3;
 }
 
 /* nowrap: el texto del botón no se corta en dos renglones. */
 @media (min-width: 360px) {
-    .resumen button {
+    .resumen .principal {
         white-space: nowrap;
     }
 }
 
 /* En celulares de menos de 360 px no entran el subtotal y el botón juntos: el botón baja a su propio renglón. */
 @media (max-width: 359px) {
-    .resumen .total {
+    .resumen .subtotal {
         grid-column: 1 / -1;
     }
 
-    .resumen button {
-        grid-row: 3;
+    .resumen .principal {
         grid-column: 1 / -1;
     }
 }
@@ -742,9 +783,9 @@ section > h3 {
     margin: 4px 0;
 }
 
-.resumen .total {
-    font-size: 1.2rem;
-    color: var(--mostaza);
+.resumen .falta {
+    font-size: 0.9rem;
+    color: var(--crema-oscura);
 }
 
 .resumen .exito {
@@ -778,8 +819,8 @@ section > h3 {
         font-size: 16px;
     }
 
-    .resumen .descripcion {
-        white-space: normal;
+    .resumen .subtotal {
+        margin-top: 12px;
     }
 
     /* Con el resumen al costado, la foto de cada paso un poco más angosta, para que entren los ingredientes. */
@@ -787,7 +828,7 @@ section > h3 {
         grid-template-columns: 180px 1fr;
     }
 
-    .resumen button {
+    .resumen .principal {
         width: 100%;
         margin: 8px 0;
     }
