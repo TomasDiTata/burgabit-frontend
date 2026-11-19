@@ -116,6 +116,14 @@ button:disabled {
     opacity: 0.5;
 }
 
+/* El foco del teclado (al moverse con Tab), bien visible en botones y enlaces, también sobre fondos oscuros.
+   :focus-visible no aparece al hacer clic con el mouse, solo al usar el teclado. */
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--mostaza);
+    outline-offset: 2px;
+}
+
 /* La acción principal de cada pantalla, en mostaza: ingresar, agregar, confirmar, y el botón que envía cada formulario. */
 .principal,
 form button[type="submit"] {
@@ -438,6 +446,31 @@ section > h3 {
 }
 
 .portada .acciones {
+    margin-top: 24px;
+}
+
+/* El cierre de la portada: una franja oscura, de lado a lado, con otra invitación a pedir. */
+.cierre {
+    margin-top: 32px;
+    padding: 56px 16px;
+    text-align: center;
+    color: var(--blanco);
+    background-color: var(--carbon);
+}
+
+.cierre h2 {
+    margin: 0 0 8px;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    color: var(--mostaza);
+}
+
+.cierre p {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.cierre .acciones {
+    justify-content: center;
     margin-top: 24px;
 }
 

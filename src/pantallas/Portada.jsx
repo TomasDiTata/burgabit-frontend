@@ -17,6 +17,20 @@ const PASOS = [
 
 // La portada: lo primero que se ve al entrar a BurgaBit. Invita a ingresar o, si ya hay sesión, a seguir.
 function Portada({ sesion }) {
+    // Los botones van arriba, junto a la foto, y otra vez al final: es una función para no escribirlos dos veces.
+    const botones = () => (
+        <div className="acciones">
+            {sesion ? (
+                <Link to={inicioDe(sesion.rol)} className="boton principal">{TEXTO_DEL_BOTON[sesion.rol]}</Link>
+            ) : (
+                <>
+                    <Link to="/ingresar" className="boton principal">Ingresar</Link>
+                    <Link to="/registro" className="boton boton-claro">Crear cuenta</Link>
+                </>
+            )}
+        </div>
+    );
+
     return (
         <>
             <section className="portada">
@@ -24,22 +38,13 @@ function Portada({ sesion }) {
                 <div className="portada-texto">
                     <p className="logo">Burga<span>Bit</span></p>
                     <h1>Armá tu hamburguesa a tu manera</h1>
-                    <p>Elegí los medallones y los toppings, confirmá el pedido y retirala recién hecha.</p>
-
-                    <div className="acciones">
-                        {sesion ? (
-                            <Link to={inicioDe(sesion.rol)} className="boton principal">{TEXTO_DEL_BOTON[sesion.rol]}</Link>
-                        ) : (
-                            <>
-                                <Link to="/ingresar" className="boton principal">Ingresar</Link>
-                                <Link to="/registro" className="boton boton-claro">Crear cuenta</Link>
-                            </>
-                        )}
-                    </div>
+                    <p>Medallones a la plancha, cheddar derretido y los toppings que quieras. Elegilos, confirmá el pedido y retirala recién hecha.</p>
+                    {botones()}
                 </div>
             </section>
 
-            <main>
+            {/* con-costados: en pantallas anchas, la hamburguesa y las papas a los costados (index.css). */}
+            <main className="con-costados">
                 <h2>Así de fácil</h2>
                 <div className="pasos">
                     {PASOS.map((paso, posicion) => (
@@ -52,6 +57,13 @@ function Portada({ sesion }) {
                     ))}
                 </div>
             </main>
+
+            {/* El cierre: para quien llegó hasta abajo, otra invitación a pedir. */}
+            <section className="cierre">
+                <h2>¿Se te hizo agua la boca?</h2>
+                <p>Armala en un par de minutos y pasala a buscar recién hecha.</p>
+                {botones()}
+            </section>
         </>
     );
 }
