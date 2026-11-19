@@ -144,7 +144,7 @@ burgabit-frontend/
 
 - **Estilo de hamburguesería:** fondo crema, rojo ketchup, amarillo mostaza y negro carbón. Los colores están como variables al principio de `src/index.css`.
 - **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
-- **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
+- **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. En los banners, la foto va arriba y el título abajo, así el texto no tapa la foto. El resumen del armador queda pegado abajo de la pantalla.
 - **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
 - **La hamburguesa se dibuja mientras se arma:** en el armador, cada vez que se toca "+" cae una capa nueva sobre el pan (carne, cheddar, lechuga, tomate, salsa...). La capa se elige por palabras del nombre del ingrediente (`src/hamburguesa.js`), y el dibujo es todo CSS: no usa imágenes. En la compu, el resumen queda fijo a la derecha con el dibujo grande; en el celular, la barra de abajo lo muestra chico. Los pasos que ya tienen lo necesario se marcan en verde y con ✓. El mismo dibujo, en chico, acompaña cada hamburguesa del pedido, de "Mis pedidos", de la cocina y del panel.
 - **Miniaturas de los ingredientes:** en el armador, cada ingrediente tiene al lado una foto chica y redonda. Se elige por palabras del nombre, como las fotos de las categorías; si ninguna coincide, se usa la foto de su categoría.
@@ -155,14 +155,14 @@ burgabit-frontend/
 
 ### Fotos
 
-Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web. Las de la cocina y el panel, además, están recortadas en una franja ancha, que es la parte que muestra el banner.
+Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web. Las del cliente siguen una misma línea: hamburguesas en primer plano, luz cálida y fondo oscuro. Las de la cocina y el panel, además, están recortadas en una franja ancha, que es la parte que muestra el banner.
 
 | Archivo | Dónde se ve | Origen |
 |---|---|---|
 | `portada.jpg` | Portada e ingreso | [Pexels 1639557](https://www.pexels.com/photo/1639557/) |
 | `registro.jpg` | Registro | [Unsplash](https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5) |
 | `armar.jpg` | Banner del armador | [Unsplash](https://images.unsplash.com/photo-1561758033-d89a9ad46330) |
-| `pedidos.jpg` | Banner de "Mis pedidos" y portada | [Pexels 2271107](https://www.pexels.com/photo/2271107/) |
+| `pedidos.jpg` | Banner de "Mis pedidos" y portada (espejada, para que la hamburguesa quede a la derecha) | [Pexels 1556688](https://www.pexels.com/photo/1556688/) |
 | `cocina.jpg` | Banner de la cocina | [Unsplash](https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf) |
 | `categorias.jpg` | Banner de categorías, en el panel | [Unsplash](https://images.unsplash.com/photo-1498837167922-ddd27525d352) |
 | `ingredientes.jpg` | Banner de ingredientes, en el panel | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
@@ -176,8 +176,8 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |
 | `panes.jpg` | Categorías de panes | [Unsplash](https://images.unsplash.com/photo-1568901346375-23c9450c58cd) |
 | `salsas.jpg` | Categorías de salsas o aderezos | [Unsplash](https://images.unsplash.com/photo-1472476443507-c7a5948772fc) |
-| `panceta.jpg` | Categorías de panceta | [Unsplash](https://images.unsplash.com/photo-1528607929212-2636ec44253e) |
-| `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
+| `panceta.jpg` | Categorías de panceta | [Pexels 33068078](https://www.pexels.com/photo/33068078/) |
+| `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 1583884](https://www.pexels.com/photo/1583884/) |
 | `hamburguesa.jpg` | Cualquier otra categoría | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
 
 Las miniaturas de `public/img/ingredientes` son recortes cuadrados de 160 × 160 px, de estas fotos:

@@ -406,6 +406,29 @@ section > h3 {
     }
 }
 
+/* En el celular, la foto arriba y el texto abajo, sin superponerse: así el texto nunca tapa lo importante de la foto. */
+@media (max-width: 599px) {
+    .banner,
+    .banner-chico {
+        flex-direction: column;
+        align-items: stretch;
+        min-height: 0;
+    }
+
+    .banner img {
+        position: static;
+        height: 140px;
+    }
+
+    .banner::after {
+        display: none;
+    }
+
+    .banner-texto {
+        padding: 14px 16px 16px;
+    }
+}
+
 /* La portada: la foto ocupa casi toda la pantalla, con el mensaje y los botones encima. */
 .portada {
     position: relative;
