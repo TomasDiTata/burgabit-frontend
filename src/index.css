@@ -779,6 +779,26 @@ section > h3 {
     font-size: 5px;
 }
 
+/* Las listas de productos (el pedido, "Mis pedidos", la cocina y el panel): cada hamburguesa con su dibujo chico al lado.
+   Sin números: el dibujo ya separa una hamburguesa de la otra. */
+.productos {
+    margin: 12px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.productos li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+}
+
+/* flex-shrink: 0: el dibujo no se achica aunque el texto de al lado sea largo. */
+.productos .hamburguesa {
+    flex-shrink: 0;
+}
+
 /* El pan de arriba: media elipse dorada, con brillo y semillas de sésamo (cada semilla es un degradé chiquito). */
 .pan-arriba {
     width: 100%;

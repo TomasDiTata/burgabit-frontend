@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { pedirApi } from "../../api.js";
 import { formatearPrecio } from "../../formato.js";
-import { subtotalDe, describirProducto } from "../../pedidos.js";
+import { subtotalDe, describirProducto, ingredientesDe } from "../../pedidos.js";
+import Hamburguesa from "../../componentes/Hamburguesa.jsx";
 
 // El pedido que se está armando: los productos listos, el total y el botón para confirmarlo.
 function Pedido({ productos, alQuitar, alConfirmar }) {
@@ -41,11 +42,15 @@ function Pedido({ productos, alQuitar, alConfirmar }) {
                 <p>Todavía no agregaste nada. Armá tu hamburguesa y sumala al pedido.</p>
             ) : (
                 <>
-                    <ol>
+                    {/* Cada hamburguesa con su dibujo chico al lado: se ve de un vistazo qué lleva. */}
+                    <ol className="productos">
                         {productos.map((producto, posicion) => (
                             <li key={posicion}>
-                                {describirProducto(producto)}: {formatearPrecio(subtotalDe(producto))}{" "}
-                                <button className="enlace" onClick={() => alQuitar(posicion)}>Quitar</button>
+                                <Hamburguesa chica ingredientes={ingredientesDe(producto)} />
+                                <span>
+                                    {describirProducto(producto)}: {formatearPrecio(subtotalDe(producto))}{" "}
+                                    <button className="enlace" onClick={() => alQuitar(posicion)}>Quitar</button>
+                                </span>
                             </li>
                         ))}
                     </ol>
