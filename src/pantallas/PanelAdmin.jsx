@@ -13,8 +13,7 @@ function PanelAdmin({ alCerrarSesion }) {
         <>
             <Encabezado seccion="Administración" alCerrarSesion={alCerrarSesion} />
 
-            {/* con-costados: en pantallas anchas, la hamburguesa y las papas a los costados (index.css). */}
-            <main className="con-costados">
+            <main>
                 <nav className="pestanas">
                     <NavLink to="/admin/categorias" className={clasePestana}>Categorías</NavLink>
                     <NavLink to="/admin/ingredientes" className={clasePestana}>Ingredientes</NavLink>

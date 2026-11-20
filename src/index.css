@@ -5,7 +5,6 @@
     font-display: swap;
 }
 
-/**/
 /* Los colores de la marca, en un solo lugar: ketchup, mostaza, pan y carbón. */
 :root {
     --crema: #fff6e9;
@@ -364,47 +363,6 @@ section > h3 {
 
 .banner-chico {
     min-height: 160px;
-}
-
-/* Pantallas anchas: a los costados de la columna del medio (960 px) sobra lugar.
-   Ahí van una hamburguesa a la izquierda y unas papas fritas a la derecha, fijas mientras se baja.
-   Cada costado tiene dos fondos, uno encima del otro: un degradé crema que desvanece la foto hacia el centro, y la foto. */
-@media (min-width: 1300px) {
-    .con-costados::before,
-    .con-costados::after {
-        content: "";
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        z-index: -1;
-        /* Lo que sobra a cada lado de la columna. */
-        width: calc((100% - 960px) / 2);
-        background-size: cover;
-        background-position: center;
-    }
-
-    /* La foto corrida al 30 %: así la hamburguesa queda del lado de afuera, antes de que empiece el degradé. */
-    .con-costados::before {
-        left: 0;
-        background-image: linear-gradient(90deg, rgba(255, 246, 233, 0) 55%, var(--crema) 100%), url("/img/costado-hamburguesa.jpg");
-        background-position: 30% center;
-    }
-
-    .con-costados::after {
-        right: 0;
-        background-image: linear-gradient(270deg, rgba(255, 246, 233, 0) 55%, var(--crema) 100%), url("/img/costado-papas.jpg");
-    }
-
-    /* Con las fotos a los costados, los banners quedan como carteles sin foto. */
-    .banner,
-    .banner-chico {
-        min-height: 0;
-    }
-
-    .banner img,
-    .banner::after {
-        display: none;
-    }
 }
 
 /* En el celular, la foto arriba y el texto abajo, sin superponerse: así el texto nunca tapa lo importante de la foto. */
@@ -1109,50 +1067,88 @@ th {
 }
 
 /* La página de una dirección que no existe. */
-/* La página de error (401, 403 y 404): usa el diseño del ingreso, con la foto de una hamburguesa desarmada.
-   La foto es una toma desde arriba, así que se puede girar: en el celular va acostada, para que entre en la franja de arriba,
-   y en pantallas anchas va parada, como se arma una hamburguesa (con amarillo agregado a los costados, para que llene la columna). */
-.error-foto {
-    background-color: #dacb6f;
-    background-image: url("/img/error-acostada.jpg");
-    background-position: center;
-    background-size: cover;
+/* La página de error (401, 403 y 404): todo centrado, en una columna. Arriba el logo, en el medio la hamburguesa triste,
+   y abajo el código del error junto a su mensaje, qué pasó y los botones. */
+.pagina-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 560px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 32px 16px 48px;
+    text-align: center;
 }
 
-/* Sobre el amarillo no hace falta el degradé oscuro del ingreso: el lema va en negro. */
-.error-foto::after {
-    display: none;
+.pagina-error .logo {
+    margin-bottom: 16px;
 }
 
-.error-foto .lema {
-    font-size: 1.6rem;
+/* La hamburguesa triste: de 240 px, salvo en celulares angostos, donde ocupa como mucho el 70 % del ancho. */
+.hamburguesa-triste {
+    width: 240px;
+    max-width: 70vw;
+    height: auto;
+}
+
+/* El título: el código del error bien grande, en rojo, y su mensaje justo debajo. */
+.pagina-error h1 {
+    margin: 12px 0 8px;
+    font-size: 2.2rem;
     color: var(--carbon);
 }
 
-@media (min-width: 860px) {
-    .error-foto {
-        background-image: url("/img/error-parada.jpg");
-    }
-
-    /* En pantallas anchas, el lema en una columna angosta a la izquierda, para no tapar la hamburguesa del medio. */
-    .error-foto .lema {
-        max-width: 4.6em;
-        font-size: 3.4rem;
-    }
+.error-codigo,
+.error-mensaje {
+    display: block;
 }
 
-/* El código del error, bien grande: es lo primero que se lee. */
 .error-codigo {
-    margin: 0 0 4px;
-    font-family: "Bebas Neue", Impact, sans-serif;
-    font-size: clamp(4rem, 12vw, 6.5rem);
+    font-size: clamp(3.6rem, 13vw, 5.5rem);
     line-height: 0.9;
-    letter-spacing: 0.02em;
-    color: var(--mostaza-oscura);
+    color: var(--ketchup);
 }
 
-.acceso-formulario .acciones {
+.pagina-error p {
+    max-width: 420px;
+    margin: 0;
+}
+
+.pagina-error .acciones {
+    justify-content: center;
     margin-top: 24px;
+}
+
+/* La lágrima aparece en el ojo, se queda un momento y cae. Se repite cada 2,4 segundos. */
+.lagrima {
+    animation: llorar 2.4s ease-in infinite;
+}
+
+@keyframes llorar {
+    0% {
+        transform: translateY(-6px);
+        opacity: 0;
+    }
+
+    20%,
+    55% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    90%,
+    100% {
+        transform: translateY(44px);
+        opacity: 0;
+    }
+}
+
+/* Si la persona pidió menos movimiento en su sistema, la lágrima queda quieta en el ojo. */
+@media (prefers-reduced-motion: reduce) {
+    .lagrima {
+        animation: none;
+    }
 }
 
 /* En pantallas angostas (celulares): títulos, encabezado y tablas un poco más chicos. */
