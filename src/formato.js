@@ -1,5 +1,10 @@
 // Formatos para mostrar los datos como se leen en Argentina.
 
+// La base guarda los nombres de categorías e ingredientes en minúscula (lowercase: true en los modelos del backend),
+// así "Cheddar" y "cheddar" cuentan como el mismo y no se repiten. Para mostrarlos, la primera letra va en mayúscula.
+// "medallón de carne" → "Medallón de carne"
+export const conMayuscula = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1);
+
 // 1500 → "$1.500"
 export const formatearPrecio = (numero) => `$${numero.toLocaleString("es-AR")}`;
 

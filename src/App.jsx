@@ -8,7 +8,7 @@ import Registro from "./pantallas/Registro.jsx";
 import PanelAdmin from "./pantallas/PanelAdmin.jsx";
 import PantallaCliente from "./pantallas/PantallaCliente.jsx";
 import PantallaCocina from "./pantallas/PantallaCocina.jsx";
-import NoEncontrada from "./pantallas/NoEncontrada.jsx";
+import PaginaDeError from "./pantallas/PaginaDeError.jsx";
 
 // Las rutas de la app: qué pantalla se ve en cada dirección.
 // Además guarda la sesión y protege las pantallas de cada rol.
@@ -32,15 +32,16 @@ function App() {
         navigate("/ingresar", { replace: true });
     };
 
-    // Una pantalla con sesión: sin sesión, manda al ingreso; con otro rol, a la pantalla de su rol.
+    // Una pantalla con sesión. Sin sesión, muestra el error 401; con una cuenta de otro rol, el 403.
+    // Son los mismos códigos que usa el backend: 401 = no se sabe quién sos; 403 = se sabe, pero no tenés permiso.
     // Es solo para la navegación: los permisos los sigue controlando el backend en cada pedido.
     const soloPara = (rol, pantalla) => {
         if(!sesion) {
-            return <Navigate to="/ingresar" replace />;
+            return <PaginaDeError codigo={401} />;
         }
 
         if(sesion.rol !== rol) {
-            return <Navigate to={inicioDe(sesion.rol)} replace />;
+            return <PaginaDeError codigo={403} sesion={sesion} rolNecesario={rol} />;
         }
 
         return pantalla;
@@ -58,8 +59,8 @@ function App() {
             <Route path="/cliente/*" element={soloPara("cliente", <PantallaCliente alCerrarSesion={cerrarSesion} />)} />
             <Route path="/cocina" element={soloPara("cocinero", <PantallaCocina alCerrarSesion={cerrarSesion} />)} />
             <Route path="/admin/*" element={soloPara("administrador", <PanelAdmin alCerrarSesion={cerrarSesion} />)} />
-            {/* Cualquier otra dirección: una página de BurgaBit que avisa que no existe. */}
-            <Route path="*" element={<NoEncontrada sesion={sesion} />} />
+            {/* Cualquier otra dirección: el error 404, en una página de BurgaBit. */}
+            <Route path="*" element={<PaginaDeError codigo={404} sesion={sesion} />} />
         </Routes>
     );
 }

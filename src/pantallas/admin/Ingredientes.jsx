@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
 import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
-import { formatearPrecio } from "../../formato.js";
+import { formatearPrecio, conMayuscula } from "../../formato.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 import Banner from "../../componentes/Banner.jsx";
@@ -83,7 +83,10 @@ function Ingredientes() {
     }, []);
 
     // El backend manda solo el id de la categoría de cada ingrediente: el nombre se busca en la lista de categorías.
-    const nombreDeCategoria = (id) => categorias.find((categoria) => categoria._id === id)?.nombre ?? "(sin categoría)";
+    const nombreDeCategoria = (id) => {
+        const categoria = categorias.find((opcion) => opcion._id === id);
+        return categoria ? conMayuscula(categoria.nombre) : "(sin categoría)";
+    };
 
     const agregar = async (evento) => {
         evento.preventDefault();
@@ -135,7 +138,7 @@ function Ingredientes() {
     // Abre el formulario de edición en la tarjeta del ingrediente, con sus datos actuales.
     const empezarEdicion = (ingrediente) => {
         setEditando(ingrediente._id);
-        setNombreEditado(ingrediente.nombre);
+        setNombreEditado(conMayuscula(ingrediente.nombre));
         setPrecioEditado(String(ingrediente.precio));
         setErroresEdicion({});
     };
@@ -235,7 +238,7 @@ function Ingredientes() {
                 {editando === ingrediente._id ? formularioDeEdicion() : (
                     <>
                         <p>
-                            <strong>{ingrediente.nombre}</strong> · {nombreDeCategoria(ingrediente.categoria)} · {formatearPrecio(ingrediente.precio)} · Stock: {ingrediente.cantidad}
+                            <strong>{conMayuscula(ingrediente.nombre)}</strong> · {nombreDeCategoria(ingrediente.categoria)} · {formatearPrecio(ingrediente.precio)} · Stock: {ingrediente.cantidad}
                             {/* Los dos motivos por los que un ingrediente no aparece en el armador. */}
                             {!ingrediente.isDisponible && <span className="aviso"> · Pausado</span>}
                             {ingrediente.cantidad === 0 && <span className="aviso"> · Sin stock</span>}
@@ -285,7 +288,7 @@ function Ingredientes() {
                         <select value={categoria} onChange={(evento) => setCategoria(evento.target.value)}>
                             <option value="">Elegí una categoría</option>
                             {categorias.map((opcion) => (
-                                <option key={opcion._id} value={opcion._id}>{opcion.nombre}</option>
+                                <option key={opcion._id} value={opcion._id}>{conMayuscula(opcion.nombre)}</option>
                             ))}
                         </select>
                         {errores.categoria && <span className="error">{errores.categoria}</span>}

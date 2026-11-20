@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
+import { conMayuscula } from "../../formato.js";
 import { esEnteroDesde, SOLO_LETRAS } from "../../validaciones.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
@@ -87,7 +88,7 @@ function Categorias() {
     // Llena el formulario con los datos de una categoría, para cambiarlos.
     const empezarEdicion = (categoria) => {
         setEditando(categoria._id);
-        setNombre(categoria.nombre);
+        setNombre(conMayuscula(categoria.nombre));
         setPaso(String(categoria.paso));
         setMinimo(String(categoria.minimo));
         setMaximo(String(categoria.maximo));
@@ -171,7 +172,7 @@ function Categorias() {
                         {categorias.map((categoria) => (
                             <tr key={categoria._id} className={categoria._id === editando ? "editando" : ""}>
                                 <td>{categoria.paso}</td>
-                                <td>{categoria.nombre}</td>
+                                <td>{conMayuscula(categoria.nombre)}</td>
                                 <td>{categoria.minimo}</td>
                                 <td>{categoria.maximo}</td>
                                 <td>

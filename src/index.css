@@ -116,6 +116,14 @@ button:disabled {
     opacity: 0.5;
 }
 
+/* El foco del teclado (al moverse con Tab), bien visible en botones y enlaces, también sobre fondos oscuros.
+   :focus-visible no aparece al hacer clic con el mouse, solo al usar el teclado. */
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid var(--mostaza);
+    outline-offset: 2px;
+}
+
 /* La acción principal de cada pantalla, en mostaza: ingresar, agregar, confirmar, y el botón que envía cada formulario. */
 .principal,
 form button[type="submit"] {
@@ -398,6 +406,29 @@ section > h3 {
     }
 }
 
+/* En el celular, la foto arriba y el texto abajo, sin superponerse: así el texto nunca tapa lo importante de la foto. */
+@media (max-width: 599px) {
+    .banner,
+    .banner-chico {
+        flex-direction: column;
+        align-items: stretch;
+        min-height: 0;
+    }
+
+    .banner img {
+        position: static;
+        height: 140px;
+    }
+
+    .banner::after {
+        display: none;
+    }
+
+    .banner-texto {
+        padding: 14px 16px 16px;
+    }
+}
+
 /* La portada: la foto ocupa casi toda la pantalla, con el mensaje y los botones encima. */
 .portada {
     position: relative;
@@ -438,6 +469,31 @@ section > h3 {
 }
 
 .portada .acciones {
+    margin-top: 24px;
+}
+
+/* El cierre de la portada: una franja oscura, de lado a lado, con otra invitación a pedir. */
+.cierre {
+    margin-top: 32px;
+    padding: 56px 16px;
+    text-align: center;
+    color: var(--blanco);
+    background-color: var(--carbon);
+}
+
+.cierre h2 {
+    margin: 0 0 8px;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    color: var(--mostaza);
+}
+
+.cierre p {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.cierre .acciones {
+    justify-content: center;
     margin-top: 24px;
 }
 
@@ -566,6 +622,12 @@ section > h3 {
     border-radius: 999px;
 }
 
+/* El paso que ya tiene lo que necesita: en verde y con ✓ (el texto también cambia, no solo el color). */
+.paso-foto span.paso-listo {
+    color: var(--blanco);
+    background-color: var(--verde);
+}
+
 .paso-contenido {
     padding: 16px;
 }
@@ -582,11 +644,6 @@ section > h3 {
     }
 }
 
-/* El nombre de cada categoría empieza con mayúscula, aunque en la base esté en minúsculas. */
-.titulo-categoria::first-letter {
-    text-transform: uppercase;
-}
-
 /* Cada ingrediente en una fila: el nombre y el precio a la izquierda, el contador a la derecha. */
 .opciones {
     margin: 0;
@@ -596,7 +653,6 @@ section > h3 {
 
 .opcion {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 12px;
     padding: 10px 0;
@@ -605,6 +661,22 @@ section > h3 {
 
 .opcion:last-child {
     border-bottom: none;
+}
+
+/* La miniatura de cada ingrediente: una foto chica y redonda, a la izquierda del nombre.
+   flex-shrink: 0: no se achica aunque el nombre sea largo. */
+.miniatura {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--crema-oscura);
+}
+
+/* El nombre y el precio ocupan todo el lugar que queda: así el contador queda a la derecha. */
+.opcion-texto {
+    flex: 1;
 }
 
 .precio {
@@ -640,14 +712,15 @@ section > h3 {
 }
 
 /* El resumen del armador queda siempre a mano: pegado abajo de la pantalla mientras se eligen los ingredientes. */
-/* Es una grilla de dos columnas: cada renglón ocupa todo el ancho, salvo el subtotal y el botón,
-   que van juntos en la segunda fila para que el resumen tape poco. */
+/* Es una grilla de tres columnas. En el primer renglón, la hamburguesa chica y, al lado, "Tu hamburguesa" con la cantidad.
+   El resto va en renglones que se arman solos, en el mismo orden que en el JSX: el detalle (si está abierto),
+   el subtotal y el botón juntos, lo que falta y el aviso. Todos usan el ancho completo, para que entren en el celular. */
 .resumen {
     position: sticky;
     bottom: 8px;
     z-index: 5;
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     column-gap: 12px;
     padding: 12px 16px;
@@ -660,27 +733,270 @@ section > h3 {
     grid-column: 1 / -1;
 }
 
-.resumen .total {
-    grid-row: 2;
+.resumen .hamburguesa {
+    grid-row: 1;
     grid-column: 1;
+    width: 64px;
 }
 
-.resumen button {
-    grid-row: 2;
-    grid-column: 2;
+/* "Tu hamburguesa" a la izquierda y la cantidad a la derecha. Si no entran juntas, la cantidad baja (flex-wrap). */
+.resumen-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px 8px;
+}
+
+.resumen .resumen-cabecera {
+    grid-row: 1;
+    grid-column: 2 / -1;
+}
+
+/* La cantidad: una etiqueta verde que, al tocarla, abre o cierra el detalle. */
+.resumen .cantidad {
+    padding: 2px 10px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    color: #9be7b0;
+    background-color: rgba(155, 231, 176, 0.12);
+    border: 1px solid rgba(155, 231, 176, 0.45);
+}
+
+/* El detalle: cada ingrediente con su precio, debajo de una línea finita. */
+.detalle {
+    margin: 8px 0 4px;
+    padding: 8px 0 0;
+    list-style: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.detalle li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.95rem;
+}
+
+/* El subtotal: la palabra chica, en mostaza, y el precio grande. */
+.resumen .subtotal {
+    grid-column: 1 / 3;
+    margin: 4px 0 0;
+}
+
+.subtotal span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--mostaza);
+}
+
+.subtotal strong {
+    font-size: 1.5rem;
+    line-height: 1.1;
+}
+
+.resumen .principal {
+    grid-column: 3;
+}
+
+/* nowrap: el texto del botón no se corta en dos renglones. */
+@media (min-width: 360px) {
+    .resumen .principal {
+        white-space: nowrap;
+    }
+}
+
+/* En celulares de menos de 360 px no entran el subtotal y el botón juntos: el botón baja a su propio renglón. */
+@media (max-width: 359px) {
+    .resumen .subtotal {
+        grid-column: 1 / -1;
+    }
+
+    .resumen .principal {
+        grid-column: 1 / -1;
+    }
 }
 
 .resumen p {
     margin: 4px 0;
 }
 
-.resumen .total {
-    font-size: 1.2rem;
-    color: var(--mostaza);
+.resumen .falta {
+    font-size: 0.9rem;
+    color: var(--crema-oscura);
 }
 
 .resumen .exito {
     color: #9be7b0;
+}
+
+/* En la compu, el armador en dos columnas: los pasos a la izquierda y, a la derecha, el resumen fijo
+   (sticky) con la hamburguesa grande, que se va armando mientras se eligen los ingredientes. */
+@media (min-width: 1000px) {
+    .armador {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        column-gap: 24px;
+        align-items: start;
+    }
+
+    .armador > .banner {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+    }
+
+    .resumen {
+        top: 76px;
+        bottom: auto;
+        display: block;
+        padding: 16px 20px;
+    }
+
+    .resumen .hamburguesa {
+        width: 100%;
+        margin: 4px 0 12px;
+    }
+
+    .resumen .subtotal {
+        margin-top: 12px;
+    }
+
+    /* Con el resumen al costado, la foto de cada paso un poco más angosta, para que entren los ingredientes. */
+    .paso {
+        grid-template-columns: 180px 1fr;
+    }
+
+    .resumen .principal {
+        width: 100%;
+        margin: 8px 0;
+    }
+}
+
+/* La hamburguesa armada con fotos (componente Hamburguesa): el pan de abajo, una foto por ingrediente y el pan de arriba.
+   column-reverse apila de abajo hacia arriba: la primera foto del código (el pan de abajo) queda abajo de todo.
+   Qué foto tapa a cuál lo decide el z-index de cada una (en Hamburguesa.jsx). position: relative y z-index: 0
+   encierran esos z-index en la hamburguesa: así ninguna capa queda encima del encabezado al bajar. */
+.hamburguesa {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 240px;
+}
+
+.hamburguesa img {
+    display: block;
+    width: 100%;
+}
+
+/* La versión chica, para las listas de productos: la misma hamburguesa, más angosta. */
+.hamburguesa-chica {
+    width: 64px;
+}
+
+/* Las listas de productos (el pedido, "Mis pedidos", la cocina y el panel): cada hamburguesa con su foto chica al lado.
+   Sin números: la foto ya separa una hamburguesa de la otra. */
+.productos {
+    margin: 12px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.productos li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+}
+
+/* flex-shrink: 0: la hamburguesa no se achica aunque el texto de al lado sea largo. */
+.productos .hamburguesa {
+    flex-shrink: 0;
+}
+
+/* Cada foto se apoya sobre la de abajo, metiéndose un poco en ella, como en una hamburguesa de verdad.
+   margin-top es cuánto se mete en esta foto la de arriba, y margin-bottom, cuánto se mete esta en la de abajo.
+   Son negativos y están en %: en un margen, el % se mide sobre el ancho, así la grande y la chica se apilan igual. */
+.pan-abajo {
+    margin: -1.5% 0 0;
+}
+
+.capa-carne {
+    margin: -0.83% 0 -1.33%;
+}
+
+.capa-pollo {
+    margin: -0.67% 0 -1%;
+}
+
+/* El queso cae sobre la carne: casi toda la foto (las gotas de cheddar) cuelga por delante. */
+.capa-queso {
+    margin: -2.83% 0 -9.5%;
+}
+
+.capa-panceta {
+    margin: -1.83% 0 -9%;
+}
+
+.capa-huevo {
+    margin: -6.33% 0 -4.33%;
+}
+
+.capa-cebolla {
+    margin: -2.33% 0 -2%;
+}
+
+.capa-tomate {
+    margin: -0.67% 0 -0.83%;
+}
+
+.capa-pepino {
+    margin: -4.67% 0 -4.67%;
+}
+
+/* La lechuga se ve sobre todo por los costados: el pan la tapa arriba y el tomate sube por detrás. */
+.capa-lechuga {
+    margin: -3% 0 -8%;
+}
+
+/* Las salsas son la misma foto, de distinto color: se apilan igual. */
+.capa-mayonesa,
+.capa-ketchup,
+.capa-mostaza,
+.capa-barbacoa {
+    margin: -2.5% 0 -3.33%;
+}
+
+.pan-arriba {
+    margin: 0 0 -1.17%;
+}
+
+/* Al sumar un ingrediente, su foto cae desde un poco más arriba. Responde a lo que hizo la persona: no se mueve sola. */
+.capa {
+    animation: caer 0.25s ease-out;
+}
+
+@keyframes caer {
+    from {
+        transform: translateY(-16px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* En las listas, la hamburguesa chica no se anima: solo la del armador, que cambia cuando se toca "+". */
+.hamburguesa-chica .capa {
+    animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .capa {
+        animation: none;
+    }
 }
 
 /* El pedido en curso, separado del armador con una franja de ketchup. */
@@ -792,18 +1108,50 @@ th {
 }
 
 /* La página de una dirección que no existe. */
-.no-encontrada {
-    max-width: 520px;
-    padding-top: 48px;
-    text-align: center;
+/* La página de error (401, 403 y 404): usa el diseño del ingreso, con la foto de una hamburguesa desarmada.
+   La foto es una toma desde arriba, así que se puede girar: en el celular va acostada, para que entre en la franja de arriba,
+   y en pantallas anchas va parada, como se arma una hamburguesa (con amarillo agregado a los costados, para que llene la columna). */
+.error-foto {
+    background-color: #dacb6f;
+    background-image: url("/img/error-acostada.jpg");
+    background-position: center;
+    background-size: cover;
 }
 
-.no-encontrada img {
-    width: 100%;
-    height: 220px;
-    margin-bottom: 16px;
-    object-fit: cover;
-    border-radius: var(--radio);
+/* Sobre el amarillo no hace falta el degradé oscuro del ingreso: el lema va en negro. */
+.error-foto::after {
+    display: none;
+}
+
+.error-foto .lema {
+    font-size: 1.6rem;
+    color: var(--carbon);
+}
+
+@media (min-width: 860px) {
+    .error-foto {
+        background-image: url("/img/error-parada.jpg");
+    }
+
+    /* En pantallas anchas, el lema en una columna angosta a la izquierda, para no tapar la hamburguesa del medio. */
+    .error-foto .lema {
+        max-width: 4.6em;
+        font-size: 3.4rem;
+    }
+}
+
+/* El código del error, bien grande: es lo primero que se lee. */
+.error-codigo {
+    margin: 0 0 4px;
+    font-family: "Bebas Neue", Impact, sans-serif;
+    font-size: clamp(4rem, 12vw, 6.5rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--mostaza-oscura);
+}
+
+.acceso-formulario .acciones {
+    margin-top: 24px;
 }
 
 /* En pantallas angostas (celulares): títulos, encabezado y tablas un poco más chicos. */

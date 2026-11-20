@@ -6,6 +6,7 @@ import Estado from "../../componentes/Estado.jsx";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 import Banner from "../../componentes/Banner.jsx";
+import Hamburguesa from "../../componentes/Hamburguesa.jsx";
 
 // Los estados de un pedido, para el filtro. Son los del modelo Orden del backend.
 const ESTADOS = ["Pendiente", "En preparación", "Lista para retirar", "Entregada", "Cancelado"];
@@ -107,10 +108,12 @@ function Pedidos() {
                             <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
                             <Estado estado={pedido.estado} />
                         </p>
-                        <ol>
+                        {/* Cada hamburguesa con su foto chica al lado: se ve de un vistazo qué lleva. */}
+                        <ol className="productos">
                             {pedido.productos.map((producto) => (
                                 <li key={producto._id}>
-                                    {listarIngredientes(producto.ingredientes)}: {formatearPrecio(producto.subtotal)}
+                                    <Hamburguesa chica ingredientes={producto.ingredientes} />
+                                    <span>{listarIngredientes(producto.ingredientes)}: {formatearPrecio(producto.subtotal)}</span>
                                 </li>
                             ))}
                         </ol>

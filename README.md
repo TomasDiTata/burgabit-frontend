@@ -34,9 +34,9 @@ Cada pantalla tiene su dirección, así que se puede guardar o compartir el enla
 | `/cocina` | Pedidos activos | Cocina |
 | `/admin/categorias`, `/admin/ingredientes`, `/admin/usuarios`, `/admin/pedidos` | Panel del administrador | Administración |
 
-- Sin sesión, las pantallas de los roles mandan al ingreso. Con otro rol, mandan a la pantalla de ese rol. Es solo para la navegación: los permisos los controla siempre el backend.
+- Sin sesión, las pantallas de los roles muestran el error 401, con botones para ingresar o crear una cuenta. Con una cuenta de otro rol, muestran el error 403 y ofrecen ir a la sección propia. Son los mismos códigos que usa el backend, y es solo para la navegación: los permisos los controla siempre el backend.
 - Después de ingresar, el ingreso se reemplaza en el historial, así "Atrás" no vuelve al formulario.
-- Cualquier otra dirección muestra una página de BurgaBit que avisa que no existe.
+- Cualquier otra dirección muestra el error 404. Los tres errores usan la misma página (`PaginaDeError.jsx`), con la foto de una hamburguesa desarmada.
 
 ## Librerías
 
@@ -91,12 +91,15 @@ burgabit-frontend/
 ├── public/                    Archivos que se publican tal cual, sin procesar.
 │   ├── favicon.svg            Ícono de la pestaña del navegador: una hamburguesa.
 │   ├── fonts/                 La letra de los títulos (Bebas Neue) y su licencia.
-│   └── img/                   Las fotos: portada, banners y una por tipo de categoría.
+│   └── img/                   Las fotos: portada, banners, una por tipo de categoría y,
+│                              en img/ingredientes, una miniatura por ingrediente y, en img/capas,
+│                              las capas de la hamburguesa que se arma.
 └── src/                       El código de la aplicación.
     ├── main.jsx               Arranca React, envuelto en BrowserRouter.
     ├── App.jsx                Las rutas: qué pantalla va en cada dirección, y cuáles piden sesión y rol.
     ├── rutas.js               La pantalla de inicio de cada rol y la clase de las pestañas.
-    ├── fotos.js               Elige la foto de cada categoría según su nombre.
+    ├── fotos.js               Elige la foto de cada categoría y de cada ingrediente según su nombre.
+    ├── hamburguesa.js         Qué foto de capa le toca a cada ingrediente, y en qué orden se apilan.
     ├── api.js                 pedirApi: la única función que habla con el backend.
     ├── sesion.js              Guarda, lee y borra el token (JWT) en el navegador.
     ├── validaciones.js        Reglas que comparten los formularios.
@@ -108,12 +111,13 @@ burgabit-frontend/
     │   ├── Cargando.jsx       El aviso de "Cargando..." mientras llegan los datos.
     │   ├── Encabezado.jsx     Barra de arriba: el logo, la sección y "Cerrar sesión".
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
+    │   ├── Hamburguesa.jsx    La hamburguesa armada con fotos: el pan, una capa por ingrediente y el pan.
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
     └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
         ├── Login.jsx          Ingreso.
         ├── Registro.jsx       Alta de clientes.
-        ├── NoEncontrada.jsx   Para las direcciones que no existen.
+        ├── PaginaDeError.jsx  Los errores 401, 403 y 404: qué pasó y qué hacer.
         ├── PantallaCliente.jsx  Pestañas del cliente, sus rutas y el pedido en curso.
         ├── PantallaCocina.jsx   Pedidos activos y cambios de estado.
         ├── PanelAdmin.jsx     Pestañas del administrador y sus rutas.
@@ -134,31 +138,38 @@ burgabit-frontend/
 - Al ingresar, el backend devuelve un token JWT. Se guarda en `localStorage` y viaja en cada pedido en el encabezado `Authorization: Bearer <token>`.
 - El frontend lee del token el rol, para elegir la pantalla, y el vencimiento, para pedir el ingreso de nuevo. Los permisos los controla siempre el backend.
 - Los formularios se validan antes de enviar, y cada pedido a la API muestra que está en curso ("Cargando...", "Guardando...") y avisa si falla.
+- Los nombres de categorías e ingredientes llegan en minúscula: el backend los guarda así (`lowercase: true` en los modelos) para que "Cheddar" y "cheddar" no cuenten como dos distintos. El frontend los muestra con la primera letra en mayúscula, con `conMayuscula` (`src/formato.js`).
 - Los pedidos del panel del administrador se piden ya filtrados: al elegir un estado, el pedido es `/api/admin?estado=...` y el backend devuelve solo esos. Así no viajan todos los pedidos para descartarlos en el navegador.
 
 ## Diseño
 
 - **Estilo de hamburguesería:** fondo crema, rojo ketchup, amarillo mostaza y negro carbón. Los colores están como variables al principio de `src/index.css`.
 - **Letra de los títulos:** Bebas Neue, guardada en `public/fonts`, así no depende de otro sitio. Tiene licencia SIL Open Font License (`public/fonts/OFL.txt`).
-- **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. El resumen del armador queda pegado abajo de la pantalla.
+- **Responsive:** en el celular, las fotos van arriba y el contenido abajo, y las pestañas bajan de renglón. En los banners, la foto va arriba y el título abajo, así el texto no tapa la foto. El resumen del armador queda pegado abajo de la pantalla.
 - **Una foto en cada sección:** el armador, "Mis pedidos", la cocina y las cuatro secciones del panel empiezan con un banner: una foto con el título encima. Es el componente `Banner`.
+- **La hamburguesa se arma mientras se elige:** en el armador, cada vez que se toca "+" cae una capa nueva sobre el pan: carne, cheddar, panceta, huevo, cebolla, tomate, pepinos, lechuga o salsa. Cada capa es una foto real recortada, con fondo transparente (`public/img/capas`), y se elige por palabras del nombre del ingrediente (`src/hamburguesa.js`). Las fotos se apilan con CSS: cada una se mete un poco en la de abajo, con márgenes negativos, como en una hamburguesa de verdad. Si hay más de un medallón, va una feta de queso arriba de cada uno. En la compu, el resumen queda fijo a la derecha con la hamburguesa grande; en el celular, la barra de abajo la muestra chica. Los pasos que ya tienen lo necesario se marcan en verde y con ✓. La misma hamburguesa, en chico, acompaña cada producto del pedido, de "Mis pedidos", de la cocina y del panel.
+- **Miniaturas de los ingredientes:** en el armador, cada ingrediente tiene al lado una foto chica y redonda. Se elige por palabras del nombre, como las fotos de las categorías; si ninguna coincide, se usa la foto de su categoría.
+- **Resumen compacto:** "Tu hamburguesa" con la cantidad de ingredientes, el subtotal grande y el botón. Al tocar la cantidad se despliega el detalle, con el precio de cada ingrediente. Si falta algo para poder agregarla, lo dice debajo del botón.
+- **Portada:** la foto grande con los botones para empezar, los tres pasos y, al final, una franja con otra invitación a pedir ("¿Se te hizo agua la boca?").
+- **Teclado:** al moverse con Tab, el botón o enlace que tiene el foco se marca con un borde mostaza, visible también sobre los fondos oscuros.
 - **Hamburguesa y papas a los costados:** en pantallas de 1300 px o más sobra lugar a los costados de la columna del medio. Ahí van una hamburguesa (a la izquierda) y unas papas fritas (a la derecha), fijas mientras se baja y desvaneciéndose hacia el centro con un degradé crema. En esas pantallas los banners quedan como carteles sin foto, y su foto ni se descarga (`loading="lazy"`). En el celular no hay costados: ahí cada banner muestra su foto.
 
 ### Fotos
 
-Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web. Las de la cocina y el panel, además, están recortadas en una franja ancha, que es la parte que muestra el banner.
+Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gratis y sin pedir permiso. Están achicadas para la web. Las del cliente siguen una misma línea: hamburguesas en primer plano, luz cálida y fondo oscuro. Las de la cocina y el panel, además, están recortadas en una franja ancha, que es la parte que muestra el banner.
 
 | Archivo | Dónde se ve | Origen |
 |---|---|---|
 | `portada.jpg` | Portada e ingreso | [Pexels 1639557](https://www.pexels.com/photo/1639557/) |
 | `registro.jpg` | Registro | [Unsplash](https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5) |
 | `armar.jpg` | Banner del armador | [Unsplash](https://images.unsplash.com/photo-1561758033-d89a9ad46330) |
-| `pedidos.jpg` | Banner de "Mis pedidos" y portada | [Pexels 2271107](https://www.pexels.com/photo/2271107/) |
+| `pedidos.jpg` | Banner de "Mis pedidos" y portada (espejada, para que la hamburguesa quede a la derecha) | [Pexels 1556688](https://www.pexels.com/photo/1556688/) |
 | `cocina.jpg` | Banner de la cocina | [Unsplash](https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf) |
 | `categorias.jpg` | Banner de categorías, en el panel | [Unsplash](https://images.unsplash.com/photo-1498837167922-ddd27525d352) |
 | `ingredientes.jpg` | Banner de ingredientes, en el panel | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
 | `usuarios.jpg` | Banner de usuarios, en el panel | [Unsplash](https://images.unsplash.com/photo-1555992336-03a23c7b20ee) |
 | `pedidos-panel.jpg` | Banner de pedidos, en el panel | [Unsplash](https://images.unsplash.com/photo-1466978913421-dad2ebd01d17) |
+| `error-parada.jpg`, `error-acostada.jpg` | Página de error: parada en pantallas anchas (con amarillo agregado a los costados) y acostada en el celular | [Pexels 7497213](https://www.pexels.com/photo/7497213/) |
 | `costado-hamburguesa.jpg` | Costado izquierdo, en pantallas anchas | [Pexels 8365318](https://www.pexels.com/photo/8365318/) |
 | `costado-papas.jpg` | Costado derecho, en pantallas anchas | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
 | `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
@@ -166,9 +177,39 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |
 | `panes.jpg` | Categorías de panes | [Unsplash](https://images.unsplash.com/photo-1568901346375-23c9450c58cd) |
 | `salsas.jpg` | Categorías de salsas o aderezos | [Unsplash](https://images.unsplash.com/photo-1472476443507-c7a5948772fc) |
-| `panceta.jpg` | Categorías de panceta | [Unsplash](https://images.unsplash.com/photo-1528607929212-2636ec44253e) |
-| `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 115740](https://www.pexels.com/photo/115740/) |
-| `hamburguesa.jpg` | Cualquier otra categoría, y la página de dirección inexistente | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
+| `panceta.jpg` | Categorías de panceta | [Pexels 33068078](https://www.pexels.com/photo/33068078/) |
+| `papas.jpg` | Categorías de papas o acompañamientos | [Pexels 1583884](https://www.pexels.com/photo/1583884/) |
+| `hamburguesa.jpg` | Cualquier otra categoría | [Unsplash](https://images.unsplash.com/photo-1571091718767-18b5b1457add) |
+
+Las miniaturas de `public/img/ingredientes` son recortes cuadrados de 160 × 160 px, de estas fotos:
+
+| Miniaturas | Origen |
+|---|---|
+| `lechuga.jpg` | [Pexels 1213859](https://www.pexels.com/photo/1213859/) |
+| `tomate.jpg` | [Pexels 8771640](https://www.pexels.com/photo/8771640/) |
+| `queso.jpg` | [Pexels 6004145](https://www.pexels.com/photo/6004145/) |
+| `panceta.jpg` | [Pexels 14133033](https://www.pexels.com/photo/14133033/) |
+| `cebolla.jpg` | [Pexels 8859774](https://www.pexels.com/photo/8859774/) |
+| `huevo.jpg` | [Pexels 722223](https://www.pexels.com/photo/722223/) |
+| `carne.jpg` | [Pexels 8365312](https://www.pexels.com/photo/8365312/) |
+| `pepinos.jpg` | [Pexels 8599636](https://www.pexels.com/photo/8599636/) |
+| `mostaza.jpg`, `mayonesa.jpg` | [Pexels 1435901](https://www.pexels.com/photo/1435901/) |
+| `barbacoa.jpg` | [Pexels 3622479](https://www.pexels.com/photo/3622479/) |
+| `ketchup.jpg` | [Pexels 8165241](https://www.pexels.com/photo/8165241/) |
+| `hongos.jpg` | [Pexels 1435904](https://www.pexels.com/photo/1435904/) |
+| `pan.jpg`, `pollo.jpg` | [Pexels 7497213](https://www.pexels.com/photo/7497213/) |
+| `palta.jpg` | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
+| `papas.jpg` | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
+
+Las capas de `public/img/capas` son recortes con fondo transparente (WebP), sacados de fotos con fondo negro y la misma luz, así combinan entre sí:
+
+| Capas | Origen |
+|---|---|
+| `pan-arriba.webp`, `pan-abajo.webp`, `lechuga.webp`, `tomate.webp`, `cebolla.webp`, `queso.webp` | [Pexels 19247575](https://www.pexels.com/photo/19247575/) |
+| `carne.webp`, `mayonesa.webp` (y sus versiones teñidas: `ketchup.webp`, `mostaza.webp`, `barbacoa.webp`) | [Pexels 18713425](https://www.pexels.com/photo/18713425/) |
+| `panceta.webp` | [Pexels 19247565](https://www.pexels.com/photo/19247565/) |
+| `pollo.webp`, `pepino.webp` | [Pexels 19247582](https://www.pexels.com/photo/19247582/) |
+| `huevo.webp` | [Pexels 1251198](https://www.pexels.com/photo/1251198/) |
 
 ## Publicación
 

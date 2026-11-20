@@ -7,6 +7,7 @@ import Estado from "../componentes/Estado.jsx";
 import Cargando from "../componentes/Cargando.jsx";
 import ErrorAlCargar from "../componentes/ErrorAlCargar.jsx";
 import Banner from "../componentes/Banner.jsx";
+import Hamburguesa from "../componentes/Hamburguesa.jsx";
 
 // Lo que puede hacer la cocina con un pedido según su estado: el texto del botón y el estado al que pasa.
 // Son las mismas transiciones que permite el backend (cocineroControlador).
@@ -101,9 +102,13 @@ function PantallaCocina({ alCerrarSesion }) {
                     <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
                     <Estado estado={pedido.estado} />
                 </p>
-                <ol>
+                {/* Cada hamburguesa con su foto chica al lado: en la cocina sirve como guía de cómo armarla. */}
+                <ol className="productos">
                     {pedido.productos.map((producto) => (
-                        <li key={producto._id}>{listarIngredientes(producto.ingredientes)}</li>
+                        <li key={producto._id}>
+                            <Hamburguesa chica ingredientes={producto.ingredientes} />
+                            <span>{listarIngredientes(producto.ingredientes)}</span>
+                        </li>
                     ))}
                 </ol>
                 <p className="total">Total: {formatearPrecio(pedido.total)}</p>
