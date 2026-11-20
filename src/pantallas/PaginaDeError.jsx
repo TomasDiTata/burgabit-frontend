@@ -1,20 +1,20 @@
 import { Link } from "react-router";
 import { inicioDe } from "../rutas.js";
+import HamburguesaTriste from "../componentes/HamburguesaTriste.jsx";
 
-// Los errores del cliente (4xx) que puede mostrar la app. Son los mismos códigos que devuelve el backend:
+// Los errores del cliente (4xx) que puede mostrar la app, cada uno con su mensaje. Son los mismos códigos que devuelve el backend:
 // 401: no se sabe quién sos (no hay sesión). 403: se sabe quién sos, pero tu cuenta no tiene permiso. 404: no existe.
-const TITULOS = {
-    401: "Sin sesión no hay hamburguesa",
-    403: "Esta sección no es para tu cuenta",
-    404: "Esta página se la comieron"
+const MENSAJES = {
+    401: "Necesitás iniciar sesión",
+    403: "No tenés permiso para entrar acá",
+    404: "Página no encontrada"
 };
 
 // Para el 403: de quién es cada sección y cómo se llama cada tipo de cuenta.
 const SECCION_DEL_ROL = { cliente: "los clientes", cocinero: "la cocina", administrador: "la administración" };
 const CUENTA_DEL_ROL = { cliente: "cliente", cocinero: "cocina", administrador: "administración" };
 
-// Página de error: la foto de una hamburguesa desarmada, el código, qué pasó y qué se puede hacer.
-// Usa el mismo diseño que el ingreso: la foto a un lado (arriba en el celular) y el contenido al otro.
+// Página de error: la hamburguesa triste en el centro, el código del error junto a su mensaje, qué pasó y qué se puede hacer.
 // codigo: 401, 403 o 404. sesion: la sesión, si hay. rolNecesario: para el 403, el rol de la sección que se quiso abrir.
 function PaginaDeError({ codigo, sesion, rolNecesario }) {
     // Qué pasó, en palabras.
@@ -49,20 +49,19 @@ function PaginaDeError({ codigo, sesion, rolNecesario }) {
     };
 
     return (
-        <div className="acceso">
-            {/* La foto va como fondo en el CSS (.error-foto): parada en pantallas anchas y acostada en el celular. */}
-            <div className="acceso-foto error-foto">
-                <p className="lema">Se nos desarmó la hamburguesa.</p>
-            </div>
+        <main className="pagina-error">
+            <Link to="/" className="logo">Burga<span>Bit</span></Link>
+            <HamburguesaTriste />
 
-            <main className="acceso-formulario">
-                <Link to="/" className="logo">Burga<span>Bit</span></Link>
-                <p className="error-codigo">Error {codigo}</p>
-                <h1>{TITULOS[codigo]}</h1>
-                <p>{explicacion()}</p>
-                <div className="acciones">{botones()}</div>
-            </main>
-        </div>
+            {/* El código y su mensaje, juntos en el mismo título. */}
+            <h1>
+                <span className="error-codigo">Error {codigo}</span>
+                <span className="error-mensaje">{MENSAJES[codigo]}</span>
+            </h1>
+            <p>{explicacion()}</p>
+
+            <div className="acciones">{botones()}</div>
+        </main>
     );
 }
 

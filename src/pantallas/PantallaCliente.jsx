@@ -35,8 +35,7 @@ function PantallaCliente({ alCerrarSesion }) {
         <>
             <Encabezado seccion="Cliente" alCerrarSesion={alCerrarSesion} />
 
-            {/* con-costados: en pantallas anchas, la hamburguesa y las papas a los costados (index.css). */}
-            <main className="con-costados">
+            <main>
                 <nav className="pestanas">
                     <NavLink to="/cliente/armar" className={clasePestana} onClick={() => setAviso("")}>
                         Armar pedido{carrito.length > 0 && ` (${carrito.length})`}

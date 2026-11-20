@@ -43,8 +43,7 @@ function Portada({ sesion }) {
                 </div>
             </section>
 
-            {/* con-costados: en pantallas anchas, la hamburguesa y las papas a los costados (index.css). */}
-            <main className="con-costados">
+            <main>
                 <h2>Así de fácil</h2>
                 <div className="pasos">
                     {PASOS.map((paso, posicion) => (
