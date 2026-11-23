@@ -113,7 +113,10 @@ burgabit-frontend/
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
     │   ├── Hamburguesa.jsx    La hamburguesa armada con fotos: el pan, una capa por ingrediente y el pan.
     │   ├── HamburguesaTriste.jsx  El dibujo de la hamburguesa triste de la página de error.
+<<<<<<< HEAD
     │   ├── TarjetaPedido.jsx  La tarjeta de un pedido: fecha, estado, hamburguesas y total.
+=======
+>>>>>>> 22d62ba8c7138cd2e90641d9aa22d46625f903d1
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
     └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
