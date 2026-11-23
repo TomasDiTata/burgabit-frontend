@@ -56,7 +56,7 @@ function App() {
             <Route path="/ingresar" element={sinSesion(<Login alIniciarSesion={iniciarSesion} />)} />
             <Route path="/registro" element={sinSesion(<Registro alIniciarSesion={iniciarSesion} />)} />
             {/* El "/*" deja que la pantalla tenga sus propias rutas adentro, como /cliente/armar y /cliente/pedidos. */}
-            <Route path="/cliente/*" element={soloPara("cliente", <PantallaCliente alCerrarSesion={cerrarSesion} />)} />
+            <Route path="/cliente/*" element={soloPara("cliente", <PantallaCliente sesion={sesion} alCerrarSesion={cerrarSesion} />)} />
             <Route path="/cocina" element={soloPara("cocinero", <PantallaCocina alCerrarSesion={cerrarSesion} />)} />
             <Route path="/admin/*" element={soloPara("administrador", <PanelAdmin alCerrarSesion={cerrarSesion} />)} />
             {/* Cualquier otra dirección: el error 404, en una página de BurgaBit. */}
