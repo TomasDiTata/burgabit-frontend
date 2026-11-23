@@ -36,7 +36,7 @@ Cada pantalla tiene su dirección, así que se puede guardar o compartir el enla
 
 - Sin sesión, las pantallas de los roles muestran el error 401, con botones para ingresar o crear una cuenta. Con una cuenta de otro rol, muestran el error 403 y ofrecen ir a la sección propia. Son los mismos códigos que usa el backend, y es solo para la navegación: los permisos los controla siempre el backend.
 - Después de ingresar, el ingreso se reemplaza en el historial, así "Atrás" no vuelve al formulario.
-- Cualquier otra dirección muestra el error 404. Los tres errores usan la misma página (`PaginaDeError.jsx`), con la foto de una hamburguesa desarmada.
+- Cualquier otra dirección muestra el error 404. Los tres errores usan la misma página (`PaginaDeError.jsx`): una hamburguesa triste dibujada en el centro (con una lágrima que cae), el código del error junto a su mensaje, qué pasó y qué hacer.
 
 ## Librerías
 
@@ -112,6 +112,8 @@ burgabit-frontend/
     │   ├── Encabezado.jsx     Barra de arriba: el logo, la sección y "Cerrar sesión".
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
     │   ├── Hamburguesa.jsx    La hamburguesa armada con fotos: el pan, una capa por ingrediente y el pan.
+    │   ├── HamburguesaTriste.jsx  El dibujo de la hamburguesa triste de la página de error.
+    │   ├── TarjetaPedido.jsx  La tarjeta de un pedido: fecha, estado, hamburguesas y total.
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
     └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
@@ -152,7 +154,6 @@ burgabit-frontend/
 - **Resumen compacto:** "Tu hamburguesa" con la cantidad de ingredientes, el subtotal grande y el botón. Al tocar la cantidad se despliega el detalle, con el precio de cada ingrediente. Si falta algo para poder agregarla, lo dice debajo del botón.
 - **Portada:** la foto grande con los botones para empezar, los tres pasos y, al final, una franja con otra invitación a pedir ("¿Se te hizo agua la boca?").
 - **Teclado:** al moverse con Tab, el botón o enlace que tiene el foco se marca con un borde mostaza, visible también sobre los fondos oscuros.
-- **Hamburguesa y papas a los costados:** en pantallas de 1300 px o más sobra lugar a los costados de la columna del medio. Ahí van una hamburguesa (a la izquierda) y unas papas fritas (a la derecha), fijas mientras se baja y desvaneciéndose hacia el centro con un degradé crema. En esas pantallas los banners quedan como carteles sin foto, y su foto ni se descarga (`loading="lazy"`). En el celular no hay costados: ahí cada banner muestra su foto.
 
 ### Fotos
 
@@ -169,9 +170,6 @@ Son de Unsplash y Pexels, con la licencia de cada sitio, que permite usarlas gra
 | `ingredientes.jpg` | Banner de ingredientes, en el panel | [Unsplash](https://images.unsplash.com/photo-1466637574441-749b8f19452f) |
 | `usuarios.jpg` | Banner de usuarios, en el panel | [Unsplash](https://images.unsplash.com/photo-1555992336-03a23c7b20ee) |
 | `pedidos-panel.jpg` | Banner de pedidos, en el panel | [Unsplash](https://images.unsplash.com/photo-1466978913421-dad2ebd01d17) |
-| `error-parada.jpg`, `error-acostada.jpg` | Página de error: parada en pantallas anchas (con amarillo agregado a los costados) y acostada en el celular | [Pexels 7497213](https://www.pexels.com/photo/7497213/) |
-| `costado-hamburguesa.jpg` | Costado izquierdo, en pantallas anchas | [Pexels 8365318](https://www.pexels.com/photo/8365318/) |
-| `costado-papas.jpg` | Costado derecho, en pantallas anchas | [Pexels 4109234](https://www.pexels.com/photo/4109234/) |
 | `medallones.jpg` | Categorías de medallones o carne, y portada | [Unsplash](https://images.unsplash.com/photo-1572802419224-296b0aeee0d9) |
 | `vegetales.jpg` | Categorías de toppings, verduras o vegetales, y portada | [Pexels 19247582](https://www.pexels.com/photo/19247582/) |
 | `quesos.jpg` | Categorías de quesos | [Unsplash](https://images.unsplash.com/photo-1542574271-7f3b92e6c821) |

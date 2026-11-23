@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../api.js";
-import { formatearFecha, formatearPrecio } from "../formato.js";
-import { listarIngredientes } from "../pedidos.js";
 import Encabezado from "../componentes/Encabezado.jsx";
-import Estado from "../componentes/Estado.jsx";
 import Cargando from "../componentes/Cargando.jsx";
 import ErrorAlCargar from "../componentes/ErrorAlCargar.jsx";
 import Banner from "../componentes/Banner.jsx";
-import Hamburguesa from "../componentes/Hamburguesa.jsx";
+import TarjetaPedido from "../componentes/TarjetaPedido.jsx";
 
 // Lo que puede hacer la cocina con un pedido según su estado: el texto del botón y el estado al que pasa.
 // Son las mismas transiciones que permite el backend (cocineroControlador).
@@ -82,6 +79,24 @@ function PantallaCocina({ alCerrarSesion }) {
         cambiarEstado(id, "Cancelado", motivo.trim());
     };
 
+    // Lo que va al pie de la tarjeta de un pedido: el botón para pasarlo al estado siguiente y, mientras no esté listo, el de cancelar.
+    const pieDe = (pedido) => (
+        <div className="acciones">
+            <button
+                className="principal"
+                onClick={() => cambiarEstado(pedido._id, SIGUIENTE_PASO[pedido.estado].estado)}
+                disabled={actualizando === pedido._id}
+            >
+                {actualizando === pedido._id ? "Guardando..." : SIGUIENTE_PASO[pedido.estado].texto}
+            </button>
+            {SE_PUEDE_CANCELAR.includes(pedido.estado) && (
+                <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={actualizando === pedido._id}>
+                    Cancelar pedido
+                </button>
+            )}
+        </div>
+    );
+
     // Qué se ve: cargando, un error, la lista vacía o los pedidos.
     const mostrarPedidos = () => {
         if(cargando) {
@@ -96,38 +111,9 @@ function PantallaCocina({ alCerrarSesion }) {
             return <p>No hay pedidos activos.</p>;
         }
 
+        // Cada pedido en su tarjeta, con el nombre de quien lo pidió y, al pie, los botones de la cocina.
         return pedidos.map((pedido) => (
-            <article key={pedido._id} className="tarjeta">
-                <p>
-                    <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
-                    <Estado estado={pedido.estado} />
-                </p>
-                {/* Cada hamburguesa con su foto chica al lado: en la cocina sirve como guía de cómo armarla. */}
-                <ol className="productos">
-                    {pedido.productos.map((producto) => (
-                        <li key={producto._id}>
-                            <Hamburguesa chica ingredientes={producto.ingredientes} />
-                            <span>{listarIngredientes(producto.ingredientes)}</span>
-                        </li>
-                    ))}
-                </ol>
-                <p className="total">Total: {formatearPrecio(pedido.total)}</p>
-
-                <div className="acciones">
-                    <button
-                        className="principal"
-                        onClick={() => cambiarEstado(pedido._id, SIGUIENTE_PASO[pedido.estado].estado)}
-                        disabled={actualizando === pedido._id}
-                    >
-                        {actualizando === pedido._id ? "Guardando..." : SIGUIENTE_PASO[pedido.estado].texto}
-                    </button>
-                    {SE_PUEDE_CANCELAR.includes(pedido.estado) && (
-                        <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={actualizando === pedido._id}>
-                            Cancelar pedido
-                        </button>
-                    )}
-                </div>
-            </article>
+            <TarjetaPedido key={pedido._id} pedido={pedido} conCliente pie={pieDe(pedido)} />
         ));
     };
 
@@ -135,8 +121,7 @@ function PantallaCocina({ alCerrarSesion }) {
         <>
             <Encabezado seccion="Cocina" alCerrarSesion={alCerrarSesion} />
 
-            {/* con-costados: en pantallas anchas, la hamburguesa y las papas a los costados (index.css). */}
-            <main className="con-costados">
+            <main>
                 <Banner
                     chico
                     foto="/img/cocina.jpg"

@@ -7,7 +7,7 @@ const CLASE_DEL_ESTADO = {
     "Cancelado": "cancelado"
 };
 
-// El estado de un pedido como una etiqueta de color. Lo usan el cliente y la cocina.
+// El estado de un pedido como una etiqueta de color. Lo usa la tarjeta de cada pedido (TarjetaPedido).
 function Estado({ estado }) {
     return <span className={`estado ${CLASE_DEL_ESTADO[estado]}`}>{estado}</span>;
 }
