@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
-import { formatearFecha, formatearPrecio } from "../../formato.js";
-import { listarIngredientes } from "../../pedidos.js";
-import Estado from "../../componentes/Estado.jsx";
+import { formatearFecha } from "../../formato.js";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 import Banner from "../../componentes/Banner.jsx";
-import Hamburguesa from "../../componentes/Hamburguesa.jsx";
+import TarjetaPedido from "../../componentes/TarjetaPedido.jsx";
 
 // Los estados de un pedido, para el filtro. Son los del modelo Orden del backend.
 const ESTADOS = ["Pendiente", "En preparación", "Lista para retirar", "Entregada", "Cancelado"];
@@ -82,6 +80,19 @@ function Pedidos() {
         </>
     );
 
+    // Lo que va al pie de la tarjeta de un pedido: su historial, si es el que se está viendo, o el botón para verlo.
+    const pieDe = (pedido) => {
+        if(detalle?._id === pedido._id) {
+            return mostrarHistorial();
+        }
+
+        return (
+            <button onClick={() => verHistorial(pedido._id)} disabled={buscando === pedido._id}>
+                {buscando === pedido._id ? "Buscando..." : "Ver historial"}
+            </button>
+        );
+    };
+
     // Qué se ve en lugar de la lista: cargando, un error, la lista vacía o una tarjeta por pedido.
     const mostrarPedidos = () => {
         // "Cargando..." solo si todavía no hay nada para mostrar: al actualizar, la lista queda en su lugar.
@@ -102,29 +113,9 @@ function Pedidos() {
             <>
                 <p>{pedidos.length === 1 ? "1 pedido" : `${pedidos.length} pedidos`}{filtro !== "" && ` en estado ${filtro}`}.</p>
 
+                {/* Cada pedido en su tarjeta, con quién lo pidió, el precio de cada hamburguesa y, al pie, el historial. */}
                 {pedidos.map((pedido) => (
-                    <article key={pedido._id} className="tarjeta">
-                        <p>
-                            <strong>{formatearFecha(pedido.createdAt)}</strong> · {pedido.cliente?.nombre} {pedido.cliente?.apellido}{" "}
-                            <Estado estado={pedido.estado} />
-                        </p>
-                        {/* Cada hamburguesa con su foto chica al lado: se ve de un vistazo qué lleva. */}
-                        <ol className="productos">
-                            {pedido.productos.map((producto) => (
-                                <li key={producto._id}>
-                                    <Hamburguesa chica ingredientes={producto.ingredientes} />
-                                    <span>{listarIngredientes(producto.ingredientes)}: {formatearPrecio(producto.subtotal)}</span>
-                                </li>
-                            ))}
-                        </ol>
-                        <p className="total">Total: {formatearPrecio(pedido.total)}</p>
-
-                        {detalle?._id === pedido._id ? mostrarHistorial() : (
-                            <button onClick={() => verHistorial(pedido._id)} disabled={buscando === pedido._id}>
-                                {buscando === pedido._id ? "Buscando..." : "Ver historial"}
-                            </button>
-                        )}
-                    </article>
+                    <TarjetaPedido key={pedido._id} pedido={pedido} conCliente conPrecios pie={pieDe(pedido)} />
                 ))}
             </>
         );

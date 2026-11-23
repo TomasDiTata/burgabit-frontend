@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { pedirApi } from "../../api.js";
-import { formatearFecha, formatearPrecio } from "../../formato.js";
-import { listarIngredientes } from "../../pedidos.js";
-import Estado from "../../componentes/Estado.jsx";
 import Cargando from "../../componentes/Cargando.jsx";
 import ErrorAlCargar from "../../componentes/ErrorAlCargar.jsx";
 import Banner from "../../componentes/Banner.jsx";
-import Hamburguesa from "../../componentes/Hamburguesa.jsx";
+import TarjetaPedido from "../../componentes/TarjetaPedido.jsx";
 
 // Si un pedido se canceló, el motivo está en su historial de estados.
 const motivoDeCancelacion = (pedido) => {
@@ -60,6 +57,20 @@ function MisPedidos({ aviso }) {
         }
     };
 
+    // Lo que va al pie de la tarjeta de un pedido: el motivo, si se canceló, y el botón para cancelarlo mientras sigue Pendiente.
+    // <> y </> agrupan los dos sin agregar otra etiqueta.
+    const pieDe = (pedido) => (
+        <>
+            {pedido.estado === "Cancelado" && <p>Motivo: {motivoDeCancelacion(pedido)}</p>}
+
+            {pedido.estado === "Pendiente" && (
+                <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={cancelando === pedido._id}>
+                    {cancelando === pedido._id ? "Cancelando..." : "Cancelar pedido"}
+                </button>
+            )}
+        </>
+    );
+
     // Qué se ve: cargando, un error, la lista vacía o los pedidos.
     const mostrarPedidos = () => {
         if(cargando) {
@@ -74,30 +85,9 @@ function MisPedidos({ aviso }) {
             return <p>Todavía no hiciste ningún pedido.</p>;
         }
 
+        // Cada pedido en su tarjeta, con el precio de cada hamburguesa y, al pie, lo propio del cliente.
         return pedidos.map((pedido) => (
-            <article key={pedido._id} className="tarjeta">
-                <p>
-                    <strong>{formatearFecha(pedido.createdAt)}</strong> <Estado estado={pedido.estado} />
-                </p>
-                {/* Cada hamburguesa con su foto chica al lado: se ve de un vistazo qué lleva. */}
-                <ol className="productos">
-                    {pedido.productos.map((producto) => (
-                        <li key={producto._id}>
-                            <Hamburguesa chica ingredientes={producto.ingredientes} />
-                            <span>{listarIngredientes(producto.ingredientes)}: {formatearPrecio(producto.subtotal)}</span>
-                        </li>
-                    ))}
-                </ol>
-                <p className="total">Total: {formatearPrecio(pedido.total)}</p>
-
-                {pedido.estado === "Cancelado" && <p>Motivo: {motivoDeCancelacion(pedido)}</p>}
-
-                {pedido.estado === "Pendiente" && (
-                    <button className="peligro" onClick={() => cancelar(pedido._id)} disabled={cancelando === pedido._id}>
-                        {cancelando === pedido._id ? "Cancelando..." : "Cancelar pedido"}
-                    </button>
-                )}
-            </article>
+            <TarjetaPedido key={pedido._id} pedido={pedido} conPrecios pie={pieDe(pedido)} />
         ));
     };
 

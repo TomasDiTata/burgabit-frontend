@@ -102,6 +102,7 @@ burgabit-frontend/
     ├── hamburguesa.js         Qué foto de capa le toca a cada ingrediente, y en qué orden se apilan.
     ├── api.js                 pedirApi: la única función que habla con el backend.
     ├── sesion.js              Guarda, lee y borra el token (JWT) en el navegador.
+    ├── carrito.js             Guarda y lee el carrito en el navegador, uno por cuenta.
     ├── validaciones.js        Reglas que comparten los formularios.
     ├── formato.js             Precios y fechas como se leen en Argentina.
     ├── pedidos.js             Cálculos y textos de los pedidos.
@@ -113,6 +114,7 @@ burgabit-frontend/
     │   ├── ErrorAlCargar.jsx  El error de una carga, con el botón "Reintentar".
     │   ├── Hamburguesa.jsx    La hamburguesa armada con fotos: el pan, una capa por ingrediente y el pan.
     │   ├── HamburguesaTriste.jsx  El dibujo de la hamburguesa triste de la página de error.
+    │   ├── TarjetaPedido.jsx  La tarjeta de un pedido: fecha, estado, hamburguesas y total.
     │   └── Estado.jsx         Etiqueta de color con el estado de un pedido.
     └── pantallas/             Una pantalla por rol, más la portada, el ingreso y el registro.
         ├── Portada.jsx        La primera página, con la foto y los botones para empezar.
@@ -138,6 +140,7 @@ burgabit-frontend/
 - Todas las pantallas llaman a `pedirApi` (`src/api.js`), que arma la dirección con `VITE_API_URL`, manda los datos en JSON y convierte las respuestas con error en mensajes para el usuario.
 - Al ingresar, el backend devuelve un token JWT. Se guarda en `localStorage` y viaja en cada pedido en el encabezado `Authorization: Bearer <token>`.
 - El frontend lee del token el rol, para elegir la pantalla, y el vencimiento, para pedir el ingreso de nuevo. Los permisos los controla siempre el backend.
+- El carrito (las hamburguesas armadas que todavía no se pidieron) también se guarda en `localStorage` (`src/carrito.js`), así no se pierde al recargar la página ni al cerrar la pestaña. La clave lleva el id de la cuenta, para que cada una vea solo el suyo. Al confirmar, el backend calcula el total con los precios del momento y controla el stock, así que un carrito guardado hace días no genera un pedido mal cobrado.
 - Los formularios se validan antes de enviar, y cada pedido a la API muestra que está en curso ("Cargando...", "Guardando...") y avisa si falla.
 - Los nombres de categorías e ingredientes llegan en minúscula: el backend los guarda así (`lowercase: true` en los modelos) para que "Cheddar" y "cheddar" no cuenten como dos distintos. El frontend los muestra con la primera letra en mayúscula, con `conMayuscula` (`src/formato.js`).
 - Los pedidos del panel del administrador se piden ya filtrados: al elegir un estado, el pedido es `/api/admin?estado=...` y el backend devuelve solo esos. Así no viajan todos los pedidos para descartarlos en el navegador.
